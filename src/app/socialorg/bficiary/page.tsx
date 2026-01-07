@@ -7,11 +7,11 @@ import { User } from '@/types';
 
 // Dữ liệu mẫu (Hoặc gọi API ở đây)
 const MOCK_DATA: User[] = [
-  { id: 1, fullName: 'Nguyễn Văn An', status: 'ACTIVE', createdAt: '2023-10-15' },
-  { id: 2, fullName: 'Trần Thị Bích', status: 'PENDING', createdAt: '2023-10-20' },
-  { id: 3, fullName: 'Lê Văn Cường', status: 'DENIED', createdAt: '2023-10-22' },
-  { id: 4, fullName: 'Phạm Thị Dung', status: 'BANNED', createdAt: '2023-10-25' },
-  { id: 5, fullName: 'Hoàng Văn Em', status: 'PENDING', createdAt: '2023-10-28' },
+  { id: 'uuid-1', fullName: 'Nguyễn Văn An', status: 'ACTIVE', createdAt: '2023-10-15' },
+  { id: 'uuid-2', fullName: 'Trần Thị Bích', status: 'PENDING', createdAt: '2023-10-20' },
+  { id: 'uuid-3', fullName: 'Lê Văn Cường', status: 'DENIED', createdAt: '2023-10-22' },
+  { id: 'uuid-4', fullName: 'Phạm Thị Dung', status: 'BANNED', createdAt: '2023-10-25' },
+  { id: 'uuid-5', fullName: 'Hoàng Văn Em', status: 'PENDING', createdAt: '2023-10-28' },
 ];
 
 export default function NeedyPage() {
@@ -19,9 +19,10 @@ export default function NeedyPage() {
   const [users, setUsers] = useState<User[]>(MOCK_DATA);
 
   // Logic Toggle Ban (Xử lý Data)
-  const handleToggleBan = (id: number, currentStatus: string) => {
+  const handleToggleBan = (id: string, currentStatus: string) => {
     setUsers((prevUsers) => 
       prevUsers.map((user) => {
+        // So sánh string với string
         if (user.id === id) {
           const newStatus = currentStatus === 'BANNED' ? 'ACTIVE' : 'BANNED';
           return { ...user, status: newStatus as User['status'] };

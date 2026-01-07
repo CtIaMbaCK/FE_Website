@@ -6,7 +6,7 @@ import { User } from '@/types'; // Import Type từ bước 1
 
 interface UserTableProps {
   data: User[];
-  onToggleBan: (id: number, currentStatus: string) => void;
+  onToggleBan: (id: string, currentStatus: string) => void;
 }
 
 export default function UserTable({ data, onToggleBan }: UserTableProps) {
@@ -44,7 +44,9 @@ export default function UserTable({ data, onToggleBan }: UserTableProps) {
             {data.length > 0 ? (
               data.map((user) => (
                 <tr key={user.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 text-sm text-gray-500">#{user.id}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500" title={user.id}>
+                    #{user.id.substring(0, 8)}...
+                  </td>
                   <td className="px-6 py-4">
                     <span className="text-sm font-medium text-gray-900">{user.fullName}</span>
                   </td>

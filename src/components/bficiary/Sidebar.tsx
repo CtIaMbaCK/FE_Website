@@ -10,7 +10,7 @@ export default function Sidebar() {
   const menuItems = [
     { 
       name: 'Dashboard', 
-      href: '/', 
+      href: '/socialorg/dashboard', 
       icon: 'dashboard' 
     },
     { 
@@ -66,7 +66,9 @@ export default function Sidebar() {
             </defs>
           </svg>
         </div>
+        <Link href={"/socialorg/dashboard"}>
         <h2 className="text-gray-900 text-lg font-bold leading-tight tracking-[-0.015em]">BetterUS</h2>
+        </Link>
       </div>
 
       <nav className="flex flex-col flex-1 p-4 overflow-y-auto">
