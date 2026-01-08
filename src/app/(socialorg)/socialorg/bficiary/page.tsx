@@ -22,7 +22,7 @@ export default function NeedyPage() {
         if (user.id === id) {
           const newStatus = currentStatus === 'BANNED' ? 'ACTIVE' : 'BANNED';
           // Ép kiểu về status của NeedyUser
-          return { ...user, status: newStatus as User['status'] };
+          return { ...user, status: newStatus as NeedyUser['status'] };
         }
         return user;
       })
