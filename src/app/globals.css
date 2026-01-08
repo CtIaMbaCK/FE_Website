@@ -1,21 +1,90 @@
 @import "tailwindcss";
 
+/* --- CẤU HÌNH BIẾN MÀU (CSS VARIABLES) --- */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* --- SHADCN UI DEFAULTS (Thêm đoạn này để sửa lỗi trong suốt) --- */
+  --card: #ffffff;
+  --card-foreground: #171717;
+  --popover: #ffffff; /* <-- Đây là biến sửa lỗi background Select bị trong suốt */
+  --popover-foreground: #171717;
+  --primary: #008080;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #008080;
+  --radius: 0.5rem;
 }
 
-/* --- CẬP NHẬT THEME --- */
+/* --- DARK MODE --- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --card: #0a0a0a;
+    --card-foreground: #ededed;
+    --popover: #0a0a0a; /* Dark mode thì popover màu đen */
+    --popover-foreground: #ededed;
+    --primary: #008080;
+    --primary-foreground: #ffffff;
+    --secondary: #1e293b;
+    --secondary-foreground: #f8fafc;
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
+    --accent: #1e293b;
+    --accent-foreground: #f8fafc;
+    --destructive: #7f1d1d;
+    --destructive-foreground: #f8fafc;
+    --border: #1e293b;
+    --input: #1e293b;
+    --ring: #008080;
+  }
+}
+
+/* --- CẤU HÌNH THEME TAILWIND V4 --- */
 @theme inline {
+  /* 1. Base Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  /* 2. Shadcn UI Colors (Map biến CSS vào Tailwind) */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover); /* <-- Map biến popover */
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+
+  /* 3. Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Màu Primary hiện tại của bạn */
-  --color-primary: #008080;
-
-  /* --- THÊM MỚI: Màu sắc cho trang Create/Dashboard --- */
+  /* 4. Custom Colors của dự án bạn */
   --color-custom-teal: #00A79D;
   --color-custom-teal-light: #E6F6F5;
   --color-custom-gray-bg: #F7FAFC;
@@ -26,27 +95,31 @@
   --color-custom-red: #EF4444;
 }
 
-/* --- THÊM MỚI: Class Utility cho Card --- */
+/* --- UTILITIES --- */
 @layer utilities {
   .custom-card {
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* --- GLOBAL STYLES --- */
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Các class Material Symbols giữ nguyên... */
+/* Class Border cho Shadcn UI components */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Material Symbols */
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;

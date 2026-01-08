@@ -1,12 +1,14 @@
 'use client';
+import React from 'react';
 
 interface FilterToolbarProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
+  children?: React.ReactNode;
   // Bạn có thể thêm props cho Filter Status sau này
 }
 
-export default function FilterToolbar({ searchTerm, onSearchChange }: FilterToolbarProps) {
+export default function FilterToolbar({ searchTerm, onSearchChange, children }: FilterToolbarProps) {
   return (
     <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-6 flex flex-col sm:flex-row gap-4 justify-between items-center">
       <div className="relative w-full sm:w-96">
@@ -19,14 +21,8 @@ export default function FilterToolbar({ searchTerm, onSearchChange }: FilterTool
           onChange={(e) => onSearchChange(e.target.value)}
         />
       </div>
-      <div className="flex gap-3 w-full sm:w-auto">
-        <select className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 bg-white">
-          <option value="">Tất cả trạng thái</option>
-          <option value="ACTIVE">Đã xác minh</option>
-          <option value="PENDING">Chờ duyệt</option>
-          <option value="DENNIED">Từ chối</option>
-          <option value="BANNED">Bị khóa</option>
-        </select>
+      <div className="flex items-center gap-2 w-full md:w-auto">
+        {children}
       </div>
     </div>
   );

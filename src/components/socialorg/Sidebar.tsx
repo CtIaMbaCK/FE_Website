@@ -23,11 +23,11 @@ export default function Sidebar() {
       href: '/socialorg/volunteers', 
       icon: 'group' 
     },
-    { 
-      name: 'Quản lý hoạt động', 
-      href: '/socialorg/requests', 
-      icon: 'volunteer_activism' 
-    },
+    // { 
+    //   name: 'Quản lý hoạt động', 
+    //   href: '/socialorg/requests', 
+    //   icon: 'volunteer_activism' 
+    // },
     { 
       name: 'Khen thưởng Tình nguyện viên', 
       href: '/socialorg/appreciation', 

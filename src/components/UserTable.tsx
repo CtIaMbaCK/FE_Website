@@ -35,7 +35,7 @@ export default function UserTable({ data, onToggleBan }: UserTableProps) {
         <table className="w-full text-left border-collapse">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider w-10">ID</th>
+              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider w-10">STT</th>
               <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Họ và tên</th>
               <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Trạng thái</th>
               <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Ngày tạo</th>
@@ -44,10 +44,10 @@ export default function UserTable({ data, onToggleBan }: UserTableProps) {
           </thead>
           <tbody className="divide-y divide-gray-200">
             {data.length > 0 ? (
-              data.map((user) => (
+              data.map((user, index) => (
                 <tr key={user.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 text-sm text-gray-500" title={user.id}>
-                    #{user.id.substring(0, 8)}...
+                    {index+1}
                   </td>
                   <td className="px-6 py-4">
                     <span className="text-sm font-medium text-gray-900">{user.fullName}</span>
