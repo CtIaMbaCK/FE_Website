@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button';
 import Toggle from '@/components/ui/toggle'; // Import Toggle của bạn
 import { User } from '@/types'; // Import Type từ bước 1
 import Link from 'next/link';
+import { NeedyUser } from '@/data/mockData';
 
 interface UserTableProps {
-  data: User[];
-  onToggleBan: (id: string, currentStatus: string) => void;
+  data: NeedyUser[]; 
+  onToggleBan: (id: string, status: string) => void;
 }
 
 export default function UserTable({ data, onToggleBan }: UserTableProps) {
@@ -61,8 +62,10 @@ export default function UserTable({ data, onToggleBan }: UserTableProps) {
                         checked={user.status === 'BANNED'} 
                         onChange={() => onToggleBan(user.id, user.status)} 
                       />
-                      <Link href='/socialorg/bficiary/edit'>
-                        <Button className='bg-white hover:bg-gray-100 border-2 border-gray-300 text-black'>Xem chi tiết</Button>
+                      <Link href={`/socialorg/bficiary/${user.id}`}>
+                        <Button className='bg-white hover:bg-gray-100 border-2 border-gray-300 text-black'>
+                          Xem chi tiết
+                        </Button>
                       </Link>
                       <Button className='text-white bg-primary hover:bg-teal-700'>Duyệt</Button>
                     </div>
