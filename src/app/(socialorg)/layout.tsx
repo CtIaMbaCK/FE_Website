@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: "Hệ thống phía Tổ chức xã hội",
 };
 
-export default function RootLayout({
+export default function SocialOrgLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

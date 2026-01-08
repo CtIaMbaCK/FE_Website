@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "BetterUS cho Tổ chức xã hội",
 };
 
-export default function RootLayout({
+export default function HomePageLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

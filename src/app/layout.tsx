@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "BetterUS",
-  description: "Kết nối tình nguyện viên với người cần giúp đỡ",
+  description: "Kết nối tình nguyện viên với người cần giúp đơ",
 };
 
 export default function RootLayout({
