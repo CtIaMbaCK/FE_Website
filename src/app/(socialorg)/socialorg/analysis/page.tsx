@@ -8,6 +8,8 @@ import {
   MdArrowDownward
 } from 'react-icons/md';
 
+import StatisticsChart from '@/components/StatisticsChart';
+
 // Import Recharts
 import {
   AreaChart,
@@ -160,52 +162,14 @@ export default function StatisticsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                
                {/* Chart 1: Volunteer Registrations (AREA CHART) */}
-               <Card className="custom-card border-none bg-white dark:bg-gray-800 flex flex-col">
-                  <CardContent className="p-6 flex flex-col h-full">
-                     <div className="flex flex-col gap-1 mb-6">
-                        <p className="text-gray-800 dark:text-gray-200 text-base font-medium">Đăng ký Tình nguyện viên mới</p>
-                        <p className="text-3xl font-bold text-gray-900 dark:text-white">150 tháng này</p>
-                        <div className="flex gap-2 items-center text-sm">
-                           <span className="text-custom-text-light">so với tháng trước</span>
-                           <span className="text-green-600 dark:text-green-500 font-medium flex items-center">
-                              <MdArrowUpward className="text-base mr-1" /> +12%
-                           </span>
-                        </div>
-                     </div>
-                     
-                     {/* --- THAY ĐỔI: Sử dụng Recharts AreaChart --- */}
+               <Card className="custom-card border-none bg-white dark:bg-gray-800 flex flex-col"> 
+                     {/* --- Chart --- */}
                      <div className="flex-1 min-h-[200px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                          <AreaChart data={volunteerChartData}>
-                            <defs>
-                              <linearGradient id="colorVolunteers" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#00A79D" stopOpacity={0.3}/>
-                                <stop offset="95%" stopColor="#00A79D" stopOpacity={0}/>
-                              </linearGradient>
-                            </defs>
-                            <Tooltip content={<CustomTooltip />} />
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                            <XAxis 
-                              dataKey="name" 
-                              axisLine={false} 
-                              tickLine={false} 
-                              tick={{fill: '#718096', fontSize: 12}} 
-                              dy={10}
-                            />
-                            <Area 
-                              type="monotone" 
-                              dataKey="value" 
-                              stroke="#00A79D" 
-                              strokeWidth={3}
-                              fillOpacity={1} 
-                              fill="url(#colorVolunteers)" 
-                            />
-                          </AreaChart>
+                          <StatisticsChart></StatisticsChart>
                         </ResponsiveContainer>
                      </div>
                      {/* ------------------------------------------- */}
-
-                  </CardContent>
                </Card>
 
                {/* Chart 2: Needs by Category (BAR CHART) */}
