@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from 'sonner';
+import ErrorBoundary from "@/components/ErrorBoundary";
 import "./globals.css"; // 1. IMPORT GLOBAL CSS TẠI ĐÂY
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -23,9 +24,11 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
       </head>
       <body className={`${inter.variable} font-sans`}>
-        {/* Chỉ render children, không đặt Sidebar ở đây nữa */}
-        {children}
-        <Toaster position="top-right" richColors />
+        <ErrorBoundary>
+          {/* Chỉ render children, không đặt Sidebar ở đây nữa */}
+          {children}
+          <Toaster position="top-right" richColors />
+        </ErrorBoundary>
       </body>
     </html>
   );

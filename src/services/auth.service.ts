@@ -1,117 +1,92 @@
-import apiClient from './api';
+import apiClient from "./api";
 
 // ============ TYPES ============
 
 export interface LoginRequest {
-  email: string;
+  phoneNumber: string;
   password: string;
 }
 
 export interface LoginResponse {
-  access_token: string;
-  refresh_token?: string;
+  accessToken: string;
   user: {
     id: string;
-    email: string;
-    fullName: string;
+    phoneNumber: string;
     role: string;
   };
 }
 
 export interface RegisterRequest {
   email: string;
+  phoneNumber: string;
   password: string;
-  fullName: string;
-  phone?: string;
+  role: "VOLUNTEER" | "BENEFICIARY" | "ORGANIZATION";
 }
 
-// ============ AUTH API FUNCTIONS ============
+export interface RegisterResponse {
+  accessToken: string;
+  role: string;
+}
 
-/**
- * Đăng nhập
- * TODO: Thay đổi endpoint '/auth/login' thành endpoint thực tế của backend
- */
-export const login = async (credentials: LoginRequest): Promise<LoginResponse> => {
-  const response = await apiClient.post('/auth/login', credentials);
+// log in
+export const login = async (
+  credentials: LoginRequest,
+): Promise<LoginResponse> => {
+  const response = await apiClient.post("/auth/login", credentials);
 
   // Lưu token vào localStorage
-  if (response.data.access_token) {
-    localStorage.setItem('access_token', response.data.access_token);
-  }
-  if (response.data.refresh_token) {
-    localStorage.setItem('refresh_token', response.data.refresh_token);
+  if (response.data.accessToken) {
+    localStorage.setItem("access_token", response.data.accessToken);
   }
 
   return response.data;
 };
 
-/**
- * Đăng xuất
- * TODO: Thay đổi endpoint '/auth/logout' nếu backend có endpoint logout
- */
+//  Đăng ký tài khoản mới
+//  post /api/v1/auth/register
+export const register = async (
+  data: RegisterRequest,
+): Promise<RegisterResponse> => {
+  const response = await apiClient.post("/auth/register", data);
+
+  // Tự động lưu token sau khi đăng ký
+  if (response.data.accessToken) {
+    localStorage.setItem("access_token", response.data.accessToken);
+  }
+
+  return response.data;
+};
+
+// log out
 export const logout = async (): Promise<void> => {
   try {
-    // Gọi API logout (nếu backend có)
-    await apiClient.post('/auth/logout');
-  } catch (error) {
-    console.error('Lỗi khi đăng xuất:', error);
-  } finally {
     // Xóa token khỏi localStorage
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
+    localStorage.removeItem("access_token");
+
+    // Redirect về trang login
+    if (typeof window !== "undefined") {
+      window.location.href = "/login";
+    }
+  } catch (error) {
+    console.error("Lỗi khi đăng xuất:", error);
   }
 };
 
-/**
- * Đăng ký tài khoản mới
- * TODO: Thay đổi endpoint '/auth/register' thành endpoint thực tế của backend
- */
-export const register = async (data: RegisterRequest): Promise<LoginResponse> => {
-  const response = await apiClient.post('/auth/register', data);
-
-  // Tự động lưu token sau khi đăng ký (nếu backend trả về token)
-  if (response.data.access_token) {
-    localStorage.setItem('access_token', response.data.access_token);
-  }
-
+// getMe() thong tin user
+export const getMe = async () => {
+  const response = await apiClient.get("users/me");
   return response.data;
 };
 
-/**
- * Lấy thông tin user hiện tại
- * TODO: Thay đổi endpoint '/auth/me' thành endpoint thực tế của backend
- */
-export const getCurrentUser = async () => {
-  const response = await apiClient.get('/auth/me');
-  return response.data;
-};
-
-/**
- * Refresh token
- * TODO: Thay đổi endpoint '/auth/refresh' thành endpoint thực tế của backend
- */
-export const refreshToken = async (): Promise<string> => {
-  const refreshToken = localStorage.getItem('refresh_token');
-
-  if (!refreshToken) {
-    throw new Error('Không có refresh token');
-  }
-
-  const response = await apiClient.post('/auth/refresh', { refresh_token: refreshToken });
-
-  // Lưu token mới
-  if (response.data.access_token) {
-    localStorage.setItem('access_token', response.data.access_token);
-  }
-
-  return response.data.access_token;
-};
-
-/**
- * Kiểm tra xem user đã đăng nhập chưa
- */
+// kiem tra dang nhap
 export const isAuthenticated = (): boolean => {
-  if (typeof window === 'undefined') return false;
-  const token = localStorage.getItem('access_token');
+  if (typeof window === "undefined") return false;
+  const token = localStorage.getItem("access_token");
   return !!token;
+};
+
+// Get token
+export const getAccessToken = (): string | null => {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("access_token");
 };

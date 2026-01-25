@@ -25,6 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Breadcrumb from '@/components/Breadcrumb';
 
 // Dữ liệu mẫu
 const MOCK_REWARDS = [
@@ -63,6 +64,12 @@ export default function RewardPage(){
 
     return (
     <div className="pb-10">
+      <Breadcrumb
+        items={[
+          { label: "Khen thưởng" },
+        ]}
+      />
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>

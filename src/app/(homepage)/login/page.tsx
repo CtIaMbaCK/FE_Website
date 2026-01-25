@@ -13,8 +13,8 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSeePassword, setSeePassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: "tcxh",
-    password: "123456",
+    phoneNumber: "",
+    password: "",
   });
 
   // Xử lý thay đổi input
@@ -31,36 +31,34 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // Gọi API login
-
-      // uncomment sau
-      // const response = await login({
-      //   email: formData.email,
-      //   password: formData.password,
-      // });
-
-      if (formData.email === "tcxh" && formData.password === "123456") {
-        toast.success("Đăng nhập thành công!");
-        router.push("/socialorg/dashboard");
-      } else {
-        toast.error("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
-        setIsLoading(false);
-        return;
-      }
+      // Gọi API login thật
+      const response = await login({
+        phoneNumber: formData.phoneNumber,
+        password: formData.password,
+      });
 
       // Hiển thị thông báo thành công
-      // uncomment
-      // toast.success("Đăng nhập thành công!");
+      toast.success("Đăng nhập thành công!");
 
-      // Redirect đến dashboard
-      // router.push("/socialorg/dashboard");
+      // Redirect theo role
+      const userRole = response.user.role;
+
+      if (userRole === 'ADMIN') {
+        router.push("/admin/dashboard");
+      } else if (userRole === 'ORGANIZATION') {
+        router.push("/socialorg/dashboard");
+      } else if (userRole === 'VOLUNTEER' || userRole === 'BENEFICIARY') {
+        // VOLUNTEER và BENEFICIARY chỉ dùng mobile, redirect về HomePage
+        router.push("/");
+      } else {
+        router.push("/");
+      }
     } catch (error: any) {
       // Hiển thị lỗi
       const errorMessage =
         error.response?.data?.message ||
         "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.";
       toast.error(errorMessage);
-      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
@@ -84,18 +82,18 @@ export default function LoginPage() {
             <div>
               <label
                 className="block text-sm font-medium text-brand-text-light mb-2"
-                htmlFor="email"
+                htmlFor="phoneNumber"
               >
-                Tên đăng nhập hoặc Email
+                Số điện thoại
               </label>
               <input
                 className="w-full px-4 py-3 border border-brand-teal rounded-lg focus:ring-brand-teal focus:border-brand-teal text-sm outline-none"
-                id="email"
-                name="email"
-                placeholder="Tên đăng nhập hoặc Email"
+                id="phoneNumber"
+                name="phoneNumber"
+                placeholder="Số điện thoại"
                 required
                 type="text"
-                value={formData.email}
+                value={formData.phoneNumber}
                 onChange={handleChange}
                 disabled={isLoading}
               />

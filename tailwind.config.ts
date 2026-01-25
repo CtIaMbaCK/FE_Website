@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['var(--font-inter)'], // Cấu hình cho Next.js Font
+        display: ['var(--font-inter)'], 
       },
     },
   },
