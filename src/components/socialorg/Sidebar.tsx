@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { getMe, logout } from "@/services/auth.service";
 import Image from "next/image";
 import { MdLogout } from "react-icons/md";
+import { User } from "lucide-react";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -209,6 +210,15 @@ export default function Sidebar() {
             )}
           </div>
         </div>
+
+        {/* Nut Thong tin ca nhan */}
+        <button
+          onClick={() => router.push("/socialorg/profile")}
+          className="flex w-full justify-center items-center gap-10 p-2 mb-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-600 hover:text-white transition-colors"
+        >
+          <User className="w-5 h-5" />
+          <span className="text-sm font-medium">Thông tin cá nhân</span>
+        </button>
 
         {/* Nut Logout */}
         <button

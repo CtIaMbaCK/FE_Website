@@ -5,13 +5,19 @@ import { toast } from "sonner";
 import {
   getAllVolunteers,
   updateVolunteer,
+  issueAdminCertificate,
+  createAdminComment,
+  getVolunteerComments,
   type Volunteer,
+  type VolunteerComment,
 } from "@/services/admin.service";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -19,6 +25,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -29,6 +42,7 @@ import {
 } from "@/components/ui/table";
 import Breadcrumb from "@/components/Breadcrumb";
 import { MdSearch, MdLock, MdLockOpen, MdVisibility } from "react-icons/md";
+import { Award, MessageSquare, Star, Trash2 } from "lucide-react";
 
 // Enum cac quan trong TPHCM
 const DISTRICTS = [
@@ -50,6 +64,21 @@ export default function VolunteersPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const limit = 10;
+
+  // Comment Dialog State
+  const [commentDialogOpen, setCommentDialogOpen] = useState(false);
+  const [selectedVolunteer, setSelectedVolunteer] = useState<Volunteer | null>(null);
+  const [commentText, setCommentText] = useState("");
+  const [commentRating, setCommentRating] = useState<number>(5);
+  const [submittingComment, setSubmittingComment] = useState(false);
+  const [viewCommentsDialogOpen, setViewCommentsDialogOpen] = useState(false);
+  const [volunteerComments, setVolunteerComments] = useState<VolunteerComment[]>([]);
+  const [loadingComments, setLoadingComments] = useState(false);
+
+  // Certificate Dialog State
+  const [certificateDialogOpen, setCertificateDialogOpen] = useState(false);
+  const [certificateNotes, setCertificateNotes] = useState("");
+  const [issuingCertificate, setIssuingCertificate] = useState(false);
 
   // Fetch data tu API
   const fetchVolunteers = async () => {
@@ -124,6 +153,83 @@ export default function VolunteersPage() {
   // Format ten quan huyen
   const formatDistrict = (district: string) => {
     return district.replace(/_/g, " ");
+  };
+
+  // Xu ly mo dialog nhan xet
+  const handleOpenCommentDialog = (volunteer: Volunteer) => {
+    setSelectedVolunteer(volunteer);
+    setCommentText("");
+    setCommentRating(5);
+    setCommentDialogOpen(true);
+  };
+
+  // Xu ly tao nhan xet
+  const handleCreateComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedVolunteer || !commentText.trim()) {
+      toast.error("Vui lòng nhập nội dung nhận xét");
+      return;
+    }
+
+    try {
+      setSubmittingComment(true);
+      await createAdminComment({
+        volunteerId: selectedVolunteer.id,
+        comment: commentText.trim(),
+        rating: commentRating,
+      });
+      toast.success("Đã tạo nhận xét thành công!");
+      setCommentDialogOpen(false);
+      setCommentText("");
+      setCommentRating(5);
+    } catch (error: any) {
+      toast.error("Lỗi: " + (error.response?.data?.message || error.message));
+    } finally {
+      setSubmittingComment(false);
+    }
+  };
+
+  // Xu ly xem nhan xet
+  const handleViewComments = async (volunteer: Volunteer) => {
+    setSelectedVolunteer(volunteer);
+    setViewCommentsDialogOpen(true);
+    setLoadingComments(true);
+    try {
+      const comments = await getVolunteerComments(volunteer.id);
+      setVolunteerComments(comments);
+    } catch (error: any) {
+      toast.error("Lỗi khi tải nhận xét: " + (error.response?.data?.message || error.message));
+    } finally {
+      setLoadingComments(false);
+    }
+  };
+
+  // Xu ly mo dialog cap chung nhan
+  const handleOpenCertificateDialog = (volunteer: Volunteer) => {
+    setSelectedVolunteer(volunteer);
+    setCertificateNotes("");
+    setCertificateDialogOpen(true);
+  };
+
+  // Xu ly cap chung nhan
+  const handleIssueCertificate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedVolunteer) return;
+
+    try {
+      setIssuingCertificate(true);
+      await issueAdminCertificate({
+        volunteerId: selectedVolunteer.id,
+        notes: certificateNotes.trim() || undefined,
+      });
+      toast.success("Đã cấp chứng nhận thành công!");
+      setCertificateDialogOpen(false);
+      setCertificateNotes("");
+    } catch (error: any) {
+      toast.error("Lỗi: " + (error.response?.data?.message || error.message));
+    } finally {
+      setIssuingCertificate(false);
+    }
   };
 
   return (
@@ -322,6 +428,26 @@ export default function VolunteersPage() {
                       <Button
                         variant="outline"
                         size="sm"
+                        onClick={() => handleOpenCommentDialog(volunteer)}
+                        className="h-8 text-xs font-medium border-[#008080] text-[#008080] hover:bg-[#008080] hover:text-white"
+                        title="Nhận xét TNV"
+                      >
+                        <MessageSquare className="mr-1.5 w-3.5 h-3.5" />
+                        Nhận xét
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleOpenCertificateDialog(volunteer)}
+                        className="h-8 text-xs font-medium border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white"
+                        title="Cấp chứng nhận"
+                      >
+                        <Award className="mr-1.5 w-3.5 h-3.5" />
+                        Chứng nhận
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => {
                           window.location.href = `/admin/volunteers/${volunteer.id}`;
                         }}
@@ -372,6 +498,193 @@ export default function VolunteersPage() {
           </TableBody>
         </Table>
       </div>
+
+      {/* Comment Dialog */}
+      <Dialog open={commentDialogOpen} onOpenChange={setCommentDialogOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Nhận xét Tình nguyện viên</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleCreateComment} className="space-y-4">
+            <div className="space-y-2">
+              <Label>Tình nguyện viên</Label>
+              <Input
+                value={selectedVolunteer?.volunteerProfile?.fullName || ""}
+                disabled
+                className="bg-gray-50"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Điểm hiện tại</Label>
+              <Input
+                value={`${selectedVolunteer?.volunteerProfile?.points || 0} điểm`}
+                disabled
+                className="bg-gray-50"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="rating">
+                Đánh giá <span className="text-red-600">*</span>
+              </Label>
+              <div className="flex items-center gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setCommentRating(star)}
+                    className="transition-all"
+                  >
+                    <Star
+                      className={`w-8 h-8 ${
+                        star <= commentRating
+                          ? "fill-yellow-400 text-yellow-400"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  </button>
+                ))}
+                <span className="ml-2 text-sm font-medium text-gray-700">
+                  {commentRating}/5 sao
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="comment">
+                Nội dung nhận xét <span className="text-red-600">*</span>
+              </Label>
+              <Textarea
+                id="comment"
+                placeholder="Nhập nội dung nhận xét về tình nguyện viên..."
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                rows={4}
+                className="resize-none"
+                required
+              />
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <Button
+                type="submit"
+                className="flex-1 bg-[#008080] hover:bg-[#006666]"
+                disabled={submittingComment || !commentText.trim()}
+              >
+                {submittingComment ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Đang gửi...
+                  </>
+                ) : (
+                  <>
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    Gửi nhận xét
+                  </>
+                )}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setCommentDialogOpen(false)}
+                disabled={submittingComment}
+              >
+                Hủy
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Certificate Dialog */}
+      <Dialog open={certificateDialogOpen} onOpenChange={setCertificateDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Award className="w-5 h-5 text-amber-500" />
+              Cấp chứng nhận cho TNV
+            </DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleIssueCertificate} className="space-y-4">
+            <div className="space-y-2">
+              <Label>Tình nguyện viên</Label>
+              <Input
+                value={selectedVolunteer?.volunteerProfile?.fullName || ""}
+                disabled
+                className="bg-gray-50"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Email</Label>
+              <Input
+                value={selectedVolunteer?.email || ""}
+                disabled
+                className="bg-gray-50"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Điểm hiện tại</Label>
+              <Input
+                value={`${selectedVolunteer?.volunteerProfile?.points || 0} điểm`}
+                disabled
+                className="bg-gray-50"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="notes">Ghi chú (tùy chọn)</Label>
+              <Textarea
+                id="notes"
+                placeholder="Thêm ghi chú về chứng nhận này..."
+                value={certificateNotes}
+                onChange={(e) => setCertificateNotes(e.target.value)}
+                rows={3}
+                className="resize-none"
+              />
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm">
+              <p className="font-semibold text-blue-900 mb-1">ℹ️ Lưu ý:</p>
+              <ul className="list-disc list-inside text-blue-800 space-y-1">
+                <li>Hệ thống sẽ tự động điền tên TNV vào chứng nhận</li>
+                <li>Sử dụng mẫu chứng nhận mặc định của BetterUS</li>
+                <li>Chứng nhận sẽ được tạo dưới dạng ảnh PNG</li>
+              </ul>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <Button
+                type="submit"
+                className="flex-1 bg-amber-500 hover:bg-amber-600 text-white"
+                disabled={issuingCertificate}
+              >
+                {issuingCertificate ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Đang cấp...
+                  </>
+                ) : (
+                  <>
+                    <Award className="mr-2 h-4 w-4" />
+                    Cấp chứng nhận
+                  </>
+                )}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setCertificateDialogOpen(false)}
+                disabled={issuingCertificate}
+              >
+                Hủy
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* Pagination */}
       {totalPages > 1 && (

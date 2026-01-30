@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import {
   getVolunteerDetail,
   updateVolunteer,
+  issueAdminCertificate,
   type Volunteer,
 } from "@/services/admin.service";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import Breadcrumb from "@/components/Breadcrumb";
 import ImageUploadZone from "@/components/ImageUploadZone";
 import {
@@ -74,6 +82,11 @@ export default function VolunteerDetailPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+
+  // Certificate dialog
+  const [certificateDialogOpen, setCertificateDialogOpen] = useState(false);
+  const [issuingCertificate, setIssuingCertificate] = useState(false);
+  const [certificateNotes, setCertificateNotes] = useState("");
 
   // Form fields
   const [fullName, setFullName] = useState("");
@@ -195,6 +208,25 @@ export default function VolunteerDetailPage() {
     } catch (error) {
       console.error("Loi update status:", error);
       toast.error("Không thể cập nhật trạng thái");
+    }
+  };
+
+  // Xu ly cap chung nhan
+  const handleIssueCertificate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIssuingCertificate(true);
+    try {
+      await issueAdminCertificate({
+        volunteerId: id,
+        notes: certificateNotes.trim() || undefined,
+      });
+      toast.success("Đã cấp chứng nhận thành công!");
+      setCertificateDialogOpen(false);
+      setCertificateNotes("");
+    } catch (error: any) {
+      toast.error("Lỗi: " + (error.response?.data?.message || error.message));
+    } finally {
+      setIssuingCertificate(false);
     }
   };
 
@@ -497,43 +529,127 @@ export default function VolunteerDetailPage() {
             </Card>
 
             {/* Action Buttons */}
-            <div className="flex items-center justify-start gap-3">
-              <Button
-                onClick={handleSave}
-                disabled={submitting}
-                className="bg-[#008080] hover:bg-[#006666] text-white px-6"
-              >
-                {submitting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Đang lưu...
-                  </>
-                ) : (
-                  "Lưu thay đổi"
-                )}
-              </Button>
-              <Button
-                variant={volunteer.status === "ACTIVE" ? "destructive" : "default"}
-                onClick={handleToggleStatus}
-                disabled={volunteer.status === "PENDING" || submitting}
-                className={
-                  volunteer.status !== "ACTIVE"
-                    ? "bg-[#008080] hover:bg-[#006666]"
-                    : ""
-                }
-              >
-                {volunteer.status === "ACTIVE" ? (
-                  <>
-                    <Lock className="mr-2 h-4 w-4" />
-                    Khóa tài khoản
-                  </>
-                ) : (
-                  <>
-                    <LockOpen className="mr-2 h-4 w-4" />
-                    Mở khóa
-                  </>
-                )}
-              </Button>
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-start gap-3">
+                <Button
+                  onClick={handleSave}
+                  disabled={submitting}
+                  className="bg-[#008080] hover:bg-[#006666] text-white px-6"
+                >
+                  {submitting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      Đang lưu...
+                    </>
+                  ) : (
+                    "Lưu thay đổi"
+                  )}
+                </Button>
+                <Button
+                  variant={volunteer.status === "ACTIVE" ? "destructive" : "default"}
+                  onClick={handleToggleStatus}
+                  disabled={volunteer.status === "PENDING" || submitting}
+                  className={
+                    volunteer.status !== "ACTIVE"
+                      ? "bg-[#008080] hover:bg-[#006666]"
+                      : ""
+                  }
+                >
+                  {volunteer.status === "ACTIVE" ? (
+                    <>
+                      <Lock className="mr-2 h-4 w-4" />
+                      Khóa tài khoản
+                    </>
+                  ) : (
+                    <>
+                      <LockOpen className="mr-2 h-4 w-4" />
+                      Mở khóa
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              {/* Certificate Button */}
+              <Dialog open={certificateDialogOpen} onOpenChange={setCertificateDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="border-[#008080] text-[#008080] hover:bg-[#008080] hover:text-white"
+                  >
+                    <Award className="mr-2 h-4 w-4" />
+                    Cấp chứng nhận
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Cấp chứng nhận cho TNV</DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleIssueCertificate} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label>Tình nguyện viên</Label>
+                      <Input value={fullName} disabled className="bg-gray-50" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Điểm hiện tại</Label>
+                      <Input
+                        value={`${volunteer?.volunteerProfile?.points || 0} điểm`}
+                        disabled
+                        className="bg-gray-50"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="notes">Ghi chú (tùy chọn)</Label>
+                      <Textarea
+                        id="notes"
+                        placeholder="Thêm ghi chú về chứng nhận này..."
+                        value={certificateNotes}
+                        onChange={(e) => setCertificateNotes(e.target.value)}
+                        rows={3}
+                        className="resize-none"
+                      />
+                    </div>
+
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm">
+                      <p className="font-semibold text-blue-900 mb-1">ℹ️ Lưu ý:</p>
+                      <ul className="list-disc list-inside text-blue-800 space-y-1">
+                        <li>Hệ thống sẽ tự động điền tên TNV vào chứng nhận</li>
+                        <li>Sử dụng mẫu chứng nhận mặc định của BetterUS</li>
+                        <li>Chứng nhận sẽ được tạo dưới dạng ảnh PNG</li>
+                      </ul>
+                    </div>
+
+                    <div className="flex gap-2 pt-2">
+                      <Button
+                        type="submit"
+                        className="flex-1 bg-[#008080] hover:bg-[#006666]"
+                        disabled={issuingCertificate}
+                      >
+                        {issuingCertificate ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                            Đang cấp...
+                          </>
+                        ) : (
+                          <>
+                            <Award className="mr-2 h-4 w-4" />
+                            Cấp chứng nhận
+                          </>
+                        )}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setCertificateDialogOpen(false)}
+                        disabled={issuingCertificate}
+                      >
+                        Hủy
+                      </Button>
+                    </div>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </div>

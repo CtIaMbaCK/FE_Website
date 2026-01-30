@@ -43,7 +43,19 @@ apiClient.interceptors.response.use(
           // Unauthorized - Token hết hạn hoặc không hợp lệ
           if (typeof window !== "undefined") {
             localStorage.removeItem("access_token");
-            window.location.href = '/login';
+
+            // QUAN TRỌNG: Không redirect nếu đang ở homepage, login, hoặc register
+            // Cho phép guest access vào các trang public
+            const currentPath = window.location.pathname;
+            const publicPaths = ['/', '/login', '/register', '/posts'];
+            const isPublicPath = publicPaths.some(path =>
+              currentPath === path || currentPath.startsWith(path + '/')
+            );
+
+            // Chỉ redirect khi không phải public path
+            if (!isPublicPath) {
+              window.location.href = '/login';
+            }
           }
           break;
 

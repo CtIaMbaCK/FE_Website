@@ -335,3 +335,82 @@ export const approveHelpRequest = async (
   });
   return response.data;
 };
+
+// Admin Certificates
+export interface IssuedCertificate {
+  id: string;
+  volunteerId: string;
+  templateId: string;
+  organizationId: string | null;
+  certificateData: any;
+  pdfUrl: string;
+  notes?: string;
+  issuedAt: string;
+  volunteer: {
+    id: string;
+    email: string;
+    volunteerProfile: {
+      fullName: string;
+      avatarUrl?: string;
+      points: number;
+    };
+  };
+  template: {
+    id: string;
+    name: string;
+  };
+}
+
+export const issueAdminCertificate = async (data: {
+  volunteerId: string;
+  additionalData?: Record<string, any>;
+  notes?: string;
+}): Promise<IssuedCertificate> => {
+  const response = await api.post("/admin/certificates/issue", data);
+  return response.data;
+};
+
+export const getAdminIssuedCertificates = async (): Promise<IssuedCertificate[]> => {
+  const response = await api.get("/admin/certificates/issued");
+  return response.data;
+};
+
+// Admin Volunteer Comments
+export interface VolunteerComment {
+  id: string;
+  volunteerId: string;
+  organizationId: string | null;
+  comment: string;
+  rating?: number;
+  createdAt: string;
+  organization?: {
+    id: string;
+    organizationProfiles?: {
+      organizationName: string;
+      avatarUrl?: string;
+    };
+  };
+}
+
+export const createAdminComment = async (data: {
+  volunteerId: string;
+  comment: string;
+  rating?: number;
+}): Promise<{ message: string; comment: VolunteerComment }> => {
+  const response = await api.post("/admin/volunteers/comments", data);
+  return response.data;
+};
+
+export const getVolunteerComments = async (
+  volunteerId: string
+): Promise<VolunteerComment[]> => {
+  const response = await api.get(`/admin/volunteers/${volunteerId}/comments`);
+  return response.data;
+};
+
+export const deleteAdminComment = async (
+  commentId: string
+): Promise<{ message: string }> => {
+  const response = await api.delete(`/admin/volunteers/comments/${commentId}`);
+  return response.data;
+};

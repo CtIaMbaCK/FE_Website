@@ -50,9 +50,9 @@ export default function CertificateEditor({
       y: 300,
       width: 500,
       height: 80,
-      fontSize: 80, // Tăng lên 48 để tên to hơn
-      fontFamily: "Arial",
-      color: "#000000",
+      fontSize: 72, // Cập nhật thành 72 (giống Admin)
+      fontFamily: "Times New Roman", // Font serif formal hơn
+      color: "#1a1a1a",
       align: "center",
     },
     // Bỏ points và issueDate - chỉ hiển thị tên TNV
