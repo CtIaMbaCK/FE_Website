@@ -25,16 +25,14 @@ import { useRouter } from "next/navigation";
 
 const STATUS_MAP: Record<string, string> = {
   PENDING: "Chờ duyệt",
-  ACTIVE: "Hoạt động",
-  DENIED: "Bị từ chối",
-  BANNED: "Bị khóa",
+  APPROVED: "Đã duyệt",
+  REJECTED: "Bị từ chối",
 };
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-800",
-  ACTIVE: "bg-green-100 text-green-800",
-  DENIED: "bg-red-100 text-red-800",
-  BANNED: "bg-gray-100 text-gray-800",
+  APPROVED: "bg-green-100 text-green-800",
+  REJECTED: "bg-red-100 text-red-800",
 };
 
 export default function AccountsPage() {
@@ -95,7 +93,7 @@ export default function AccountsPage() {
 
   const handleApprove = async (memberId: string) => {
     try {
-      await updateMemberStatus(memberId, "ACTIVE");
+      await updateMemberStatus(memberId, "APPROVED");
       toast.success("Đã duyệt hồ sơ thành công");
       loadPendingMembers();
     } catch (error: any) {
@@ -108,7 +106,7 @@ export default function AccountsPage() {
 
   const handleDeny = async (memberId: string) => {
     try {
-      await updateMemberStatus(memberId, "DENIED");
+      await updateMemberStatus(memberId, "REJECTED");
       toast.success("Đã từ chối hồ sơ");
       loadPendingMembers();
     } catch (error: any) {

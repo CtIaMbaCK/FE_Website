@@ -76,6 +76,11 @@ export default function Sidebar() {
       href: "/socialorg/accounts",
       icon: "person_add",
     },
+    {
+      name: "Tin nhắn",
+      href: "/socialorg/chat",
+      icon: "chat",
+    },
     // {
     //   name: 'Quản lý hoạt động',
     //   href: '/socialorg/requests',

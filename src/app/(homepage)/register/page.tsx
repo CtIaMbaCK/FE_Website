@@ -1803,7 +1803,7 @@ export default function RegisterPage() {
                           {/* Business License */}
                           <div>
                             <Label className="text-gray-900 text-sm">
-                              Giấy phép kinh doanh
+                              Giấy phép hoạt động
                             </Label>
                             <div className="mt-2">
                               {organizationPreviews.businessLicense ? (

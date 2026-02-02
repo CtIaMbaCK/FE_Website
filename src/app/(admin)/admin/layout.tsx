@@ -15,6 +15,7 @@ import {
   MdClose,
   MdLogout,
   MdHelpOutline,
+  MdChat,
 } from "react-icons/md";
 import { logout, getMe } from "@/services/auth.service";
 
@@ -74,6 +75,7 @@ export default function AdminLayout({
     { href: "/admin/requests", icon: MdHelpOutline, label: "Yêu cầu giúp đỡ" },
     { href: "/admin/posts", icon: MdArticle, label: "Bài viết" },
     { href: "/admin/campaigns", icon: MdCampaign, label: "Chiến dịch" },
+    { href: "/admin/chat", icon: MdChat, label: "Tin nhắn" },
   ];
 
   return (

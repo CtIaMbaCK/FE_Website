@@ -529,7 +529,7 @@ export default function OrganizationProfilePage() {
                 <CardHeader>
                   <div className="flex items-center gap-2">
                     <FileText className="w-5 h-5 text-gray-600" />
-                    <CardTitle className="text-base">Giấy phép kinh doanh</CardTitle>
+                    <CardTitle className="text-base">Giấy phép hoạt động</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
