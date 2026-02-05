@@ -10,6 +10,8 @@ import {
 } from "@/services/admin.service";
 import { Card } from "@/components/ui/card";
 import Breadcrumb from "@/components/Breadcrumb";
+import EmergencyDashboard from "@/components/EmergencyDashboard";
+import ActivityLog from "@/components/ActivityLog";
 import {
   MdPeople,
   MdVolunteerActivism,
@@ -146,18 +148,11 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* Welcome Message */}
-      <Card className="p-8">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Chào mừng đến với Admin Panel
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Đây là trang quản trị hệ thống. Bạn có thể quản lý người cần giúp đỡ,
-            tình nguyện viên, tổ chức xã hội, bài viết và chiến dịch từ menu bên trái.
-          </p>
-        </div>
-      </Card>
+      {/* Emergency SOS Section */}
+      <EmergencyDashboard />
+
+      {/* Activity Log Section */}
+      <ActivityLog />
 
       {/* Quick Links */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

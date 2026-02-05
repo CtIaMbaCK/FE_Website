@@ -124,8 +124,30 @@ export default function AdminChatPage() {
         });
       }
 
-      // Reload conversations
-      loadConversations();
+      // Update conversation list real-time
+      setConversations((prevConvs) => {
+        return prevConvs.map((conv) => {
+          if (conv.id === message.conversationId) {
+            return {
+              ...conv,
+              lastMessage: {
+                content: message.content,
+                createdAt: message.createdAt,
+                isRead: message.isRead,
+                senderId: message.senderId,
+              },
+              lastMessageAt: message.createdAt,
+            };
+          }
+          return conv;
+        }).sort((a, b) => {
+          // Sort theo thời gian mới nhất
+          const timeA = a.lastMessageAt ? new Date(a.lastMessageAt).getTime() : 0;
+          const timeB = b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0;
+          return timeB - timeA;
+        });
+      });
+
       loadUnreadCount();
     });
 
@@ -135,6 +157,30 @@ export default function AdminChatPage() {
       setMessages((prev) =>
         prev.map((msg) => (msg.id === "temp" ? message : msg)),
       );
+
+      // Update conversation list với tin nhắn mới gửi
+      setConversations((prevConvs) => {
+        return prevConvs.map((conv) => {
+          if (conv.id === message.conversationId) {
+            return {
+              ...conv,
+              lastMessage: {
+                content: message.content,
+                createdAt: message.createdAt,
+                isRead: message.isRead,
+                senderId: message.senderId,
+              },
+              lastMessageAt: message.createdAt,
+            };
+          }
+          return conv;
+        }).sort((a, b) => {
+          // Sort theo thời gian mới nhất
+          const timeA = a.lastMessageAt ? new Date(a.lastMessageAt).getTime() : 0;
+          const timeB = b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0;
+          return timeB - timeA;
+        });
+      });
     });
 
     socket.on(
@@ -358,7 +404,13 @@ export default function AdminChatPage() {
 
         if (response.ok) {
           const data = await response.json();
-          setSearchResults(data);
+          // Sort theo role: ADMIN → ORGANIZATION → VOLUNTEER → BENEFICIARY
+          const roleOrder = { ADMIN: 1, ORGANIZATION: 2, VOLUNTEER: 3, BENEFICIARY: 4 };
+          const sortedData = data.sort((a: SearchUser, b: SearchUser) => {
+            return (roleOrder[a.role as keyof typeof roleOrder] || 99) -
+                   (roleOrder[b.role as keyof typeof roleOrder] || 99);
+          });
+          setSearchResults(sortedData);
           setShowSearchResults(true);
         }
       } catch (error) {
@@ -517,10 +569,11 @@ export default function AdminChatPage() {
                 </div>
               ) : (
                 conversations.map((conv) => {
+                  // Tin nhắn chưa đọc từ người khác (không phải admin gửi)
                   const isUnread =
                     conv.lastMessage &&
                     !conv.lastMessage.isRead &&
-                    conv.lastMessage.senderId !== "admin";
+                    conv.lastMessage.senderId === conv.otherUser.id;
 
                   return (
                     <button

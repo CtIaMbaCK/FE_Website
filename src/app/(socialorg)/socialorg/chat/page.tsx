@@ -124,8 +124,33 @@ export default function AdminChatPage() {
         });
       }
 
-      // Reload conversations
-      loadConversations();
+      // Update conversation list real-time
+      setConversations((prevConvs) => {
+        return prevConvs.map((conv) => {
+          if (conv.id === message.conversationId) {
+            return {
+              ...conv,
+              lastMessage: {
+                content: message.content,
+                createdAt: message.createdAt,
+                isRead: message.isRead,
+                senderId: message.senderId,
+              },
+              lastMessageAt: message.createdAt,
+            };
+          }
+          return conv;
+        }).sort((a, b) => {
+          // Admin luôn lên đầu
+          if (a.otherUser.role === "ADMIN") return -1;
+          if (b.otherUser.role === "ADMIN") return 1;
+          // Sort theo thời gian
+          const timeA = a.lastMessageAt ? new Date(a.lastMessageAt).getTime() : 0;
+          const timeB = b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0;
+          return timeB - timeA;
+        });
+      });
+
       loadUnreadCount();
     });
 
@@ -135,6 +160,33 @@ export default function AdminChatPage() {
       setMessages((prev) =>
         prev.map((msg) => (msg.id === "temp" ? message : msg)),
       );
+
+      // Update conversation list với tin nhắn mới gửi
+      setConversations((prevConvs) => {
+        return prevConvs.map((conv) => {
+          if (conv.id === message.conversationId) {
+            return {
+              ...conv,
+              lastMessage: {
+                content: message.content,
+                createdAt: message.createdAt,
+                isRead: message.isRead,
+                senderId: message.senderId,
+              },
+              lastMessageAt: message.createdAt,
+            };
+          }
+          return conv;
+        }).sort((a, b) => {
+          // Admin luôn lên đầu
+          if (a.otherUser.role === "ADMIN") return -1;
+          if (b.otherUser.role === "ADMIN") return 1;
+          // Sort theo thời gian
+          const timeA = a.lastMessageAt ? new Date(a.lastMessageAt).getTime() : 0;
+          const timeB = b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0;
+          return timeB - timeA;
+        });
+      });
     });
 
     socket.on(
@@ -157,6 +209,7 @@ export default function AdminChatPage() {
     socketRef.current = socket;
 
     // Load initial data
+    ensureAdminConversation();
     loadConversations();
     loadUnreadCount();
 
@@ -164,6 +217,40 @@ export default function AdminChatPage() {
       socket.disconnect();
     };
   }, []);
+
+  // Ensure admin conversation exists
+  const ensureAdminConversation = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+
+      // Get admin user info
+      const adminResponse = await fetch(`${API_BASE_URL}/chat/admin-user`, {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+        },
+      });
+
+      if (adminResponse.ok) {
+        const admin = await adminResponse.json();
+        if (admin && admin.id) {
+          // Create/get conversation with admin
+          await fetch(`${API_BASE_URL}/chat/conversations`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+              "ngrok-skip-browser-warning": "true",
+            },
+            body: JSON.stringify({ targetUserId: admin.id }),
+          });
+          console.log("✅ Admin conversation ensured");
+        }
+      }
+    } catch (error) {
+      console.error("Ensure admin conversation error:", error);
+      // Silent fail - không block app
+    }
+  };
 
   // Load conversations
   const loadConversations = async () => {
@@ -358,7 +445,13 @@ export default function AdminChatPage() {
 
         if (response.ok) {
           const data = await response.json();
-          setSearchResults(data);
+          // Sort theo role: ADMIN → ORGANIZATION → VOLUNTEER → BENEFICIARY
+          const roleOrder = { ADMIN: 1, ORGANIZATION: 2, VOLUNTEER: 3, BENEFICIARY: 4 };
+          const sortedData = data.sort((a: SearchUser, b: SearchUser) => {
+            return (roleOrder[a.role as keyof typeof roleOrder] || 99) -
+                   (roleOrder[b.role as keyof typeof roleOrder] || 99);
+          });
+          setSearchResults(sortedData);
           setShowSearchResults(true);
         }
       } catch (error) {
@@ -511,77 +604,125 @@ export default function AdminChatPage() {
           ) : (
             // Conversations List
             <>
-              {conversations.length === 0 ? (
-                <div className="p-8 text-center text-gray-500">
-                  <p>Chưa có cuộc hội thoại nào</p>
-                </div>
-              ) : (
-                conversations.map((conv) => {
-                  const isUnread =
-                    conv.lastMessage &&
-                    !conv.lastMessage.isRead &&
-                    conv.lastMessage.senderId !== "admin";
+              {(() => {
+                // Tách admin conversation và conversations khác
+                const adminConv = conversations.find((c) => c.otherUser.role === "ADMIN");
+                const otherConvs = conversations.filter((c) => c.otherUser.role !== "ADMIN");
 
-                  return (
-                    <button
-                      key={conv.id}
-                      onClick={() => handleSelectConversation(conv)}
-                      className={`w-full p-4 border-b border-gray-100 hover:bg-gray-50 transition text-left ${
-                        selectedConversation?.id === conv.id ? "bg-blue-50" : ""
-                      }`}
-                    >
-                      <div className="flex items-start gap-3">
-                        {/* Avatar */}
-                        <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
-                          {getDisplayName(conv.otherUser)[0]}
-                        </div>
-
-                        {/* Content */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between mb-1">
-                            <h3
-                              className={`font-semibold truncate ${isUnread ? "font-bold" : ""}`}
-                            >
-                              {getDisplayName(conv.otherUser)}
-                            </h3>
-                            <span
-                              className={`text-xs ${isUnread ? "text-primary font-bold" : "text-gray-500"}`}
-                            >
-                              {conv.lastMessageAt
-                                ? new Date(
-                                    conv.lastMessageAt,
-                                  ).toLocaleTimeString("vi-VN", {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })
-                                : ""}
-                            </span>
+                return (
+                  <>
+                    {/* Admin conversation luôn ở đầu */}
+                    {adminConv && (
+                      <button
+                        key={adminConv.id}
+                        onClick={() => handleSelectConversation(adminConv)}
+                        className={`w-full p-4 border-b border-gray-100 hover:bg-gray-50 transition text-left bg-blue-50/30 ${
+                          selectedConversation?.id === adminConv.id ? "bg-blue-50" : ""
+                        }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="w-12 h-12 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
+                            A
                           </div>
-
-                          <div className="flex items-center gap-2">
-                            <span
-                              className={`px-2 py-0.5 text-xs rounded ${getRoleBadge(conv.otherUser.role).color} text-white`}
-                            >
-                              {getRoleBadge(conv.otherUser.role).text}
-                            </span>
-                            {isUnread && (
-                              <span className="w-2 h-2 bg-primary rounded-full"></span>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-1">
+                              <h3 className="font-semibold truncate">Admin BetterUS</h3>
+                              <span className="text-xs text-gray-500">
+                                {adminConv.lastMessageAt
+                                  ? new Date(adminConv.lastMessageAt).toLocaleTimeString("vi-VN", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })
+                                  : ""}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="px-2 py-0.5 text-xs rounded bg-red-500 text-white">
+                                ADMIN
+                              </span>
+                              {adminConv.lastMessage && !adminConv.lastMessage.isRead &&
+                                adminConv.lastMessage.senderId === adminConv.otherUser.id && (
+                                  <span className="w-2 h-2 bg-primary rounded-full"></span>
+                                )}
+                            </div>
+                            {adminConv.lastMessage ? (
+                              <p className="text-sm truncate mt-1 text-gray-600">
+                                {adminConv.lastMessage.content}
+                              </p>
+                            ) : (
+                              <p className="text-sm text-gray-600 mt-1">
+                                Nhắn tin với Admin để được hỗ trợ
+                              </p>
                             )}
                           </div>
-
-                          {conv.lastMessage && (
-                            <p
-                              className={`text-sm truncate mt-1 ${isUnread ? "font-semibold text-gray-900" : "text-gray-600"}`}
-                            >
-                              {conv.lastMessage.content}
-                            </p>
-                          )}
                         </div>
+                      </button>
+                    )}
+
+                    {/* Các conversations khác */}
+                    {otherConvs.length === 0 && !adminConv ? (
+                      <div className="p-8 text-center text-gray-500">
+                        <p>Chưa có cuộc hội thoại nào</p>
                       </div>
-                    </button>
-                  );
-                })
-              )}
+                    ) : (
+                      otherConvs.map((conv) => {
+                        const isUnread =
+                          conv.lastMessage &&
+                          !conv.lastMessage.isRead &&
+                          conv.lastMessage.senderId === conv.otherUser.id;
+
+                        return (
+                          <button
+                            key={conv.id}
+                            onClick={() => handleSelectConversation(conv)}
+                            className={`w-full p-4 border-b border-gray-100 hover:bg-gray-50 transition text-left ${
+                              selectedConversation?.id === conv.id ? "bg-blue-50" : ""
+                            }`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
+                                {getDisplayName(conv.otherUser)[0]}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between mb-1">
+                                  <h3 className={`font-semibold truncate ${isUnread ? "font-bold" : ""}`}>
+                                    {getDisplayName(conv.otherUser)}
+                                  </h3>
+                                  <span className={`text-xs ${isUnread ? "text-primary font-bold" : "text-gray-500"}`}>
+                                    {conv.lastMessageAt
+                                      ? new Date(conv.lastMessageAt).toLocaleTimeString("vi-VN", {
+                                          hour: "2-digit",
+                                          minute: "2-digit",
+                                        })
+                                      : ""}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span
+                                    className={`px-2 py-0.5 text-xs rounded ${getRoleBadge(conv.otherUser.role).color} text-white`}
+                                  >
+                                    {getRoleBadge(conv.otherUser.role).text}
+                                  </span>
+                                  {isUnread && (
+                                    <span className="w-2 h-2 bg-primary rounded-full"></span>
+                                  )}
+                                </div>
+                                {conv.lastMessage && (
+                                  <p
+                                    className={`text-sm truncate mt-1 ${isUnread ? "font-semibold text-gray-900" : "text-gray-600"}`}
+                                  >
+                                    {conv.lastMessage.content}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })
+                    )}
+                  </>
+                );
+              })()}
             </>
           )}
         </div>
@@ -594,12 +735,18 @@ export default function AdminChatPage() {
             {/* Header */}
             <div className="p-4 border-b border-gray-200 bg-white">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">
-                  {getDisplayName(selectedConversation.otherUser)[0]}
+                {/* Avatar - Màu đỏ cho Admin */}
+                <div className={`w-10 h-10 rounded-full ${selectedConversation.otherUser.role === "ADMIN" ? "bg-red-500" : "bg-primary"} text-white flex items-center justify-center font-bold`}>
+                  {selectedConversation.otherUser.role === "ADMIN"
+                    ? "A"
+                    : getDisplayName(selectedConversation.otherUser)[0]}
                 </div>
                 <div>
+                  {/* Tên - Hiển thị "Admin BetterUS" nếu là admin */}
                   <h3 className="font-semibold text-gray-800">
-                    {getDisplayName(selectedConversation.otherUser)}
+                    {selectedConversation.otherUser.role === "ADMIN"
+                      ? "Admin BetterUS"
+                      : getDisplayName(selectedConversation.otherUser)}
                   </h3>
                   <span
                     className={`text-xs px-2 py-0.5 rounded ${getRoleBadge(selectedConversation.otherUser.role).color} text-white`}
