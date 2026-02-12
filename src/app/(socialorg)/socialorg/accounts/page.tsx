@@ -59,26 +59,20 @@ export default function AccountsPage() {
       if (activeSubTab === "volunteer") {
         const response = await getVolunteers({
           search,
+          status: "PENDING", // Chỉ lấy PENDING từ backend
           page,
           limit: 10,
         });
-        // Lọc chỉ lấy members có status PENDING
-        const pendingVolunteers = response.data.filter(
-          (v) => v.status === "PENDING"
-        );
-        setVolunteers(pendingVolunteers);
+        setVolunteers(response.data);
         setTotalPages(response.meta.totalPages);
       } else {
         const response = await getBeneficiaries({
           search,
+          status: "PENDING", // Chỉ lấy PENDING từ backend
           page,
           limit: 10,
         });
-        // Lọc chỉ lấy members có status PENDING
-        const pendingBeneficiaries = response.data.filter(
-          (b) => b.status === "PENDING"
-        );
-        setBeneficiaries(pendingBeneficiaries);
+        setBeneficiaries(response.data);
         setTotalPages(response.meta.totalPages);
       }
     } catch (error: any) {

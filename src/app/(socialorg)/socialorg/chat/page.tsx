@@ -209,7 +209,6 @@ export default function AdminChatPage() {
     socketRef.current = socket;
 
     // Load initial data
-    ensureAdminConversation();
     loadConversations();
     loadUnreadCount();
 
@@ -217,40 +216,6 @@ export default function AdminChatPage() {
       socket.disconnect();
     };
   }, []);
-
-  // Ensure admin conversation exists
-  const ensureAdminConversation = async () => {
-    try {
-      const token = localStorage.getItem("access_token");
-
-      // Get admin user info
-      const adminResponse = await fetch(`${API_BASE_URL}/chat/admin-user`, {
-        headers: {
-          "ngrok-skip-browser-warning": "true",
-        },
-      });
-
-      if (adminResponse.ok) {
-        const admin = await adminResponse.json();
-        if (admin && admin.id) {
-          // Create/get conversation with admin
-          await fetch(`${API_BASE_URL}/chat/conversations`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-              "ngrok-skip-browser-warning": "true",
-            },
-            body: JSON.stringify({ targetUserId: admin.id }),
-          });
-          console.log("✅ Admin conversation ensured");
-        }
-      }
-    } catch (error) {
-      console.error("Ensure admin conversation error:", error);
-      // Silent fail - không block app
-    }
-  };
 
   // Load conversations
   const loadConversations = async () => {
@@ -390,7 +355,9 @@ export default function AdminChatPage() {
   // Get display name
   const getDisplayName = (user: OtherUser | undefined) => {
     if (!user) return "User";
-    if (user.role === "VOLUNTEER" || user.role === "BENEFICIARY") {
+    if (user.role === "ADMIN") {
+      return user.profile?.fullName || "Admin BetterUS";
+    } else if (user.role === "VOLUNTEER" || user.role === "BENEFICIARY") {
       return user.profile?.fullName || "User";
     } else if (user.role === "ORGANIZATION") {
       return user.profile?.organizationName || "Tổ chức";
@@ -401,6 +368,7 @@ export default function AdminChatPage() {
   // Get role badge
   const getRoleBadge = (role: string) => {
     const badges = {
+      ADMIN: { text: "ADMIN", color: "bg-red-500" },
       VOLUNTEER: { text: "TNV", color: "bg-green-500" },
       BENEFICIARY: { text: "NCGĐ", color: "bg-orange-500" },
       ORGANIZATION: { text: "TCXH", color: "bg-blue-500" },
@@ -604,68 +572,12 @@ export default function AdminChatPage() {
           ) : (
             // Conversations List
             <>
-              {(() => {
-                // Tách admin conversation và conversations khác
-                const adminConv = conversations.find((c) => c.otherUser.role === "ADMIN");
-                const otherConvs = conversations.filter((c) => c.otherUser.role !== "ADMIN");
-
-                return (
-                  <>
-                    {/* Admin conversation luôn ở đầu */}
-                    {adminConv && (
-                      <button
-                        key={adminConv.id}
-                        onClick={() => handleSelectConversation(adminConv)}
-                        className={`w-full p-4 border-b border-gray-100 hover:bg-gray-50 transition text-left bg-blue-50/30 ${
-                          selectedConversation?.id === adminConv.id ? "bg-blue-50" : ""
-                        }`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="w-12 h-12 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
-                            A
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-1">
-                              <h3 className="font-semibold truncate">Admin BetterUS</h3>
-                              <span className="text-xs text-gray-500">
-                                {adminConv.lastMessageAt
-                                  ? new Date(adminConv.lastMessageAt).toLocaleTimeString("vi-VN", {
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                    })
-                                  : ""}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="px-2 py-0.5 text-xs rounded bg-red-500 text-white">
-                                ADMIN
-                              </span>
-                              {adminConv.lastMessage && !adminConv.lastMessage.isRead &&
-                                adminConv.lastMessage.senderId === adminConv.otherUser.id && (
-                                  <span className="w-2 h-2 bg-primary rounded-full"></span>
-                                )}
-                            </div>
-                            {adminConv.lastMessage ? (
-                              <p className="text-sm truncate mt-1 text-gray-600">
-                                {adminConv.lastMessage.content}
-                              </p>
-                            ) : (
-                              <p className="text-sm text-gray-600 mt-1">
-                                Nhắn tin với Admin để được hỗ trợ
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </button>
-                    )}
-
-                    {/* Các conversations khác */}
-                    {otherConvs.length === 0 && !adminConv ? (
-                      <div className="p-8 text-center text-gray-500">
-                        <p>Chưa có cuộc hội thoại nào</p>
-                      </div>
-                    ) : (
-                      otherConvs.map((conv) => {
+              {conversations.length === 0 ? (
+                <div className="p-8 text-center text-gray-500">
+                  <p>Chưa có cuộc hội thoại nào</p>
+                </div>
+              ) : (
+                conversations.map((conv) => {
                         const isUnread =
                           conv.lastMessage &&
                           !conv.lastMessage.isRead &&
@@ -719,10 +631,7 @@ export default function AdminChatPage() {
                           </button>
                         );
                       })
-                    )}
-                  </>
-                );
-              })()}
+              )}
             </>
           )}
         </div>

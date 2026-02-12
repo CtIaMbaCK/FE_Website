@@ -126,26 +126,36 @@ export default function AdminChatPage() {
 
       // Update conversation list real-time
       setConversations((prevConvs) => {
-        return prevConvs.map((conv) => {
-          if (conv.id === message.conversationId) {
-            return {
-              ...conv,
-              lastMessage: {
-                content: message.content,
-                createdAt: message.createdAt,
-                isRead: message.isRead,
-                senderId: message.senderId,
-              },
-              lastMessageAt: message.createdAt,
-            };
-          }
-          return conv;
-        }).sort((a, b) => {
-          // Sort theo thời gian mới nhất
-          const timeA = a.lastMessageAt ? new Date(a.lastMessageAt).getTime() : 0;
-          const timeB = b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0;
-          return timeB - timeA;
-        });
+        // Kiểm tra xem conversation đã tồn tại chưa
+        const existingConv = prevConvs.find((c) => c.id === message.conversationId);
+
+        if (existingConv) {
+          // Update conversation hiện có
+          return prevConvs.map((conv) => {
+            if (conv.id === message.conversationId) {
+              return {
+                ...conv,
+                lastMessage: {
+                  content: message.content,
+                  createdAt: message.createdAt,
+                  isRead: message.isRead,
+                  senderId: message.senderId,
+                },
+                lastMessageAt: message.createdAt,
+              };
+            }
+            return conv;
+          }).sort((a, b) => {
+            // Sort theo thời gian mới nhất
+            const timeA = a.lastMessageAt ? new Date(a.lastMessageAt).getTime() : 0;
+            const timeB = b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0;
+            return timeB - timeA;
+          });
+        } else {
+          // Conversation mới - reload danh sách để lấy đầy đủ thông tin
+          loadConversations();
+          return prevConvs;
+        }
       });
 
       loadUnreadCount();

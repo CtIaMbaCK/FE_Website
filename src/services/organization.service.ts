@@ -37,7 +37,7 @@ export interface BeneficiaryProfile {
 export interface OrganizationMember {
   id: string;
   email: string;
-  status: "PENDING" | "ACTIVE" | "DENIED" | "BANNED";
+  status: "PENDING" | "APPROVED" | "REJECTED"; // Organization status
   createdAt: string;
   volunteerProfile?: VolunteerProfile;
   bficiaryProfile?: BeneficiaryProfile;
@@ -57,6 +57,7 @@ export interface PaginatedResponse<T> {
 
 export interface GetVolunteersParams {
   search?: string; // Tìm theo tên, email, SĐT
+  status?: "PENDING" | "APPROVED" | "REJECTED"; // Lọc theo trạng thái
   page?: number;
   limit?: number;
   districts?: string[]; // Lọc theo nhiều quận
@@ -68,6 +69,7 @@ export const getVolunteers = async (
   const response = await api.get("/organization/volunteers", {
     params: {
       search: params?.search,
+      status: params?.status,
       page: params?.page || 1,
       limit: params?.limit || 10,
       districts: params?.districts, // Send as array, axios will handle it
@@ -83,6 +85,7 @@ export const getVolunteers = async (
 
 export interface GetBeneficiariesParams {
   search?: string; // Tìm theo tên, email, SĐT
+  status?: "PENDING" | "APPROVED" | "REJECTED"; // Lọc theo trạng thái
   page?: number;
   limit?: number;
 }
@@ -93,6 +96,7 @@ export const getBeneficiaries = async (
   const response = await api.get("/organization/beneficiaries", {
     params: {
       search: params?.search,
+      status: params?.status,
       page: params?.page || 1,
       limit: params?.limit || 10,
     },
@@ -113,7 +117,7 @@ export const getMemberDetail = async (
 
 export const updateMemberStatus = async (
   id: string,
-  status: "PENDING" | "ACTIVE" | "DENIED" | "BANNED"
+  status: "PENDING" | "APPROVED" | "REJECTED"
 ) => {
   const response = await api.patch(`/organization/member/${id}/status`, {
     status,
