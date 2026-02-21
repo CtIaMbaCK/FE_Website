@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import HomeHeader from "@/components/HomePageHeader";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "BetterUS",
@@ -13,15 +14,16 @@ export default function HomePageLayout({
 }>) {
   return (
     <>
-      {/* Phần nội dung chính bên phải */}
-      <div className="flex flex-col flex-1 h-screen overflow-hidden">
-        {/* Header cố định ở trên cùng của phần nội dung */}
+      <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
+        {/* Header ở trên cùng, sticky */}
         <HomeHeader />
 
         {/* Nội dung thay đổi (Children) */}
-        <main className="flex-1 overflow-y-auto p-6 bg-gray-100">
+        <main className="flex-1">
           {children}
         </main>
+        
+        <Footer />
       </div>
     </>
   );
