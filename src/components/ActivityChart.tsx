@@ -1,4 +1,8 @@
-import StatisticsChart from "@/components/StatisticsChart";
+"use client";
+
+import dynamic from "next/dynamic";
+
+const StatisticsChart = dynamic(() => import("@/components/StatisticsChart"), { ssr: false });
 
 export default function ActivityChart() {
   return (
@@ -6,7 +10,7 @@ export default function ActivityChart() {
       <h2 className="text-gray-900 text-lg font-bold p-6 border-b border-gray-200">
         Tổng quan Hoạt động
       </h2>
-      <StatisticsChart></StatisticsChart>
+      <StatisticsChart />
     </div>
   );
 }

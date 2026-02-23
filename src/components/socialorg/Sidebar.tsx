@@ -76,11 +76,7 @@ export default function Sidebar() {
       href: "/socialorg/accounts",
       icon: "person_add",
     },
-    {
-      name: "Tin nhắn",
-      href: "/socialorg/chat",
-      icon: "chat",
-    },
+    
     // {
     //   name: 'Quản lý hoạt động',
     //   href: '/socialorg/requests',
@@ -91,21 +87,17 @@ export default function Sidebar() {
     //   href: "/socialorg/appreciation",
     //   icon: "military_tech",
     // },
-    {
-      name: "Nhận xét TNV",
-      href: "/socialorg/rewards/comments",
-      icon: "comment",
-    },
-    {
-      name: "Mẫu Chứng nhận",
-      href: "/socialorg/rewards/templates",
-      icon: "workspace_premium",
-    },
-    {
-      name: "Cấp Chứng nhận",
-      href: "/socialorg/rewards/certificates",
-      icon: "award_star",
-    },
+    // {
+    //   name: "Nhận xét TNV",
+    //   href: "/socialorg/rewards/comments",
+    //   icon: "comment",
+    // },
+    
+    // {
+    //   name: "Cấp Chứng nhận",
+    //   href: "/socialorg/rewards/certificates",
+    //   icon: "award_star",
+    // },
     {
       name: "Quản lý Chiến dịch - sự kiện",
       href: "/socialorg/manage-events",
@@ -117,11 +109,20 @@ export default function Sidebar() {
       icon: "perm_media",
     },
     {
+      name: "Mẫu Chứng nhận",
+      href: "/socialorg/rewards/templates",
+      icon: "workspace_premium",
+    },
+    {
+      name: "Tin nhắn",
+      href: "/socialorg/chat",
+      icon: "chat",
+    },
+    {
       name: "Thống kê",
       href: "/socialorg/analysis",
       icon: "bar_chart",
     },
-    // Thêm phần tử cho sidebar...
   ];
 
   return (
@@ -146,8 +147,10 @@ export default function Sidebar() {
         <div className="flex flex-col gap-1">
           {/* 5. Dùng vòng lặp map để render menu */}
           {menuItems.map((item) => {
-            // Kiểm tra xem link này có đang active không
-            const isActive = pathname === item.href;
+            // Cải tiến: Active khi pathname bắt đầu bằng href của menu
+            const isActive =
+              pathname === item.href ||
+              (pathname.startsWith(item.href + "/") && item.href !== "/socialorg");
 
             return (
               <Link

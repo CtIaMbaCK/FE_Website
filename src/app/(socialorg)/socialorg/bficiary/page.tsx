@@ -23,16 +23,14 @@ import Link from "next/link";
 
 const STATUS_MAP: Record<string, string> = {
   PENDING: "Chờ duyệt",
-  ACTIVE: "Hoạt động",
-  DENIED: "Bị từ chối",
-  BANNED: "Bị khóa",
+  APPROVED: "Đã duyệt",
+  REJECTED: "Bị từ chối",
 };
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-800",
-  ACTIVE: "bg-green-100 text-green-800",
-  DENIED: "bg-red-100 text-red-800",
-  BANNED: "bg-gray-100 text-gray-800",
+  APPROVED: "bg-green-100 text-green-800",
+  REJECTED: "bg-red-100 text-red-800",
 };
 
 export default function BeneficiariesPage() {
@@ -50,6 +48,7 @@ export default function BeneficiariesPage() {
         setLoading(true);
         const response = await getBeneficiaries({
           search: search || undefined,
+          status: "APPROVED",
           page,
           limit: 10,
         });
@@ -70,15 +69,16 @@ export default function BeneficiariesPage() {
 
   // Toggle status
   const handleToggleStatus = async (id: string, currentStatus: string) => {
-    const newStatus = currentStatus === "ACTIVE" ? "BANNED" : "ACTIVE";
+    const newStatus = currentStatus === "APPROVED" ? "REJECTED" : "APPROVED";
 
     try {
-      await updateMemberStatus(id, newStatus as "PENDING" | "ACTIVE" | "DENIED" | "BANNED");
+      await updateMemberStatus(id, newStatus as "PENDING" | "APPROVED" | "REJECTED");
       toast.success("Đã cập nhật trạng thái");
 
       // Reload data
       const response = await getBeneficiaries({
         search: search || undefined,
+        status: "APPROVED",
         page,
         limit: 10,
       });
@@ -91,76 +91,73 @@ export default function BeneficiariesPage() {
 
 
   return (
-    <div className="min-h-screen pb-10">
-      <div className="max-w-7xl mx-auto px-6 pt-4">
-        <Breadcrumb
-          items={[
-            { label: "Quản lý người cần giúp đỡ" },
-          ]}
-        />
+    <div className="space-y-8 font-sans pb-10">
+      {/* Breadcrumb */}
+      <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center">
+        <Breadcrumb items={[{ label: "Quản lý Người cần giúp đỡ" }]} />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Quản lý Người cần giúp đỡ
-              </h1>
-              <p className="text-sm text-gray-600 mt-1">
-                Quản lý danh sách người cần giúp đỡ trong tổ chức
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg text-sm font-medium">
-                {beneficiaries.length} người
-              </div>
-            </div>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="w-2 h-10 bg-gradient-to-b from-[#008080] to-[#00A79D] rounded-full"></div>
+          <div>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+              Người Cần Giúp Đỡ
+            </h1>
+            <p className="text-slate-500 font-medium mt-1">
+              Quản lý danh sách người cần giúp đỡ trong tổ chức
+            </p>
           </div>
         </div>
+        <div className="flex items-center gap-2">
+          <div className="px-5 py-2.5 bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-100/50 text-teal-700 rounded-xl text-sm font-bold shadow-sm">
+            {beneficiaries.length} người
+          </div>
+        </div>
+      </div>
 
       {/* Search */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-        <div className="p-5">
-          <div className="flex items-center gap-3">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Tìm kiếm theo tên, email hoặc số điện thoại..."
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setPage(1);
-                }}
-                className="pl-10 h-10 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/10"
-              />
-            </div>
+      <div className="bg-white/80 backdrop-blur-xl p-6 rounded-[2rem] shadow-sm border border-slate-100 relative overflow-hidden group">
+        <div className="absolute -right-10 -top-10 w-32 h-32 rounded-full blur-3xl opacity-20 bg-[#008080] group-hover:opacity-30 transition-opacity"></div>
+        <div className="flex flex-col sm:flex-row gap-4 relative z-10 w-full xl:w-1/2">
+          {/* Search box */}
+          <div className="flex-1 relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 h-5 w-5" />
+            <Input
+              placeholder="Tìm kiếm theo tên, email hoặc số điện thoại..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              className="pl-12 bg-slate-50/50 border-slate-200 rounded-xl h-11 focus-visible:ring-[#008080] focus-visible:ring-offset-0 focus-visible:border-[#008080] transition-colors"
+            />
           </div>
         </div>
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50/50 border-b border-gray-200">
-              <TableHead className="w-[60px] font-medium text-gray-700 text-xs uppercase tracking-wide">
+            <TableRow className="bg-slate-50/50 border-b border-slate-100 hover:bg-slate-50/50">
+              <TableHead className="w-[60px] font-bold text-slate-500 text-xs uppercase tracking-wider pl-6">
                 STT
               </TableHead>
-              <TableHead className="font-medium text-gray-700 text-xs uppercase tracking-wide">
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">
                 Người cần giúp đỡ
               </TableHead>
-              <TableHead className="font-medium text-gray-700 text-xs uppercase tracking-wide">
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">
                 Email
               </TableHead>
-              <TableHead className="w-[120px] font-medium text-gray-700 text-xs uppercase tracking-wide">
+              <TableHead className="w-[120px] font-bold text-slate-500 text-xs uppercase tracking-wider">
                 Trạng thái
               </TableHead>
-              <TableHead className="w-[110px] font-medium text-gray-700 text-xs uppercase tracking-wide">
+              <TableHead className="w-[110px] font-bold text-slate-500 text-xs uppercase tracking-wider">
                 Ngày tạo
               </TableHead>
-              <TableHead className="text-right font-medium text-gray-700 text-xs uppercase tracking-wide w-[120px]">
+              <TableHead className="text-right font-bold text-slate-500 text-xs uppercase tracking-wider w-[120px] pr-6">
                 Thao tác
               </TableHead>
             </TableRow>
@@ -168,31 +165,26 @@ export default function BeneficiariesPage() {
           <TableBody>
             {loading ? (
               <TableRow key="loading-row">
-                <TableCell colSpan={6} className="text-center py-16 bg-gray-50/30">
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="relative">
-                      <div className="w-10 h-10 border-3 border-gray-200 rounded-full"></div>
-                      <div className="absolute inset-0 w-10 h-10 border-3 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
-                    </div>
-                    <span className="text-sm text-gray-500 font-medium">Đang tải dữ liệu...</span>
+                <TableCell colSpan={6} className="text-center py-16 bg-slate-50/30">
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <div className="w-10 h-10 border-4 border-[#008080]/20 border-t-[#008080] rounded-full animate-spin"></div>
+                    <span className="text-sm font-medium text-slate-500">Đang tải dữ liệu...</span>
                   </div>
                 </TableCell>
               </TableRow>
             ) : beneficiaries.length === 0 ? (
               <TableRow key="empty-row">
-                <TableCell colSpan={6} className="text-center py-16 bg-gray-50/30">
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
-                      <svg className="w-7 h-7 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                      </svg>
+                <TableCell colSpan={6} className="text-center py-24 bg-slate-50/30">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-sm border border-slate-100">
+                      <Search className="w-8 h-8 text-slate-300" />
                     </div>
                     <div className="space-y-1">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-base font-bold text-slate-700">
                         Không tìm thấy người cần giúp đỡ
                       </p>
-                      <p className="text-xs text-gray-500">
-                        Thử điều chỉnh tìm kiếm của bạn
+                      <p className="text-sm text-slate-500 font-medium">
+                        Thử điều chỉnh từ khóa tìm kiếm của bạn
                       </p>
                     </div>
                   </div>
@@ -200,21 +192,21 @@ export default function BeneficiariesPage() {
               </TableRow>
             ) : (
               beneficiaries.map((beneficiary, index) => (
-                <TableRow key={beneficiary.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
-                  <TableCell className="text-sm text-gray-500 font-medium">
+                <TableRow key={beneficiary.id} className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors group">
+                  <TableCell className="text-sm text-slate-500 font-bold pl-6">
                     {(page - 1) * 10 + index + 1}
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-white font-semibold text-sm">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#008080] to-teal-400 flex items-center justify-center text-white font-bold text-sm shadow-sm">
                         {(beneficiary.bficiaryProfile?.fullName || "?").charAt(0).toUpperCase()}
                       </div>
-                      <div className="font-medium text-gray-900 text-sm">
+                      <div className="font-bold text-slate-800 text-sm group-hover:text-[#008080] transition-colors">
                         {beneficiary.bficiaryProfile?.fullName || "Chưa cập nhật"}
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600">
+                  <TableCell className="text-sm text-slate-600 font-medium">
                     {beneficiary.email}
                   </TableCell>
                   <TableCell>
@@ -222,28 +214,33 @@ export default function BeneficiariesPage() {
                       onClick={() =>
                         handleToggleStatus(beneficiary.id, beneficiary.status)
                       }
-                      className={`px-2.5 py-1 rounded-md text-xs font-medium cursor-pointer transition-all hover:opacity-80 ${
-                        STATUS_COLORS[beneficiary.status]
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm border ${
+                        beneficiary.status === "APPROVED"
+                          ? "bg-green-50 text-green-700 border-green-200 hover:shadow-green-500/20"
+                          : beneficiary.status === "PENDING"
+                          ? "bg-yellow-50 text-yellow-700 border-yellow-200 hover:shadow-yellow-500/20"
+                          : "bg-red-50 text-red-700 border-red-200 hover:shadow-red-500/20"
                       }`}
                     >
                       {STATUS_MAP[beneficiary.status]}
                     </button>
                   </TableCell>
-                  <TableCell className="text-xs text-gray-500">
-                    {new Date(beneficiary.createdAt).toLocaleDateString("vi-VN")}
+                  <TableCell className="text-sm text-slate-500 font-medium">
+                    {new Date(beneficiary.createdAt).toLocaleDateString("vi-VN", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric"
+                    })}
                   </TableCell>
-                  <TableCell>
-                    <div className="flex justify-end">
+                  <TableCell className="pr-6">
+                    <div className="flex justify-end content-center">
                       <Link href={`/socialorg/bficiary/${beneficiary.id}/edit`}>
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-8 text-xs font-medium border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+                          className="h-9 px-4 text-xs font-bold text-teal-700 hover:text-white bg-teal-50 hover:bg-teal-600 border-teal-200 hover:border-teal-600 transition-all shadow-sm rounded-xl"
                         >
-                          <svg className="w-3.5 h-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                          </svg>
-                          Sửa
+                          Chỉnh sửa
                         </Button>
                       </Link>
                     </div>
@@ -257,10 +254,10 @@ export default function BeneficiariesPage() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-between items-center mt-6 px-1">
-          <div className="text-sm text-gray-600">
-            Hiển thị <span className="font-medium text-gray-900">{(page - 1) * 10 + 1}</span> đến{" "}
-            <span className="font-medium text-gray-900">
+        <div className="flex justify-between items-center mt-6 px-2">
+          <div className="text-sm font-medium text-slate-500">
+            Hiển thị <span className="font-bold text-[#008080]">{(page - 1) * 10 + 1}</span> đến{" "}
+            <span className="font-bold text-[#008080]">
               {Math.min(page * 10, beneficiaries.length + (page - 1) * 10)}
             </span>
           </div>
@@ -270,35 +267,28 @@ export default function BeneficiariesPage() {
               size="sm"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="h-9 px-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-10 px-4 rounded-xl font-bold bg-white border-slate-200 text-slate-600 hover:bg-teal-50 hover:text-teal-700 hover:border-teal-200 transition-all disabled:opacity-50"
             >
-              <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
               Trước
             </Button>
-            <div className="flex items-center gap-1">
-              <span className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md">
+            <div className="flex items-center gap-2 mx-1">
+              <span className="w-10 h-10 flex items-center justify-center text-sm font-bold text-white bg-gradient-to-br from-[#008080] to-[#00A79D] shadow-md rounded-xl">
                 {page}
               </span>
-              <span className="text-sm text-gray-500">/ {totalPages}</span>
+              <span className="text-sm font-bold text-slate-400">/ {totalPages}</span>
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="h-9 px-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-10 px-4 rounded-xl font-bold bg-white border-slate-200 text-slate-600 hover:bg-teal-50 hover:text-teal-700 hover:border-teal-200 transition-all disabled:opacity-50"
             >
               Sau
-              <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
             </Button>
           </div>
         </div>
       )}
-      </div>
     </div>
   );
 }

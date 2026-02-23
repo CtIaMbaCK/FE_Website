@@ -63,12 +63,18 @@ export default function RewardPage(){
     const[searchTerm, setSearchTerm]= useState('');
 
     return (
-    <div className="pb-10">
-      <Breadcrumb
-        items={[
-          { label: "Khen thưởng" },
-        ]}
-      />
+    <div className="pb-10 bg-[#f8f9fa] min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 pt-4">
+        <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center mb-6">
+          <Breadcrumb
+            items={[
+              { label: "Khen thưởng" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6">
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -182,8 +188,9 @@ export default function RewardPage(){
                         <MdChevronRight className="text-xl" />
                      </Button>
                   </nav>
-               </div>
-               </div>
+            </div>
+          </div>
+        </div>
     </div>
   );
 }

@@ -66,13 +66,19 @@ export default function CommentsPage() {
   }
 
   return (
-    <div className="pb-10">
-      <Breadcrumb
-        items={[
-          { label: "Khen thưởng", href: "/socialorg/rewards" },
-          { label: "Nhận xét tình nguyện viên" },
-        ]}
-      />
+    <div className="pb-10 bg-[#f8f9fa] min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 pt-4">
+        <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center mb-6">
+          <Breadcrumb
+            items={[
+              { label: "Khen thưởng", href: "/socialorg/rewards" },
+              { label: "Nhận xét tình nguyện viên" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6">
 
       <div className="flex justify-between items-center mb-6">
         <div>
@@ -188,6 +194,7 @@ export default function CommentsPage() {
             </Card>
           ))
         )}
+      </div>
       </div>
     </div>
   );

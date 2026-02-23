@@ -50,6 +50,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import Breadcrumb from "@/components/Breadcrumb";
 
 // --- DỮ LIỆU MẪU CHO BIỂU ĐỒ ---
 const volunteerChartData = [
@@ -299,9 +300,16 @@ export default function StatisticsPage() {
   }
 
   return (
-    <div className="pb-10">
+    <div className="pb-10 bg-[#f8f9fa] min-h-screen">
+      {/* Breadcrumb */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-4">
+        <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center mb-6">
+          <Breadcrumb items={[{ label: "Báo cáo thống kê" }]} />
+        </div>
+      </div>
+
       {/* Main Content */}
-      <main className="flex-1 flex flex-col p-4 sm:p-6 md:p-8 lg:p-10">
+      <main className="flex-1 flex flex-col px-4 sm:px-6 md:px-8 lg:px-10">
         <div className="w-full max-w-7xl mx-auto flex flex-col gap-8">
           {/* 1. Page Header */}
           <div className="flex flex-wrap justify-between gap-4 items-center">

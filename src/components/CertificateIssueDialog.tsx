@@ -100,41 +100,48 @@ export default function CertificateIssueDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle className="text-xl">Cấp chứng nhận</DialogTitle>
-          <DialogDescription>
-            Cấp chứng nhận cho tình nguyện viên: <span className="font-semibold text-gray-900">{volunteerName}</span>
+      <DialogContent className="sm:max-w-[500px] bg-white/95 backdrop-blur-xl border border-slate-100 shadow-2xl rounded-[2rem] p-8">
+        <DialogHeader className="mb-4">
+          <DialogTitle className="text-2xl font-black text-slate-800 flex items-center gap-3">
+            <span className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </span>
+            Cấp chứng nhận
+          </DialogTitle>
+          <DialogDescription className="text-slate-500 font-medium text-base mt-2">
+            Cấp chứng nhận cho: <strong className="text-slate-800">{volunteerName}</strong>
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-5 py-4">
+        <div className="space-y-6 py-2">
           {/* Template Selection */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
+          <div className="space-y-3">
+            <label className="text-sm font-bold text-slate-600 uppercase tracking-wider">
               Chọn mẫu chứng nhận <span className="text-red-500">*</span>
             </label>
             {loadingTemplates ? (
               <div className="flex items-center justify-center py-8">
                 <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                <span className="ml-2 text-sm text-gray-600">Đang tải mẫu...</span>
+                <span className="ml-3 text-sm text-slate-600 font-bold uppercase tracking-wider">Đang tải mẫu...</span>
               </div>
             ) : templates.length === 0 ? (
-              <div className="text-center py-6 bg-gray-50 rounded-lg border border-dashed">
-                <p className="text-sm text-gray-600">Chưa có mẫu chứng nhận nào</p>
-                <p className="text-xs text-gray-500 mt-1">
+              <div className="text-center py-8 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                <p className="text-sm text-slate-600 font-bold">Chưa có mẫu chứng nhận nào</p>
+                <p className="text-xs text-slate-500 mt-2 font-medium">
                   Vui lòng tạo mẫu chứng nhận trước
                 </p>
               </div>
             ) : (
               <>
                 <Select value={selectedTemplateId} onValueChange={setSelectedTemplateId}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full h-11 border-slate-200 rounded-xl focus:ring-blue-500/10 focus:border-blue-500 bg-gray-50/50 shadow-sm font-medium">
                     <SelectValue placeholder="Chọn mẫu chứng nhận" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="rounded-xl border-slate-200 shadow-xl font-medium">
                     {templates.map((template) => (
-                      <SelectItem key={template.id} value={template.id}>
+                      <SelectItem key={template.id} value={template.id} className="cursor-pointer">
                         {template.name}
                       </SelectItem>
                     ))}
@@ -143,19 +150,21 @@ export default function CertificateIssueDialog({
 
                 {/* Template Preview */}
                 {selectedTemplate && (
-                  <div className="mt-3 p-3 bg-gray-50 rounded-lg border">
-                    <div className="flex gap-3">
-                      <img
-                        src={selectedTemplate.templateImageUrl}
-                        alt={selectedTemplate.name}
-                        className="w-24 h-16 object-cover rounded border"
-                      />
+                  <div className="mt-4 p-4 bg-blue-50/50 rounded-2xl border border-blue-100 shadow-sm transition-all hover:bg-blue-50">
+                    <div className="flex gap-4 items-center">
+                      <div className="w-24 h-16 rounded-lg overflow-hidden border border-slate-200 shadow-sm shrink-0 bg-white">
+                        <img
+                          src={selectedTemplate.templateImageUrl}
+                          alt={selectedTemplate.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                       <div className="flex-1">
-                        <p className="font-medium text-sm text-gray-900">
+                        <p className="font-bold text-sm text-slate-800">
                           {selectedTemplate.name}
                         </p>
                         {selectedTemplate.description && (
-                          <p className="text-xs text-gray-600 mt-1">
+                          <p className="text-xs text-slate-500 font-medium mt-1 line-clamp-2 leading-relaxed">
                             {selectedTemplate.description}
                           </p>
                         )}
@@ -168,8 +177,8 @@ export default function CertificateIssueDialog({
           </div>
 
           {/* Notes */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
+          <div className="space-y-3">
+            <label className="text-sm font-bold text-slate-600 uppercase tracking-wider">
               Ghi chú (tùy chọn)
             </label>
             <Textarea
@@ -177,23 +186,24 @@ export default function CertificateIssueDialog({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
-              className="resize-none"
+              className="resize-none border-slate-200 focus:border-blue-500 focus:ring-blue-500/10 rounded-xl bg-gray-50/50 shadow-sm"
             />
           </div>
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="mt-6 gap-3 sm:gap-0">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={loading}
+            className="h-11 px-6 rounded-xl border-slate-200 text-slate-700 hover:bg-slate-50 font-bold transition-all w-full sm:w-auto"
           >
             Hủy
           </Button>
           <Button
             onClick={handleIssue}
             disabled={loading || !selectedTemplateId || templates.length === 0}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="h-11 px-8 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-sm transition-all w-full sm:w-auto"
           >
             {loading ? (
               <>

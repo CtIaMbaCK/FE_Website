@@ -20,8 +20,11 @@ import {
 import VolunteerCommentDialog from "@/components/VolunteerCommentDialog";
 import CertificateIssueDialog from "@/components/CertificateIssueDialog";
 import Breadcrumb from "@/components/Breadcrumb";
-import { Search } from "lucide-react";
+import { Search, Check, ChevronsUpDown } from "lucide-react";
 import Link from "next/link";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { MdSearch, MdLocationOn } from "react-icons/md";
 
 // Danh sách quận TP.HCM
 const DISTRICTS = [
@@ -66,16 +69,14 @@ const DISTRICT_NAMES: Record<string, string> = {
 
 const STATUS_MAP: Record<string, string> = {
   PENDING: "Chờ duyệt",
-  ACTIVE: "Hoạt động",
-  DENIED: "Bị từ chối",
-  BANNED: "Bị khóa",
+  APPROVED: "Đã duyệt",
+  REJECTED: "Bị từ chối",
 };
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-800",
-  ACTIVE: "bg-green-100 text-green-800",
-  DENIED: "bg-red-100 text-red-800",
-  BANNED: "bg-gray-100 text-gray-800",
+  APPROVED: "bg-green-100 text-green-800",
+  REJECTED: "bg-red-100 text-red-800",
 };
 
 export default function VolunteersPage() {
@@ -85,6 +86,8 @@ export default function VolunteersPage() {
   const [selectedDistricts, setSelectedDistricts] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  
 
   // Comment dialog state
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
@@ -104,6 +107,7 @@ export default function VolunteersPage() {
         setLoading(true);
         const response = await getVolunteers({
           search: search || undefined,
+          status: "APPROVED",
           districts:
             selectedDistricts.length > 0 ? selectedDistricts : undefined,
           page,
@@ -111,6 +115,7 @@ export default function VolunteersPage() {
         });
         setVolunteers(response.data);
         setTotalPages(response.meta.totalPages);
+        setTotal(response.meta.total);
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : "Đã xảy ra lỗi";
@@ -126,18 +131,19 @@ export default function VolunteersPage() {
 
   // Toggle status
   const handleToggleStatus = async (id: string, currentStatus: string) => {
-    const newStatus = currentStatus === "ACTIVE" ? "BANNED" : "ACTIVE";
+    const newStatus = currentStatus === "APPROVED" ? "REJECTED" : "APPROVED";
 
     try {
       await updateMemberStatus(
         id,
-        newStatus as "PENDING" | "ACTIVE" | "DENIED" | "BANNED"
+        newStatus as "PENDING" | "APPROVED" | "REJECTED"
       );
       toast.success("Đã cập nhật trạng thái");
 
       // Reload data
       const response = await getVolunteers({
         search: search || undefined,
+        status: "APPROVED",
         districts: selectedDistricts.length > 0 ? selectedDistricts : undefined,
         page,
         limit: 10,
@@ -175,7 +181,8 @@ export default function VolunteersPage() {
 
   return (
     <div className="min-h-screen pb-10">
-      <div className="mx-auto px-6 pt-4">
+      {/* Breadcrumb */}
+      <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center">
         <Breadcrumb
           items={[
             { label: "Quản lý tình nguyện viên" },
@@ -185,30 +192,24 @@ export default function VolunteersPage() {
 
       <div className="mx-auto px-6 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Tình nguyện viên
-              </h1>
-              <p className="text-sm text-gray-600 mt-1">
-                Quản lý danh sách tình nguyện viên trong tổ chức
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">
-                {volunteers.length} tình nguyện viên
-              </div>
-            </div>
-          </div>
+      <div className="flex items-center gap-4 mb-8">
+        <div className="w-2 h-10 bg-gradient-to-b from-[#008080] to-[#00A79D] rounded-full"></div>
+        <div>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+            Tình nguyện viên
+          </h1>
+          <p className="text-slate-500 font-medium mt-1">Tổng cộng: <span className="text-[#008080] font-bold">{volunteers.length}</span> hồ sơ trên hệ thống</p>
         </div>
+      </div>
 
         {/* Search & Filter */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-        <div className="p-5 border-b border-gray-100">
-          <div className="flex items-center gap-3">
+        <div className="bg-white/80 backdrop-blur-xl p-6 rounded-[2rem] shadow-sm border border-slate-100 relative overflow-hidden group mb-8">
+          <div className="absolute -right-10 -top-10 w-32 h-32 rounded-full blur-3xl opacity-20 bg-[#008080] group-hover:opacity-30 transition-opacity"></div>
+          
+          <div className="flex flex-col sm:flex-row gap-4 relative z-10 w-full xl:w-2/3">
+            {/* Search box */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl" />
               <Input
                 placeholder="Tìm kiếm theo tên, email hoặc số điện thoại..."
                 value={search}
@@ -216,69 +217,94 @@ export default function VolunteersPage() {
                   setSearch(e.target.value);
                   setPage(1);
                 }}
-                className="pl-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500/10"
+                className="pl-12 bg-slate-50/50 border-slate-200 rounded-xl h-11 focus-visible:ring-[#008080] focus-visible:ring-offset-0 focus-visible:border-[#008080] transition-colors"
               />
+            </div>
+
+            {/* Thao tác Lọc */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              {/* Multi-select District */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className="h-11 px-4 bg-slate-50/50 border border-slate-200 rounded-xl hover:bg-slate-100 focus:ring-2 focus:ring-[#008080] text-slate-600 font-medium justify-between font-normal min-w-[200px]"
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      <MdLocationOn className="text-[#008080]" />
+                      {selectedDistricts.length === 0
+                        ? "Tất cả khu vực"
+                        : `Đã chọn ${selectedDistricts.length} khu vực`}
+                    </div>
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[300px] p-0 rounded-2xl border-slate-100 shadow-xl overflow-hidden backdrop-blur-3xl bg-white/90">
+                  <Command>
+                    <CommandInput placeholder="Tìm kiếm quận/huyện..." className="h-11" />
+                    <CommandList className="max-h-[300px] overflow-y-auto custom-scrollbar">
+                      <CommandEmpty>Không tìm thấy quận/huyện nào.</CommandEmpty>
+                      <CommandGroup>
+                        {DISTRICTS.map((district) => {
+                          const isSelected = selectedDistricts.includes(district);
+                          return (
+                            <CommandItem
+                              key={district}
+                              onSelect={() => toggleDistrict(district)}
+                              className="flex items-center gap-2 px-4 py-2 hover:bg-teal-50/50 cursor-pointer"
+                            >
+                              <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${isSelected ? 'bg-[#008080] border-[#008080] text-white' : 'border-slate-300'}`}>
+                                {isSelected && <Check className="h-3.5 w-3.5" />}
+                              </div>
+                              <span className="font-medium text-slate-700">{DISTRICT_NAMES[district]}</span>
+                            </CommandItem>
+                          );
+                        })}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+
+              {/* Nút reset */}
+              {selectedDistricts.length > 0 && (
+                <Button
+                  variant="ghost"
+                  onClick={() => setSelectedDistricts([])}
+                  className="h-11 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-xl px-4 font-bold"
+                >
+                  Xóa lọc khu vực
+                </Button>
+              )}
             </div>
           </div>
         </div>
 
-        {/* District Filter */}
-        <div className="p-5">
-          <div className="flex items-center justify-between mb-3">
-            <label className="text-sm font-medium text-gray-700">
-              Lọc theo khu vực
-            </label>
-            {selectedDistricts.length > 0 && (
-              <button
-                onClick={() => setSelectedDistricts([])}
-                className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
-              >
-                <span>Xóa lọc ({selectedDistricts.length})</span>
-              </button>
-            )}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {DISTRICTS.map((district) => (
-              <button
-                key={district}
-                onClick={() => toggleDistrict(district)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-                  selectedDistricts.includes(district)
-                    ? "bg-blue-600 text-white shadow-sm ring-1 ring-blue-600"
-                    : "bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200"
-                }`}
-              >
-                {DISTRICT_NAMES[district]}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
         {/* Table */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50/50 border-b border-gray-200">
-              <TableHead className="w-[60px] font-bold text-gray-700 text-md uppercase tracking-wide">
+            <TableRow className="bg-slate-50/50 border-b border-slate-100 hover:bg-slate-50/50">
+              <TableHead className="w-[60px] font-bold text-slate-500 text-xs uppercase tracking-wider pl-6">
                 STT
               </TableHead>
-              <TableHead className="font-bold text-gray-700 text-md uppercase tracking-wide">
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">
                 Tình nguyện viên
               </TableHead>
-              <TableHead className="font-bold text-gray-700 text-md uppercase tracking-wide">
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">
                 Email
               </TableHead>
-              <TableHead className="w-[100px] font-bold text-gray-700 text-md uppercase tracking-wide">
+              <TableHead className="w-[100px] font-bold text-slate-500 text-xs uppercase tracking-wider">
                 Điểm
               </TableHead>
-              <TableHead className="w-[120px] font-bold text-gray-700 text-md uppercase tracking-wide">
+              <TableHead className="w-[120px] font-bold text-slate-500 text-xs uppercase tracking-wider">
                 Trạng thái
               </TableHead>
-              <TableHead className="w-[110px] font-bold text-gray-700 text-md uppercase tracking-wide">
+              <TableHead className="w-[120px] font-bold text-slate-500 text-xs uppercase tracking-wider">
                 Ngày tạo
               </TableHead>
-              <TableHead className="text-right font-bold text-gray-700 text-md uppercase tracking-wide w-[360px]">
+              <TableHead className="text-right font-bold text-slate-500 text-xs uppercase tracking-wider w-[220px] pr-6">
                 Thao tác
               </TableHead>
             </TableRow>
@@ -299,7 +325,7 @@ export default function VolunteersPage() {
             ) : volunteers.length === 0 ? (
               <TableRow key="empty-row">
                 <TableCell
-                  colSpan={7}
+                  colSpan={8}
                   className="text-center py-16 bg-gray-50/30"
                 >
                   <div className="flex flex-col items-center gap-3">
@@ -377,7 +403,7 @@ export default function VolunteersPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-8 text-xs font-medium border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+                          className="h-8 px-3 rounded-lg text-xs font-bold bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 shadow-sm transition-all"
                         >
                           <svg className="w-3.5 h-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -390,7 +416,7 @@ export default function VolunteersPage() {
                         size="sm"
                         variant="outline"
                         onClick={() => openCommentDialog(volunteer)}
-                        className="h-8 text-xs font-medium text-amber-700 border-amber-200 hover:bg-amber-50 hover:border-amber-300"
+                        className="h-8 px-3 rounded-lg text-xs font-bold bg-amber-50 border border-amber-100 hover:bg-amber-100 text-amber-700 shadow-sm transition-all"
                       >
                         <svg className="w-3.5 h-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
@@ -402,7 +428,7 @@ export default function VolunteersPage() {
                         size="sm"
                         variant="outline"
                         onClick={() => openCertificateDialog(volunteer)}
-                        className="h-8 text-xs font-medium text-blue-700 border-blue-200 hover:bg-blue-50 hover:border-blue-300"
+                        className="h-8 px-3 rounded-lg text-xs font-bold bg-blue-50 border border-blue-100 hover:bg-blue-100 text-blue-700 shadow-sm transition-all"
                       >
                         <svg className="w-3.5 h-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

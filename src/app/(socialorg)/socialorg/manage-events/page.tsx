@@ -169,15 +169,20 @@ export default function ManageCampaignsPage() {
   };
 
   return (
-    <div className="pb-10">
+    <div className="pb-10 bg-[#f8f9fa] min-h-screen">
       {/* Breadcrumb */}
-      <Breadcrumb
-        items={[
-          { label: "Quản lý chiến dịch & sự kiện" },
-        ]}
-      />
+      <div className="max-w-7xl mx-auto px-6 pt-4">
+        <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center">
+          <Breadcrumb
+            items={[
+              { label: "Quản lý chiến dịch & sự kiện" },
+            ]}
+          />
+        </div>
+      </div>
 
-      {/* Header */}
+      <div className="max-w-7xl mx-auto px-6 mt-6">
+        {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Quản lý chiến dịch & sự kiện</h1>
@@ -496,6 +501,7 @@ export default function ManageCampaignsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }

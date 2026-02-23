@@ -72,13 +72,15 @@ export default function EditCampaignPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
-        <Breadcrumb
-          items={[
-            { label: "Quản lý chiến dịch", href: "/socialorg/manage-events" },
-            { label: campaign.title, href: `/socialorg/manage-events/${campaignId}` },
-            { label: "Chỉnh sửa" },
-          ]}
-        />
+        <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center mb-2">
+          <Breadcrumb
+            items={[
+              { label: "Quản lý chiến dịch", href: "/socialorg/manage-events" },
+              { label: campaign.title, href: `/socialorg/manage-events/${campaignId}` },
+              { label: "Chỉnh sửa" },
+            ]}
+          />
+        </div>
 
         {/* Header with gradient */}
         <div className="relative overflow-hidden bg-gradient-to-r from-teal-600 to-cyan-600 rounded-2xl shadow-lg p-8 mb-8 mt-6">

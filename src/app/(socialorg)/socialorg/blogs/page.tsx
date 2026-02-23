@@ -96,7 +96,7 @@ export default function BlogsPage() {
 
   return (
     <div className="min-h-screen pb-10">
-      <div className="max-w-7xl mx-auto px-6 pt-4">
+      <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center ml-6 mt-4">
         <Breadcrumb items={[{ label: "Quản lý Truyền thông" }]} />
       </div>
 
