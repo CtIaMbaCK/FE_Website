@@ -152,7 +152,33 @@ export default function VolunteersPage() {
 
   // Format ten quan huyen
   const formatDistrict = (district: string) => {
-    return district.replace(/_/g, " ");
+    const districtMap: Record<string, string> = {
+      Quan_1: "Quận 1",
+      Quan_2: "Quận 2",
+      Quan_3: "Quận 3",
+      Quan_4: "Quận 4",
+      Quan_5: "Quận 5",
+      Quan_6: "Quận 6",
+      Quan_7: "Quận 7",
+      Quan_8: "Quận 8",
+      Quan_9: "Quận 9",
+      Quan_10: "Quận 10",
+      Quan_11: "Quận 11",
+      Quan_12: "Quận 12",
+      Quan_Binh_Thanh: "Quận Bình Thạnh",
+      Quan_Tan_Binh: "Quận Tân Bình",
+      Quan_Tan_Phu: "Quận Tân Phú",
+      Quan_Phu_Nhuan: "Quận Phú Nhuận",
+      Quan_Binh_Tan: "Quận Bình Tân",
+      Quan_Go_Vap: "Quận Gò Vấp",
+      Quan_Thu_Duc: "TP Thủ Đức",
+      Huyen_Binh_Chanh: "Huyện Bình Chánh",
+      Huyen_Hoc_Mon: "Huyện Hóc Môn",
+      Huyen_Cu_Chi: "Huyện Củ Chi",
+      Huyen_Nha_Be: "Huyện Nhà Bè",
+      Huyen_Can_Gio: "Huyện Cần Giờ",
+    };
+    return districtMap[district] || district.replace(/_/g, " ");
   };
 
   // Xu ly mo dialog nhan xet
@@ -233,35 +259,35 @@ export default function VolunteersPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 font-sans pb-10">
       {/* Breadcrumb */}
-      <Breadcrumb
-        items={[
-          { label: "Quản lý tình nguyện viên" }
-        ]}
-      />
+      <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center">
+        <Breadcrumb items={[{ label: "Quản lý Tình nguyện viên" }]} />
+      </div>
 
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">
-          Quản lý Tình nguyện viên
-        </h1>
-        <p className="text-gray-600 mt-2">
-          Tổng số: {total} tình nguyện viên
-        </p>
+      <div className="flex items-center gap-4">
+        <div className="w-2 h-10 bg-gradient-to-b from-[#008080] to-[#00A79D] rounded-full"></div>
+        <div>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+            Tình Nguyện Viên
+          </h1>
+          <p className="text-slate-500 font-medium mt-1">Tổng cộng: <span className="text-[#008080] font-bold">{total}</span> hồ sơ trên hệ thống</p>
+        </div>
       </div>
 
       {/* Filters */}
-      <Card className="p-4">
-        <div className="flex flex-col gap-4">
+      <div className="bg-white/80 backdrop-blur-xl p-6 rounded-[2rem] shadow-sm border border-slate-100 relative overflow-hidden group">
+        <div className="absolute -right-10 -top-10 w-32 h-32 rounded-full blur-3xl opacity-20 bg-[#008080] group-hover:opacity-30 transition-opacity"></div>
+        <div className="flex flex-col sm:flex-row gap-4 relative z-10 w-full xl:w-2/3">
           {/* Search box */}
-          <div className="relative">
-            <MdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <div className="flex-1 relative">
+            <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl" />
             <Input
               placeholder="Tìm theo tên, email, số điện thoại..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10"
+              className="pl-12 bg-slate-50/50 border-slate-200 rounded-xl h-11 focus-visible:ring-[#008080] focus-visible:ring-offset-0 focus-visible:border-[#008080] transition-colors"
             />
           </div>
 
@@ -269,26 +295,26 @@ export default function VolunteersPage() {
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Status filter */}
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[200px]">
-                <SelectValue placeholder="Lọc theo trạng thái" />
+              <SelectTrigger className="w-full sm:w-[200px] bg-slate-50/50 border-slate-200 rounded-xl h-11 focus:ring-[#008080] focus:ring-offset-0">
+                <SelectValue placeholder="Lọc trạng thái" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tất cả trạng thái</SelectItem>
-                <SelectItem value="ACTIVE">Hoạt động</SelectItem>
-                <SelectItem value="PENDING">Chờ duyệt</SelectItem>
-                <SelectItem value="BANNED">Đã khóa</SelectItem>
+              <SelectContent className="rounded-xl border-slate-100 shadow-xl">
+                <SelectItem value="all" className="rounded-lg">Tất cả trạng thái</SelectItem>
+                <SelectItem value="ACTIVE" className="rounded-lg">Hoạt động</SelectItem>
+                <SelectItem value="PENDING" className="rounded-lg">Chờ duyệt</SelectItem>
+                <SelectItem value="BANNED" className="rounded-lg">Đã khóa</SelectItem>
               </SelectContent>
             </Select>
 
             {/* District filter */}
             <Select value={districtFilter} onValueChange={setDistrictFilter}>
-              <SelectTrigger className="w-full sm:w-[200px]">
-                <SelectValue placeholder="Lọc theo quận/huyện" />
+              <SelectTrigger className="w-full sm:w-[200px] bg-slate-50/50 border-slate-200 rounded-xl h-11 focus:ring-[#008080] focus:ring-offset-0">
+                <SelectValue placeholder="Lọc quận/huyện" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tất cả quận/huyện</SelectItem>
+              <SelectContent className="rounded-xl border-slate-100 shadow-xl">
+                <SelectItem value="all" className="rounded-lg">Tất cả quận/huyện</SelectItem>
                 {DISTRICTS.map((district) => (
-                  <SelectItem key={district} value={district}>
+                  <SelectItem key={district} value={district} className="rounded-lg">
                     {formatDistrict(district)}
                   </SelectItem>
                 ))}
@@ -296,36 +322,36 @@ export default function VolunteersPage() {
             </Select>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* Table */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50/50 border-b border-gray-200">
-              <TableHead className="w-[60px] font-medium text-gray-700 text-xs uppercase tracking-wide">
+            <TableRow className="bg-slate-50/50 border-b border-slate-100 hover:bg-slate-50/50">
+              <TableHead className="w-[60px] font-bold text-slate-500 text-xs uppercase tracking-wider py-4 pl-6">
                 STT
               </TableHead>
-              <TableHead className="font-medium text-gray-700 text-xs uppercase tracking-wide">
-                Tình nguyện viên
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">
+                Tình Nguyện Viên
               </TableHead>
-              <TableHead className="font-medium text-gray-700 text-xs uppercase tracking-wide">
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">
                 Email
               </TableHead>
-              <TableHead className="font-medium text-gray-700 text-xs uppercase tracking-wide">
-                Số điện thoại
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">
+                Số Điện Thoại
               </TableHead>
-              <TableHead className="w-[100px] font-medium text-gray-700 text-xs uppercase tracking-wide">
+              <TableHead className="w-[100px] font-bold text-slate-500 text-xs uppercase tracking-wider">
                 Điểm
               </TableHead>
-              <TableHead className="font-medium text-gray-700 text-xs uppercase tracking-wide">
-                Tổ chức XH
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">
+                Tổ Chức Xã Hội
               </TableHead>
-              <TableHead className="w-[120px] font-medium text-gray-700 text-xs uppercase tracking-wide">
-                Trạng thái
+              <TableHead className="w-[120px] font-bold text-slate-500 text-xs uppercase tracking-wider">
+                Trạng Thái
               </TableHead>
-              <TableHead className="text-right font-medium text-gray-700 text-xs uppercase tracking-wide w-[200px]">
-                Thao tác
+              <TableHead className="text-right font-bold text-slate-500 text-xs uppercase tracking-wider w-[240px] pr-6">
+                Thao Tác
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -378,18 +404,21 @@ export default function VolunteersPage() {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600">
+                  <TableCell className="text-sm font-medium text-slate-600">
                     {volunteer.email}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600">
+                  <TableCell className="text-sm font-medium text-slate-600">
                     {volunteer.phoneNumber || "Chưa có"}
                   </TableCell>
                   <TableCell>
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-teal-100 text-teal-800">
-                      {volunteer.volunteerProfile?.points || 0} điểm
-                    </span>
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 text-amber-600 rounded-lg text-xs font-bold ring-1 ring-amber-200">
+                      <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                      </svg>
+                      {volunteer.volunteerProfile?.points || 0}
+                    </div>
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600">
+                  <TableCell className="text-sm font-medium text-slate-600">
                     {volunteer.volunteerProfile?.organization
                       ?.organizationProfiles?.organizationName || "Chưa có"}
                   </TableCell>
@@ -397,23 +426,23 @@ export default function VolunteersPage() {
                     <button
                       onClick={() => handleToggleStatus(volunteer)}
                       disabled={volunteer.status === "PENDING"}
-                      className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                      className={`px-3 py-1.5 rounded-xl text-[11px] font-bold uppercase tracking-wider inline-flex justify-center transition-all border ${
                         volunteer.status === "PENDING"
                           ? "cursor-not-allowed opacity-50"
-                          : "cursor-pointer hover:opacity-80"
+                          : "cursor-pointer hover:shadow-sm"
                       } ${
                         volunteer.status === "ACTIVE"
-                          ? "bg-green-100 text-green-800"
+                          ? "bg-emerald-50 text-emerald-600 border-emerald-100"
                           : volunteer.status === "PENDING"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-red-100 text-red-800"
+                            ? "bg-amber-50 text-amber-600 border-amber-100"
+                            : "bg-red-50 text-red-600 border-red-100"
                       }`}
                       title={
                         volunteer.status === "PENDING"
-                          ? "Khong the khoa tai khoan dang cho duyet"
+                          ? "Không thể khóa tài khoản đang chờ duyệt"
                           : volunteer.status === "ACTIVE"
-                          ? "Khóa tai khoan"
-                          : "Mở khóa tai khoan"
+                          ? "Khóa tài khoản"
+                          : "Mở khóa tài khoản"
                       }
                     >
                       {volunteer.status === "ACTIVE"
@@ -423,26 +452,26 @@ export default function VolunteersPage() {
                         : "Đã khóa"}
                     </button>
                   </TableCell>
-                  <TableCell>
-                    <div className="flex justify-end gap-2">
+                  <TableCell className="pr-6">
+                    <div className="flex justify-end gap-2 pr-2">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleOpenCommentDialog(volunteer)}
-                        className="h-8 text-xs font-medium border-[#008080] text-[#008080] hover:bg-[#008080] hover:text-white"
+                        className="h-9 px-3 rounded-xl border-slate-200 text-teal-600 hover:text-teal-700 hover:bg-teal-50 hover:border-teal-200 shadow-sm transition-all text-xs font-bold"
                         title="Nhận xét TNV"
                       >
-                        <MessageSquare className="mr-1.5 w-3.5 h-3.5" />
+                        <MessageSquare className="mr-1.5 w-4 h-4" />
                         Nhận xét
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleOpenCertificateDialog(volunteer)}
-                        className="h-8 text-xs font-medium border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white"
+                        className="h-9 px-3 rounded-xl border-slate-200 text-amber-600 hover:text-amber-700 hover:bg-amber-50 hover:border-amber-200 shadow-sm transition-all text-xs font-bold"
                         title="Cấp chứng nhận"
                       >
-                        <Award className="mr-1.5 w-3.5 h-3.5" />
+                        <Award className="mr-1.5 w-4 h-4" />
                         Chứng nhận
                       </Button>
                       <Button
@@ -451,41 +480,43 @@ export default function VolunteersPage() {
                         onClick={() => {
                           window.location.href = `/admin/volunteers/${volunteer.id}`;
                         }}
-                        className="h-8 text-xs font-medium border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+                        className="h-9 px-3 rounded-xl border-slate-200 text-slate-600 hover:text-[#008080] hover:bg-white hover:border-[#008080]/30 shadow-sm transition-all text-xs font-bold"
                       >
-                        <MdVisibility className="mr-1.5 w-3.5 h-3.5" />
+                        <MdVisibility className="mr-1.5 w-4 h-4" />
                         Chi tiết
                       </Button>
                       <Button
                         variant={
                           volunteer.status === "ACTIVE"
                             ? "destructive"
-                            : "default"
+                            : "outline"
                         }
                         size="sm"
                         onClick={() => handleToggleStatus(volunteer)}
                         disabled={volunteer.status === "PENDING"}
-                        className={`h-8 text-xs font-medium ${
-                          volunteer.status === "BANNED"
-                            ? "bg-[#008080] hover:bg-[#006666]"
-                            : ""
+                        className={`h-9 px-3 rounded-xl shadow-sm text-xs font-bold transition-all ${
+                          volunteer.status === "ACTIVE"
+                            ? "bg-white border border-red-200 text-red-600 hover:bg-red-50"
+                            : volunteer.status === "BANNED"
+                            ? "bg-[#008080] hover:bg-[#00A79D] text-white"
+                            : "bg-slate-100 text-slate-400"
                         }`}
                         title={
                           volunteer.status === "PENDING"
-                            ? "Khong the khoa tai khoan dang cho duyet"
+                            ? "Không thể khóa tài khoản đang chờ duyệt"
                             : volunteer.status === "ACTIVE"
-                            ? "Khóa tai khoan"
-                            : "Mở khóa tai khoan"
+                            ? "Khóa tài khoản"
+                            : "Mở khóa tài khoản"
                         }
                       >
                         {volunteer.status === "ACTIVE" ? (
                           <>
-                            <MdLock className="mr-1.5 w-3.5 h-3.5" />
+                            <MdLock className="mr-1.5 w-4 h-4" />
                             Khóa
                           </>
                         ) : (
                           <>
-                            <MdLockOpen className="mr-1.5 w-3.5 h-3.5" />
+                            <MdLockOpen className="mr-1.5 w-4 h-4" />
                             Mở khóa
                           </>
                         )}
@@ -501,58 +532,58 @@ export default function VolunteersPage() {
 
       {/* Comment Dialog */}
       <Dialog open={commentDialogOpen} onOpenChange={setCommentDialogOpen}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-lg rounded-3xl p-6">
           <DialogHeader>
-            <DialogTitle>Nhận xét Tình nguyện viên</DialogTitle>
+            <DialogTitle className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#008080] to-teal-500">Nhận xét Tình nguyện viên</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleCreateComment} className="space-y-4">
+          <form onSubmit={handleCreateComment} className="space-y-5 mt-2">
             <div className="space-y-2">
-              <Label>Tình nguyện viên</Label>
+              <Label className="text-slate-600 font-medium">Tình nguyện viên</Label>
               <Input
                 value={selectedVolunteer?.volunteerProfile?.fullName || ""}
                 disabled
-                className="bg-gray-50"
+                className="bg-slate-50 border-slate-200 rounded-xl h-11"
               />
             </div>
 
             <div className="space-y-2">
-              <Label>Điểm hiện tại</Label>
+              <Label className="text-slate-600 font-medium">Điểm hiện tại</Label>
               <Input
                 value={`${selectedVolunteer?.volunteerProfile?.points || 0} điểm`}
                 disabled
-                className="bg-gray-50"
+                className="bg-slate-50 border-slate-200 rounded-xl h-11"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="rating">
+              <Label htmlFor="rating" className="text-slate-600 font-medium">
                 Đánh giá <span className="text-red-600">*</span>
               </Label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border border-slate-100">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
                     type="button"
                     onClick={() => setCommentRating(star)}
-                    className="transition-all"
+                    className="transition-all hover:scale-110"
                   >
                     <Star
                       className={`w-8 h-8 ${
                         star <= commentRating
-                          ? "fill-yellow-400 text-yellow-400"
-                          : "text-gray-300"
+                          ? "fill-amber-400 text-amber-400"
+                          : "text-slate-300"
                       }`}
                     />
                   </button>
                 ))}
-                <span className="ml-2 text-sm font-medium text-gray-700">
+                <span className="ml-2 text-sm font-bold text-slate-700 bg-white px-3 py-1 rounded-full shadow-sm">
                   {commentRating}/5 sao
                 </span>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="comment">
+              <Label htmlFor="comment" className="text-slate-600 font-medium">
                 Nội dung nhận xét <span className="text-red-600">*</span>
               </Label>
               <Textarea
@@ -561,15 +592,15 @@ export default function VolunteersPage() {
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 rows={4}
-                className="resize-none"
+                className="resize-none border-slate-200 rounded-xl focus:border-[#008080] focus:ring-[#008080]/20"
                 required
               />
             </div>
 
-            <div className="flex gap-2 pt-2">
+            <div className="flex gap-3 pt-4">
               <Button
                 type="submit"
-                className="flex-1 bg-[#008080] hover:bg-[#006666]"
+                className="flex-1 bg-gradient-to-r from-[#008080] to-teal-500 hover:from-[#006666] hover:to-[#008080] text-white rounded-xl h-12 font-bold shadow-md hover:shadow-lg transition-all"
                 disabled={submittingComment || !commentText.trim()}
               >
                 {submittingComment ? (
@@ -587,6 +618,7 @@ export default function VolunteersPage() {
               <Button
                 type="button"
                 variant="outline"
+                className="rounded-xl h-12 px-6 font-bold border-slate-200 hover:bg-slate-50 text-slate-600"
                 onClick={() => setCommentDialogOpen(false)}
                 disabled={submittingComment}
               >
@@ -599,66 +631,67 @@ export default function VolunteersPage() {
 
       {/* Certificate Dialog */}
       <Dialog open={certificateDialogOpen} onOpenChange={setCertificateDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md rounded-3xl p-6">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Award className="w-5 h-5 text-amber-500" />
+            <DialogTitle className="flex items-center gap-2 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-400">
+              <Award className="w-6 h-6 text-amber-500" />
               Cấp chứng nhận cho TNV
             </DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleIssueCertificate} className="space-y-4">
+          <form onSubmit={handleIssueCertificate} className="space-y-5 mt-2">
             <div className="space-y-2">
-              <Label>Tình nguyện viên</Label>
+              <Label className="text-slate-600 font-medium">Tình nguyện viên</Label>
               <Input
                 value={selectedVolunteer?.volunteerProfile?.fullName || ""}
                 disabled
-                className="bg-gray-50"
+                className="bg-slate-50 border-slate-200 rounded-xl h-11"
               />
             </div>
 
             <div className="space-y-2">
-              <Label>Email</Label>
+              <Label className="text-slate-600 font-medium">Email</Label>
               <Input
                 value={selectedVolunteer?.email || ""}
                 disabled
-                className="bg-gray-50"
+                className="bg-slate-50 border-slate-200 rounded-xl h-11"
               />
             </div>
 
             <div className="space-y-2">
-              <Label>Điểm hiện tại</Label>
+              <Label className="text-slate-600 font-medium">Điểm hiện tại</Label>
               <Input
                 value={`${selectedVolunteer?.volunteerProfile?.points || 0} điểm`}
                 disabled
-                className="bg-gray-50"
+                className="bg-slate-50 border-slate-200 rounded-xl h-11"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="notes">Ghi chú (tùy chọn)</Label>
+              <Label htmlFor="notes" className="text-slate-600 font-medium">Ghi chú (tùy chọn)</Label>
               <Textarea
                 id="notes"
                 placeholder="Thêm ghi chú về chứng nhận này..."
                 value={certificateNotes}
                 onChange={(e) => setCertificateNotes(e.target.value)}
                 rows={3}
-                className="resize-none"
+                className="resize-none border-slate-200 rounded-xl focus:border-amber-500 focus:ring-amber-500/20"
               />
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm">
-              <p className="font-semibold text-blue-900 mb-1">ℹ️ Lưu ý:</p>
-              <ul className="list-disc list-inside text-blue-800 space-y-1">
-                <li>Hệ thống sẽ tự động điền tên TNV vào chứng nhận</li>
-                <li>Sử dụng mẫu chứng nhận mặc định của BetterUS</li>
-                <li>Chứng nhận sẽ được tạo dưới dạng ảnh PNG</li>
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm">
+              <p className="font-bold text-amber-800 mb-1 flex items-center gap-1">
+                <Star className="w-4 h-4" /> Lưu ý:
+              </p>
+              <ul className="list-disc list-inside text-amber-700/80 space-y-1 font-medium ml-1">
+                <li>Hệ thống tự động dùng tên TNV</li>
+                <li>Sử dụng mẫu chứng nhận mặc định BetterUS</li>
               </ul>
             </div>
 
-            <div className="flex gap-2 pt-2">
+            <div className="flex gap-3 pt-4">
               <Button
                 type="submit"
-                className="flex-1 bg-amber-500 hover:bg-amber-600 text-white"
+                className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl h-12 font-bold shadow-md hover:shadow-lg transition-all"
                 disabled={issuingCertificate}
               >
                 {issuingCertificate ? (
@@ -676,6 +709,7 @@ export default function VolunteersPage() {
               <Button
                 type="button"
                 variant="outline"
+                className="rounded-xl h-12 px-6 font-bold border-slate-200 hover:bg-slate-50 text-slate-600"
                 onClick={() => setCertificateDialogOpen(false)}
                 disabled={issuingCertificate}
               >
@@ -688,42 +722,67 @@ export default function VolunteersPage() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-between items-center mt-6 px-1">
-          <div className="text-sm text-gray-600">
-            Hiển thị <span className="font-medium text-gray-900">{(page - 1) * limit + 1}</span> đến{" "}
-            <span className="font-medium text-gray-900">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 px-2">
+          <div className="text-sm text-slate-500 font-medium">
+            Hiển thị{" "}
+            <span className="font-bold text-slate-800">
+              {(page - 1) * limit + 1}
+            </span>{" "}
+            đến{" "}
+            <span className="font-bold text-slate-800">
               {Math.min(page * limit, total)}
-            </span> trên {total}
+            </span>{" "}
+            trên <span className="font-bold text-slate-800">{total}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 bg-white/60 backdrop-blur-md p-1.5 rounded-2xl border border-slate-100 shadow-sm">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="h-9 px-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-10 px-4 rounded-xl border-transparent bg-transparent hover:bg-slate-100 text-slate-600 disabled:opacity-40 font-bold transition-colors"
             >
-              <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              <svg
+                className="w-4 h-4 mr-1.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               Trước
             </Button>
-            <div className="flex items-center gap-1">
-              <span className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md">
+            <div className="flex items-center">
+              <span className="w-10 h-10 flex items-center justify-center text-sm font-black text-white bg-[#008080] rounded-xl shadow-md">
                 {page}
               </span>
-              <span className="text-sm text-gray-500">/ {totalPages}</span>
+              <span className="px-3 text-sm font-bold text-slate-400">/ {totalPages}</span>
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="h-9 px-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-10 px-4 rounded-xl border-transparent bg-transparent hover:bg-slate-100 text-slate-600 disabled:opacity-40 font-bold transition-colors"
             >
               Sau
-              <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              <svg
+                className="w-4 h-4 ml-1.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </Button>
           </div>

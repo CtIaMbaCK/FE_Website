@@ -3,6 +3,8 @@
 import Icon from "@/components/icons";
 import { useState, useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
+import { MdSearch, MdSend, MdChatBubbleOutline, MdClose } from "react-icons/md";
+import Breadcrumb from "@/components/Breadcrumb";
 
 // API base URL
 const API_BASE_URL =
@@ -370,14 +372,14 @@ export default function AdminChatPage() {
   // Get role badge
   const getRoleBadge = (role: string) => {
     const badges = {
-      VOLUNTEER: { text: "TNV", color: "bg-green-500" },
+      VOLUNTEER: { text: "TNV", color: "bg-teal-500" },
       BENEFICIARY: { text: "NCGĐ", color: "bg-orange-500" },
       ORGANIZATION: { text: "TCXH", color: "bg-blue-500" },
     };
     return (
       badges[role as keyof typeof badges] || {
         text: "USER",
-        color: "bg-gray-500",
+        color: "bg-slate-500",
       }
     );
   };
@@ -474,97 +476,87 @@ export default function AdminChatPage() {
   }
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex bg-gray-50">
-      {/* Conversations List */}
-      <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+    <div className="flex flex-col gap-6 font-sans pb-4 h-[calc(100vh-4rem)]">
+      {/* Breadcrumb */}
+      <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center w-fit shrink-0">
+        <Breadcrumb
+          items={[
+            { label: "Tin nhắn" },
+          ]}
+        />
+      </div>
+
+      {/* Main Layout Area */}
+      <div className="flex-1 flex gap-6 min-h-0">
+        {/* Conversations List */}
+        <div className="w-80 md:w-96 bg-white/80 backdrop-blur-xl border border-slate-100 shadow-sm rounded-[2rem] flex flex-col overflow-hidden relative">
         {/* Header */}
-        <div className="p-4 ">
-          <h2 className="text-xl font-bold text-gray-800">Tin nhắn</h2>
-          {unreadCount > 0 && (
-            <span className="inline-block mt-2 px-3 py-1 text-xs font-semibold text-white bg-red-500 rounded-full">
-              {unreadCount} chưa đọc
-            </span>
-          )}
+        <div className="p-6 border-b border-slate-100/60 bg-slate-50/30">
+          <div className="flex items-center justify-between mb-4">
+             <h2 className="text-2xl font-black text-slate-800 tracking-tight">Tin nhắn</h2>
+             {unreadCount > 0 && (
+               <span className="px-3 py-1 text-xs font-bold text-white bg-red-500 rounded-full shadow-sm">
+                 {unreadCount} mới
+               </span>
+             )}
+          </div>
 
           {/* Search Box */}
-          <div className="mt-3 relative ">
+          <div className="relative">
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
               placeholder="Tìm kiếm người dùng..."
-              className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:border-primary text-sm"
+              className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 rounded-xl outline-none text-sm transition-all"
             />
-            <svg
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-            {/* <Icon icon='search'/> */}
+            <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            {searchTerm && (
+               <button onClick={() => { setSearchTerm(""); setShowSearchResults(false); }} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-100 rounded-md">
+                 <MdClose className="text-slate-400 w-4 h-4" />
+               </button>
+            )}
           </div>
         </div>
 
         {/* Search Results or Conversations List */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden">
           {showSearchResults ? (
             // Search Results
             <>
-              <div className="p-3 bg-gray-50 border-b border-gray-200">
-                <h3 className="text-sm font-semibold text-gray-700">
+              <div className="px-6 py-3 bg-slate-50/80 border-b border-slate-100">
+                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                   Kết quả tìm kiếm {isSearching && "(đang tìm...)"}
                 </h3>
               </div>
               {searchResults.length === 0 && !isSearching ? (
-                <div className="p-8 text-center text-gray-500">
-                  <p className="text-sm">Không tìm thấy người dùng</p>
+                <div className="p-8 text-center text-slate-400">
+                  <p className="text-sm font-medium">Không tìm thấy người dùng</p>
                 </div>
               ) : (
                 searchResults.map((user) => (
                   <button
                     key={user.id}
                     onClick={() => handleCreateConversation(user.id)}
-                    className="w-full p-4 border-b border-gray-100 hover:bg-gray-50 transition text-left"
+                    className="w-full p-4 px-6 border-b border-slate-50 hover:bg-teal-50/50 transition-colors text-left group"
                   >
-                    <div className="flex items-start gap-3">
+                    <div className="flex items-center gap-4 w-full">
                       {/* Avatar */}
-                      <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-[#008080] text-white flex items-center justify-center font-bold text-lg flex-shrink-0 shadow-sm group-hover:shadow transition-all">
                         {getDisplayName(user)[0]}
                       </div>
 
                       {/* Content */}
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold truncate">
+                        <h3 className="font-bold text-slate-800 truncate">
                           {getDisplayName(user)}
                         </h3>
                         <span
-                          className={`inline-block mt-1 px-2 py-0.5 text-xs rounded ${getRoleBadge(user.role).color} text-white`}
+                          className={`inline-block mt-1 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider rounded-md ${getRoleBadge(user.role).color} text-white`}
                         >
                           {getRoleBadge(user.role).text}
                         </span>
                       </div>
-
-                      {/* Arrow */}
-                      <svg
-                        className="w-5 h-5 text-gray-400 mt-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
                     </div>
                   </button>
                 ))
@@ -574,8 +566,11 @@ export default function AdminChatPage() {
             // Conversations List
             <>
               {conversations.length === 0 ? (
-                <div className="p-8 text-center text-gray-500">
-                  <p>Chưa có cuộc hội thoại nào</p>
+                <div className="p-12 flex flex-col items-center justify-center text-center text-slate-400 space-y-3">
+                  <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center">
+                    <MdChatBubbleOutline className="w-8 h-8 text-slate-300" />
+                  </div>
+                  <p className="font-medium">Chưa có cuộc hội thoại nào</p>
                 </div>
               ) : (
                 conversations.map((conv) => {
@@ -589,26 +584,29 @@ export default function AdminChatPage() {
                     <button
                       key={conv.id}
                       onClick={() => handleSelectConversation(conv)}
-                      className={`w-full p-4 border-b border-gray-100 hover:bg-gray-50 transition text-left ${
-                        selectedConversation?.id === conv.id ? "bg-blue-50" : ""
+                      className={`w-full p-4 px-6 border-b border-slate-50 hover:bg-slate-50/80 transition-all text-left group ${
+                        selectedConversation?.id === conv.id ? "bg-teal-50/50 border-l-4 border-l-teal-500" : "border-l-4 border-l-transparent"
                       }`}
                     >
-                      <div className="flex items-start gap-3">
+                      <div className="flex items-start gap-4">
                         {/* Avatar */}
-                        <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 text-slate-600 flex items-center justify-center font-black text-xl flex-shrink-0 shadow-sm relative">
                           {getDisplayName(conv.otherUser)[0]}
+                          {isUnread && (
+                            <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-white"></span>
+                          )}
                         </div>
 
                         {/* Content */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">
                             <h3
-                              className={`font-semibold truncate ${isUnread ? "font-bold" : ""}`}
+                              className={`truncate ${isUnread ? "font-black text-slate-900" : "font-bold text-slate-700"}`}
                             >
                               {getDisplayName(conv.otherUser)}
                             </h3>
                             <span
-                              className={`text-xs ${isUnread ? "text-primary font-bold" : "text-gray-500"}`}
+                              className={`text-[11px] whitespace-nowrap ml-2 shrink-0 ${isUnread ? "text-teal-600 font-bold" : "text-slate-400 font-medium"}`}
                             >
                               {conv.lastMessageAt
                                 ? new Date(
@@ -621,22 +619,19 @@ export default function AdminChatPage() {
                             </span>
                           </div>
 
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 mb-1">
                             <span
-                              className={`px-2 py-0.5 text-xs rounded ${getRoleBadge(conv.otherUser.role).color} text-white`}
+                              className={`px-2 py-[2px] text-[10px] font-bold uppercase tracking-wider rounded ${getRoleBadge(conv.otherUser.role).color} text-white`}
                             >
                               {getRoleBadge(conv.otherUser.role).text}
                             </span>
-                            {isUnread && (
-                              <span className="w-2 h-2 bg-primary rounded-full"></span>
-                            )}
                           </div>
 
                           {conv.lastMessage && (
                             <p
-                              className={`text-sm truncate mt-1 ${isUnread ? "font-semibold text-gray-900" : "text-gray-600"}`}
+                              className={`text-sm truncate pr-2 ${isUnread ? "font-bold text-slate-800" : "font-medium text-slate-500"}`}
                             >
-                              {conv.lastMessage.content}
+                              {conv.lastMessage.senderId !== conv.otherUser.id ? "Bạn: " : ""}{conv.lastMessage.content}
                             </p>
                           )}
                         </div>
@@ -651,69 +646,73 @@ export default function AdminChatPage() {
       </div>
 
       {/* Chat Area */}
-      <div className="flex-1 flex flex-col bg-white">
+      <div className="flex-1 flex flex-col bg-white/80 backdrop-blur-xl border border-slate-100 shadow-sm rounded-[2rem] overflow-hidden relative">
         {selectedConversation ? (
           <>
+            <div className="absolute top-[-100px] right-[-100px] w-64 h-64 bg-teal-50 rounded-full opacity-50 blur-3xl pointer-events-none -z-10"></div>
+
             {/* Header */}
-            <div className="p-4 border-b border-gray-200 bg-white">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">
+            <div className="p-4 px-8 border-b border-slate-100/60 bg-white/50 backdrop-blur flex items-center justify-between sticky top-0 z-10">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-[#008080] text-white flex items-center justify-center font-black text-xl shadow-md">
                   {getDisplayName(selectedConversation.otherUser)[0]}
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-800">
+                  <h3 className="font-black text-lg text-slate-800 tracking-tight">
                     {getDisplayName(selectedConversation.otherUser)}
                   </h3>
-                  <span
-                    className={`text-xs px-2 py-0.5 rounded ${getRoleBadge(selectedConversation.otherUser.role).color} text-white`}
-                  >
-                    {getRoleBadge(selectedConversation.otherUser.role).text}
-                  </span>
-                  {isTyping && (
-                    <span className="ml-2 text-sm text-gray-500 italic">
-                      đang nhập...
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span
+                      className={`text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-md ${getRoleBadge(selectedConversation.otherUser.role).color} text-white`}
+                    >
+                      {getRoleBadge(selectedConversation.otherUser.role).text}
                     </span>
-                  )}
+                    {isTyping && (
+                      <span className="text-xs text-teal-600 font-bold animate-pulse">
+                        đang nhập...
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((msg) => {
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 scroll-smooth">
+              {messages.map((msg, index) => {
                 const isMe = msg.senderId !== selectedConversation.otherUser.id;
 
                 return (
                   <div
                     key={msg.id}
-                    className={`flex ${isMe ? "justify-end" : "justify-start"}`}
+                    className={`flex ${isMe ? "justify-end" : "justify-start"} group relative`}
                   >
                     <div
-                      className={`max-w-md px-4 py-2 rounded-2xl ${
+                      className={`max-w-[85%] lg:max-w-[70%] px-5 py-3 rounded-2xl shadow-sm relative ${
                         isMe
-                          ? "bg-primary text-white rounded-br-none"
-                          : "bg-gray-200 text-gray-800 rounded-bl-none"
+                          ? "bg-gradient-to-br from-[#008080] to-teal-500 text-white rounded-br-sm"
+                          : "bg-white border border-slate-100 text-slate-700 rounded-bl-sm"
                       }`}
                     >
-                      <p className="text-sm">{msg.content}</p>
-                      <p
-                        className={`text-xs mt-1 ${isMe ? "text-blue-100" : "text-gray-600"}`}
+                      <p className="text-[15px] leading-relaxed break-words">{msg.content}</p>
+                      <div
+                        className={`text-[11px] mt-1.5 font-bold flex items-center gap-1 ${isMe ? "text-teal-100/80 justify-end" : "text-slate-400"}`}
                       >
                         {new Date(msg.createdAt).toLocaleTimeString("vi-VN", {
                           hour: "2-digit",
                           minute: "2-digit",
                         })}
-                      </p>
+                      </div>
                     </div>
                   </div>
                 );
               })}
-              <div ref={messagesEndRef} />
+              <div ref={messagesEndRef} className="h-4" />
             </div>
 
             {/* Input */}
-            <div className="p-4 border-t border-gray-200 bg-white">
-              <div className="flex gap-2">
+            <div className="p-4 px-6 border-t border-slate-100/60 bg-white/50 backdrop-blur z-10 shrink-0">
+              <div className="flex items-center gap-3 bg-white border border-slate-200 rounded-full p-1.5 shadow-sm focus-within:ring-2 focus-within:ring-teal-100 focus-within:border-teal-400 transition-all">
                 <input
                   type="text"
                   value={messageInput}
@@ -727,39 +726,32 @@ export default function AdminChatPage() {
                       handleSendMessage();
                     }
                   }}
-                  placeholder="Nhập tin nhắn..."
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:border-primary"
+                  placeholder="Soạn tin nhắn..."
+                  className="flex-1 bg-transparent px-5 py-2.5 outline-none text-slate-700 text-sm placeholder:text-slate-400"
                 />
                 <button
                   onClick={handleSendMessage}
                   disabled={!messageInput.trim()}
-                  className="px-6 py-2 bg-primary text-white rounded-full hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  className="w-11 h-11 shrink-0 bg-gradient-to-br from-[#008080] to-teal-400 text-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:-translate-y-0.5"
                 >
-                  Gửi
+                  <MdSend className="w-5 h-5 ml-1" />
                 </button>
               </div>
             </div>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-500">
-            <div className="text-center">
-              <svg
-                className="w-24 h-24 mx-auto mb-4 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                />
-              </svg>
-              <p className="text-lg">Chọn một cuộc hội thoại để bắt đầu chat</p>
+          <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 text-center bg-slate-50/30">
+            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-100 mb-6 relative group">
+              {/* <div className="absolute inset-0 bg-teal-500 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity"></div> */}
+              <MdChatBubbleOutline className="w-12 h-12 text-teal-500 relative z-10" />
             </div>
+            <h2 className="text-2xl font-black text-slate-700 tracking-tight mb-2">Bắt đầu trò chuyện</h2>
+            <p className="text-sm font-medium text-slate-500 max-w-sm">
+              Nhấn vào một hội thoại từ danh sách bên trái hoặc dùng ô tìm kiếm để bắt đầu nhắn tin!
+            </p>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

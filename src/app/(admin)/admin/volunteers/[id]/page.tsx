@@ -256,33 +256,31 @@ export default function VolunteerDetailPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-6 pt-4">
-        <Breadcrumb
-          items={[
-            { label: "Quản lý tình nguyện viên", href: "/admin/volunteers" },
-            { label: fullName || "Chi tiết" },
-          ]}
-        />
-      </div>
-
-      {/* Top Actions Bar */}
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <Link href="/admin/volunteers">
-          <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
-            <ArrowLeft className="h-4 w-4 mr-1.5" />
-            Quay lại
-          </Button>
-        </Link>
+    <div className="min-h-screen pb-12">
+      {/* Breadcrumb & Back */}
+      <div className="max-w-7xl mx-auto px-6 pt-6 pb-2">
+        <div className="flex items-center justify-between">
+          <Breadcrumb
+            items={[
+              { label: "Quản lý tình nguyện viên", href: "/admin/volunteers" },
+              { label: fullName || "Chi tiết" },
+            ]}
+          />
+          <Link href="/admin/volunteers">
+            <Button variant="ghost" size="sm" className="text-slate-500 hover:bg-slate-100 hover:text-slate-900 rounded-xl h-9 px-4">
+              <ArrowLeft className="h-4 w-4 mr-1.5" />
+              Quay lại
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Profile Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
-          <div className="flex flex-col items-center">
-            <div className="relative mb-4">
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[#008080] to-teal-600 flex items-center justify-center text-white text-4xl font-bold overflow-hidden">
+        <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 p-8 mb-8 relative overflow-hidden">
+          <div className="flex flex-col items-center relative z-10">
+            <div className="relative mb-5">
+              <div className="w-32 h-32 rounded-full bg-slate-100 flex items-center justify-center text-[#008080] text-5xl font-black overflow-hidden shadow-sm border-4 border-white ring-1 ring-slate-100 relative group pointer-events-auto cursor-pointer" onClick={() => document.getElementById("avatar-upload")?.click()}>
                 {avatarUrl ? (
                   <img
                     src={avatarUrl}
@@ -292,58 +290,101 @@ export default function VolunteerDetailPage() {
                 ) : (
                   <span>{fullName.charAt(0).toUpperCase()}</span>
                 )}
+                <div 
+                  className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  {uploadingAvatar ? (
+                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <>
+                      <User className="w-6 h-6 mb-1" />
+                      <span className="text-[10px] uppercase font-bold tracking-wider">Thay ảnh</span>
+                    </>
+                  )}
+                  <input
+                    id="avatar-upload"
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png"
+                    onChange={handleAvatarUpload}
+                    className="hidden"
+                    disabled={uploadingAvatar}
+                  />
+                </div>
               </div>
-              {/* Upload avatar button */}
-              <label
-                htmlFor="avatar-upload"
-                className="absolute bottom-0 right-0 w-10 h-10 bg-[#008080] rounded-full border-4 border-white flex items-center justify-center cursor-pointer hover:bg-[#006666] transition-colors"
-              >
-                {uploadingAvatar ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  <User className="w-5 h-5 text-white" />
-                )}
-                <input
-                  id="avatar-upload"
-                  type="file"
-                  accept="image/jpeg,image/jpg,image/png"
-                  onChange={handleAvatarUpload}
-                  className="hidden"
-                  disabled={uploadingAvatar}
-                />
-              </label>
+              <div className="absolute bottom-1 right-1 w-6 h-6 bg-emerald-500 rounded-full border-4 border-white flex items-center justify-center shadow-sm"></div>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">{fullName}</h1>
-            <p className="text-sm text-gray-500 mb-1">HỒ SƠ TÌNH NGUYỆN VIÊN</p>
-            <div className="inline-flex items-center px-3 py-1 bg-teal-50 text-teal-700 rounded-full text-xs font-medium">
+            
+            <h1 className="text-3xl font-black text-slate-900 mb-1 tracking-tight">{fullName}</h1>
+            <p className="text-sm font-bold text-[#008080] mb-3 uppercase tracking-widest">Hồ Sơ Tình Nguyện Viên</p>
+            
+            <div className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm border ${
+              volunteer.status === "ACTIVE" ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
+              volunteer.status === "BANNED" ? "bg-red-50 text-red-600 border-red-100" :
+              "bg-amber-50 text-amber-600 border-amber-100"
+            }`}>
               {volunteer.status === "ACTIVE" ? "Đang hoạt động" : volunteer.status === "BANNED" ? "Đã khóa" : "Chờ duyệt"}
             </div>
+            
             {/* Points badge */}
-            <div className="flex items-center gap-2 mt-3 bg-[#008080] text-white px-4 py-2 rounded-full">
-              <Star className="w-5 h-5" />
-              <span className="font-bold text-lg">
+            <div className="flex items-center gap-2 mt-4 px-5 py-2.5 bg-gradient-to-r from-amber-400 to-amber-500 text-white rounded-2xl shadow-sm border border-amber-300">
+              <Star className="w-5 h-5 fill-white text-white" />
+              <span className="font-black text-lg">
                 {volunteer.volunteerProfile?.points || 0} điểm
               </span>
             </div>
-            <p className="text-xs text-gray-400 mt-2">
-              Tham gia: {new Date(volunteer.createdAt).toLocaleDateString("vi-VN")}
+
+            <p className="text-xs text-slate-500 font-medium mt-4">
+              Tham gia từ: {new Date(volunteer.createdAt).toLocaleDateString("vi-VN")}
             </p>
           </div>
         </div>
 
-        {/* Two Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Column - Personal Info */}
-          <div className="space-y-6">
+        {/* Giấy tờ tùy thân (Đưa lên đầu) */}
+        <Card className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden mb-8">
+          <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-white rounded-xl shadow-sm border border-slate-100">
+                <Briefcase className="w-5 h-5 text-[#008080]" />
+              </div>
+              <CardTitle className="text-lg font-bold text-slate-800">Giấy tờ tùy thân</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* CCCD Mặt trước */}
+              <ImageUploadZone
+                label="CCCD Mặt trước"
+                currentImageUrl={cccdFrontFile}
+                onImageUploaded={(url) => setCccdFrontFile(url)}
+                onImageRemoved={() => setCccdFrontFile("")}
+              />
+
+              {/* CCCD Mặt sau */}
+              <ImageUploadZone
+                label="CCCD Mặt sau"
+                currentImageUrl={cccdBackFile}
+                onImageUploaded={(url) => setCccdBackFile(url)}
+                onImageRemoved={() => setCccdBackFile("")}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Two Column Layout (Thông tin còn lại) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Left Column */}
+          <div className="space-y-8">
             {/* Thông tin cá nhân */}
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <User className="w-5 h-5 text-gray-600" />
-                  <CardTitle className="text-base">Thông tin cá nhân</CardTitle>
+            <Card className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+              <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white rounded-xl shadow-sm border border-slate-100">
+                    <User className="w-5 h-5 text-[#008080]" />
+                  </div>
+                  <CardTitle className="text-lg font-bold text-slate-800">Thông tin cá nhân</CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 pt-6">
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-sm font-medium text-gray-700 flex items-center gap-2">
                     <Mail className="w-4 h-4 text-gray-400" />
@@ -353,7 +394,7 @@ export default function VolunteerDetailPage() {
                     id="email"
                     value={volunteer.email}
                     disabled
-                    className="bg-gray-50 border-gray-200"
+                    className="bg-gray-50 border-gray-200 rounded-xl h-11"
                   />
                 </div>
 
@@ -367,7 +408,7 @@ export default function VolunteerDetailPage() {
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="Nhập họ và tên đầy đủ"
                     required
-                    className="h-10 border-gray-300 focus:border-[#008080] focus:ring-[#008080]/10"
+                    className="h-11 rounded-xl border-gray-300 focus:border-[#008080] focus:ring-[#008080]/10"
                   />
                 </div>
 
@@ -380,7 +421,7 @@ export default function VolunteerDetailPage() {
                     id="phone"
                     value={volunteer.phoneNumber || "Chưa cập nhật"}
                     disabled
-                    className="bg-gray-50 border-gray-200"
+                    className="bg-gray-50 border-gray-200 rounded-xl h-11"
                   />
                 </div>
 
@@ -394,36 +435,38 @@ export default function VolunteerDetailPage() {
                         ?.organizationProfiles?.organizationName || "Chưa có"
                     }
                     disabled
-                    className="bg-gray-50 border-gray-200"
+                    className="bg-gray-50 border-gray-200 rounded-xl h-11"
                   />
                 </div>
               </CardContent>
             </Card>
 
             {/* Kỹ năng chuyên môn */}
-            <Card>
-              <CardHeader>
+            <Card className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+              <CardHeader className="bg-sky-50/30 border-b border-sky-100 pb-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Award className="w-5 h-5 text-gray-600" />
-                    <CardTitle className="text-base">Kỹ năng chuyên môn</CardTitle>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white rounded-xl shadow-sm border border-sky-100">
+                      <Award className="w-5 h-5 text-sky-500" />
+                    </div>
+                    <CardTitle className="text-lg font-bold text-slate-800">Kỹ năng chuyên môn</CardTitle>
                   </div>
-                  <span className="text-xs text-gray-500 font-medium">
+                  <span className="text-xs font-bold px-3 py-1 bg-sky-100 text-sky-700 rounded-full">
                     {skills.length} kỹ năng
                   </span>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <div className="flex flex-wrap gap-2">
                   {SKILLS.map((skill) => (
                     <button
                       key={skill.value}
                       type="button"
                       onClick={() => toggleSkill(skill.value)}
-                      className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
                         skills.includes(skill.value)
-                          ? "bg-[#008080] text-white shadow-sm"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200"
+                          ? "bg-[#008080] border-[#008080] text-white shadow-md shadow-teal-500/20 hover:bg-[#006666]"
+                          : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
                       }`}
                     >
                       {skill.label}
@@ -432,16 +475,21 @@ export default function VolunteerDetailPage() {
                 </div>
               </CardContent>
             </Card>
+          </div>
 
+          {/* Right Column */}
+          <div className="space-y-8">
             {/* Kinh nghiệm */}
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Briefcase className="w-5 h-5 text-gray-600" />
-                  <CardTitle className="text-base">Kinh nghiệm</CardTitle>
+            <Card className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+              <CardHeader className="bg-indigo-50/30 border-b border-indigo-100 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white rounded-xl shadow-sm border border-indigo-100">
+                    <Briefcase className="w-5 h-5 text-indigo-500" />
+                  </div>
+                  <CardTitle className="text-lg font-bold text-slate-800">Kinh nghiệm & Khu vực</CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6 pt-6">
                 <div className="space-y-2">
                   <Label htmlFor="experienceYears" className="text-sm font-medium text-gray-700">
                     Số năm kinh nghiệm
@@ -454,7 +502,7 @@ export default function VolunteerDetailPage() {
                     onChange={(e) =>
                       setExperienceYears(parseInt(e.target.value) || 0)
                     }
-                    className="h-10 border-gray-300 focus:border-[#008080] focus:ring-[#008080]/10"
+                    className="h-11 rounded-xl border-gray-300 focus:border-[#008080] focus:ring-[#008080]/10"
                   />
                 </div>
 
@@ -468,7 +516,7 @@ export default function VolunteerDetailPage() {
                     onChange={(e) => setBio(e.target.value)}
                     placeholder="Giới thiệu về bản thân, kinh nghiệm và mong muốn..."
                     rows={4}
-                    className="resize-none border-gray-300 focus:border-[#008080] focus:ring-[#008080]/10"
+                    className="resize-none rounded-xl border-gray-300 focus:border-[#008080] focus:ring-[#008080]/10"
                   />
                 </div>
 
@@ -477,20 +525,20 @@ export default function VolunteerDetailPage() {
                     <Label className="text-sm font-medium text-gray-700">
                       Khu vực ưu tiên hoạt động
                     </Label>
-                    <span className="text-xs text-gray-500 font-medium">
+                    <span className="text-xs font-bold px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full">
                       {preferredDistricts.length} khu vực
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-2 p-4 border border-gray-200 rounded-lg bg-gray-50/50 max-h-[200px] overflow-y-auto">
+                  <div className="flex flex-wrap gap-2 p-5 border border-slate-200 rounded-2xl bg-slate-50/50 max-h-[250px] overflow-y-auto custom-scrollbar">
                     {DISTRICTS.map((district) => (
                       <button
                         key={district.value}
                         type="button"
                         onClick={() => toggleDistrict(district.value)}
-                        className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
                           preferredDistricts.includes(district.value)
-                            ? "bg-[#008080] text-white shadow-sm"
-                            : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-300"
+                            ? "bg-indigo-500 border-indigo-500 text-white shadow-sm"
+                            : "bg-white text-slate-600 hover:bg-slate-100 border-slate-300"
                         }`}
                       >
                         {district.label}
@@ -500,157 +548,144 @@ export default function VolunteerDetailPage() {
                 </div>
               </CardContent>
             </Card>
-          </div>
 
-          {/* Right Column - Documents */}
-          <div className="space-y-6">
-            {/* CCCD/CMND */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Giấy tờ tùy thân</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {/* CCCD Mặt trước */}
-                <ImageUploadZone
-                  label="CCCD Mặt trước"
-                  currentImageUrl={cccdFrontFile}
-                  onImageUploaded={(url) => setCccdFrontFile(url)}
-                  onImageRemoved={() => setCccdFrontFile("")}
-                />
-
-                {/* CCCD Mặt sau */}
-                <ImageUploadZone
-                  label="CCCD Mặt sau"
-                  currentImageUrl={cccdBackFile}
-                  onImageUploaded={(url) => setCccdBackFile(url)}
-                  onImageRemoved={() => setCccdBackFile("")}
-                />
-              </CardContent>
-            </Card>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-start gap-3">
-                <Button
-                  onClick={handleSave}
-                  disabled={submitting}
-                  className="bg-[#008080] hover:bg-[#006666] text-white px-6"
-                >
-                  {submitting ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                      Đang lưu...
-                    </>
-                  ) : (
-                    "Lưu thay đổi"
-                  )}
-                </Button>
-                <Button
-                  variant={volunteer.status === "ACTIVE" ? "destructive" : "default"}
-                  onClick={handleToggleStatus}
-                  disabled={volunteer.status === "PENDING" || submitting}
-                  className={
-                    volunteer.status !== "ACTIVE"
-                      ? "bg-[#008080] hover:bg-[#006666]"
-                      : ""
-                  }
-                >
-                  {volunteer.status === "ACTIVE" ? (
-                    <>
-                      <Lock className="mr-2 h-4 w-4" />
-                      Khóa tài khoản
-                    </>
-                  ) : (
-                    <>
-                      <LockOpen className="mr-2 h-4 w-4" />
-                      Mở khóa
-                    </>
-                  )}
-                </Button>
-              </div>
-
-              {/* Certificate Button */}
-              <Dialog open={certificateDialogOpen} onOpenChange={setCertificateDialogOpen}>
-                <DialogTrigger asChild>
+            {/* Action Buttons Section */}
+            <Card className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+              <div className="flex flex-col gap-4 p-6 bg-slate-50/50">
+                <div className="text-sm font-medium text-slate-500 text-center sm:text-left">
+                  Cập nhật thông tin và cấp chứng nhận.
+                </div>
+                
+                <div className="flex flex-col gap-3 w-full">
                   <Button
-                    variant="outline"
-                    className="border-[#008080] text-[#008080] hover:bg-[#008080] hover:text-white"
+                    onClick={handleSave}
+                    disabled={submitting}
+                    className="w-full bg-[#008080] hover:bg-[#00A79D] text-white h-12 rounded-xl font-bold shadow-md hover:-translate-y-0.5 transition-all text-sm"
                   >
-                    <Award className="mr-2 h-4 w-4" />
-                    Cấp chứng nhận
+                    {submitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                        Đang lưu...
+                      </>
+                    ) : (
+                      "Lưu thay đổi"
+                    )}
                   </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Cấp chứng nhận cho TNV</DialogTitle>
-                  </DialogHeader>
-                  <form onSubmit={handleIssueCertificate} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label>Tình nguyện viên</Label>
-                      <Input value={fullName} disabled className="bg-gray-50" />
-                    </div>
+                  
+                  <div className="flex gap-3">
+                    <Button
+                      variant={volunteer.status === "ACTIVE" ? "destructive" : "outline"}
+                      onClick={handleToggleStatus}
+                      disabled={volunteer.status === "PENDING" || submitting}
+                      className={`flex-1 h-12 rounded-xl font-bold shadow-sm transition-all text-sm ${
+                        volunteer.status === "ACTIVE"
+                          ? "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 hover:text-red-700" 
+                          : volunteer.status === "BANNED" 
+                            ? "bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100 hover:text-emerald-700"
+                            : "bg-slate-100 text-slate-400 border-slate-200"
+                      }`}
+                    >
+                      {volunteer.status === "ACTIVE" ? (
+                        <>
+                          <Lock className="mr-2 h-4 w-4" /> Khóa
+                        </>
+                      ) : volunteer.status === "BANNED" ? (
+                        <>
+                          <LockOpen className="mr-2 h-4 w-4" /> Mở khóa
+                        </>
+                      ) : (
+                        "Chờ duyệt"
+                      )}
+                    </Button>
 
-                    <div className="space-y-2">
-                      <Label>Điểm hiện tại</Label>
-                      <Input
-                        value={`${volunteer?.volunteerProfile?.points || 0} điểm`}
-                        disabled
-                        className="bg-gray-50"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="notes">Ghi chú (tùy chọn)</Label>
-                      <Textarea
-                        id="notes"
-                        placeholder="Thêm ghi chú về chứng nhận này..."
-                        value={certificateNotes}
-                        onChange={(e) => setCertificateNotes(e.target.value)}
-                        rows={3}
-                        className="resize-none"
-                      />
-                    </div>
-
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm">
-                      <p className="font-semibold text-blue-900 mb-1">ℹ️ Lưu ý:</p>
-                      <ul className="list-disc list-inside text-blue-800 space-y-1">
-                        <li>Hệ thống sẽ tự động điền tên TNV vào chứng nhận</li>
-                        <li>Sử dụng mẫu chứng nhận mặc định của BetterUS</li>
-                        <li>Chứng nhận sẽ được tạo dưới dạng ảnh PNG</li>
-                      </ul>
-                    </div>
-
-                    <div className="flex gap-2 pt-2">
-                      <Button
-                        type="submit"
-                        className="flex-1 bg-[#008080] hover:bg-[#006666]"
-                        disabled={issuingCertificate}
-                      >
-                        {issuingCertificate ? (
-                          <>
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                            Đang cấp...
-                          </>
-                        ) : (
-                          <>
-                            <Award className="mr-2 h-4 w-4" />
+                    <Dialog open={certificateDialogOpen} onOpenChange={setCertificateDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="flex-1 h-12 rounded-xl font-bold shadow-sm transition-all text-sm border-amber-200 text-amber-600 bg-amber-50 hover:bg-amber-100 hover:border-amber-300"
+                        >
+                          <Award className="mr-2 h-4 w-4" />
+                          Cấp chứng nhận
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md rounded-3xl p-6">
+                        <DialogHeader>
+                          <DialogTitle className="flex items-center gap-2 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-400">
+                            <Award className="w-6 h-6 text-amber-500" />
                             Cấp chứng nhận
-                          </>
-                        )}
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => setCertificateDialogOpen(false)}
-                        disabled={issuingCertificate}
-                      >
-                        Hủy
-                      </Button>
-                    </div>
-                  </form>
-                </DialogContent>
-              </Dialog>
-            </div>
+                          </DialogTitle>
+                        </DialogHeader>
+                        <form onSubmit={handleIssueCertificate} className="space-y-4">
+                          <div className="space-y-2">
+                            <Label className="text-slate-600 font-medium">Tình nguyện viên</Label>
+                            <Input value={fullName} disabled className="bg-slate-50 rounded-xl h-11 border-slate-200" />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label className="text-slate-600 font-medium">Điểm hiện tại</Label>
+                            <Input
+                              value={`${volunteer?.volunteerProfile?.points || 0} điểm`}
+                              disabled
+                              className="bg-slate-50 rounded-xl h-11 border-slate-200"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label htmlFor="notes" className="text-slate-600 font-medium">Ghi chú (tùy chọn)</Label>
+                            <Textarea
+                              id="notes"
+                              placeholder="Thêm ghi chú về chứng nhận này..."
+                              value={certificateNotes}
+                              onChange={(e) => setCertificateNotes(e.target.value)}
+                              rows={3}
+                              className="resize-none rounded-xl border-slate-200 focus:border-amber-500 focus:ring-amber-500/20"
+                            />
+                          </div>
+
+                          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm mt-2">
+                            <p className="font-bold text-amber-800 mb-1 flex items-center gap-1">
+                              <Star className="w-4 h-4" /> Lưu ý:
+                            </p>
+                            <ul className="list-disc list-inside text-amber-700/80 space-y-1 font-medium ml-1">
+                              <li>Hệ thống tự động dùng tên TNV</li>
+                              <li>Sử dụng mẫu chứng nhận mặc định BetterUS</li>
+                            </ul>
+                          </div>
+
+                          <div className="flex gap-3 pt-4">
+                            <Button
+                              type="submit"
+                              className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl h-12 font-bold shadow-md hover:shadow-lg transition-all"
+                              disabled={issuingCertificate}
+                            >
+                              {issuingCertificate ? (
+                                <>
+                                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                                  Đang cấp...
+                                </>
+                              ) : (
+                                <>
+                                  <Award className="mr-2 h-4 w-4" /> Xác nhận
+                                </>
+                              )}
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => setCertificateDialogOpen(false)}
+                              disabled={issuingCertificate}
+                              className="rounded-xl h-12 px-6 font-bold border-slate-200 hover:bg-slate-50 text-slate-600"
+                            >
+                              Hủy
+                            </Button>
+                          </div>
+                        </form>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </div>
+              </div>
+            </Card>
           </div>
         </div>
       </div>

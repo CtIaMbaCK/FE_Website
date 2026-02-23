@@ -142,7 +142,32 @@ export default function OrganizationDetailPage() {
 
   // Format ten quan huyen
   const formatDistrict = (district: string) => {
-    return district.replace(/_/g, " ");
+    const districtMap: Record<string, string> = {
+      QUAN_1: "Quận 1",
+      QUAN_2: "Quận 2",
+      QUAN_3: "Quận 3",
+      QUAN_4: "Quận 4",
+      QUAN_5: "Quận 5",
+      QUAN_6: "Quận 6",
+      QUAN_7: "Quận 7",
+      QUAN_8: "Quận 8",
+      QUAN_10: "Quận 10",
+      QUAN_11: "Quận 11",
+      QUAN_12: "Quận 12",
+      BINH_TAN: "Quận Bình Tân",
+      BINH_THANH: "Quận Bình Thạnh",
+      GO_VAP: "Quận Gò Vấp",
+      PHU_NHUAN: "Quận Phú Nhuận",
+      TAN_BINH: "Quận Tân Bình",
+      TAN_PHU: "Quận Tân Phú",
+      TP_THU_DUC: "TP Thủ Đức",
+      HUYEN_BINH_CHANH: "Huyện Bình Chánh",
+      HUYEN_CAN_GIO: "Huyện Cần Giờ",
+      HUYEN_CU_CHI: "Huyện Củ Chi",
+      HUYEN_HOC_MON: "Huyện Hóc Môn",
+      HUYEN_NHA_BE: "Huyện Nhà Bè",
+    };
+    return districtMap[district] || district.replace(/_/g, " ");
   };
 
   if (loading) {
@@ -165,40 +190,27 @@ export default function OrganizationDetailPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
-      {/* Breadcrumb */}
-      <Breadcrumb
-        items={[
-          { label: "Quản lý tổ chức xã hội", href: "/admin/organizations" },
-          { label: "Chi tiết" }
-        ]}
-      />
-
-      {/* Header */}
+    <div className="min-h-screen pb-12 font-sans space-y-6 max-w-7xl mx-auto px-6 pt-8">
+      {/* Breadcrumb & Actions Bar */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => router.push("/admin/organizations")}
-          >
-            <MdArrowBack className="mr-2" />
-            Quay lại
-          </Button>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Chi tiết Tổ chức xã hội
-          </h1>
+        <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center">
+          <Breadcrumb
+            items={[
+              { label: "Quản lý Tổ chức xã hội", href: "/admin/organizations" },
+              { label: organization.organizationProfiles?.organizationName || "Chi tiết" }
+            ]}
+          />
         </div>
-
+        
         <div className="flex gap-2">
           {!isEditing ? (
             <>
               <Button
                 variant="outline"
                 onClick={() => setIsEditing(true)}
-                className="bg-white"
+                className="h-11 px-6 rounded-xl border-slate-200 text-slate-600 hover:text-[#008080] hover:bg-white shadow-sm transition-all font-bold"
               >
-                <MdEdit className="mr-2" />
+                <MdEdit className="mr-2 h-4 w-4" />
                 Chỉnh sửa
               </Button>
               <Button
@@ -210,20 +222,20 @@ export default function OrganizationDetailPage() {
                   organization.status === "PENDING" ||
                   organization.status === "DENIED"
                 }
-                className={
+                className={`h-11 px-6 rounded-xl font-bold shadow-sm transition-all ${
                   organization.status !== "ACTIVE"
-                    ? "bg-[#008080] hover:bg-[#006666]"
-                    : ""
-                }
+                    ? "bg-[#008080] hover:bg-[#00A79D] text-white"
+                    : "bg-white border border-red-200 text-red-600 hover:bg-red-50"
+                }`}
               >
                 {organization.status === "ACTIVE" ? (
                   <>
-                    <MdLock className="mr-2" />
+                    <MdLock className="mr-2 h-4 w-4" />
                     Khóa tài khoản
                   </>
                 ) : (
                   <>
-                    <MdLockOpen className="mr-2" />
+                    <MdLockOpen className="mr-2 h-4 w-4" />
                     Mở khóa
                   </>
                 )}
@@ -243,100 +255,111 @@ export default function OrganizationDetailPage() {
                     phoneNumber: organization.phoneNumber || "",
                   });
                 }}
+                className="h-11 px-6 rounded-xl border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-bold"
               >
-                <MdCancel className="mr-2" />
+                <MdCancel className="mr-2 h-4 w-4" />
                 Hủy
               </Button>
               <Button
                 onClick={handleSave}
-                className="bg-[#008080] hover:bg-[#006666]"
+                className="h-11 px-6 rounded-xl bg-gradient-to-r from-[#008080] to-[#00A79D] text-white font-bold hover:from-[#006666] hover:to-[#008080] shadow-md"
               >
-                <MdSave className="mr-2" />
-                Lưu
+                <MdSave className="mr-2 h-4 w-4" />
+                Lưu Thay Đổi
               </Button>
             </>
           )}
         </div>
       </div>
 
-      {/* Main Content - 2 columns on desktop */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Main Content - Soft UI Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
         {/* Left Column - Avatar and Basic Info */}
-        <div className="lg:col-span-1">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex flex-col items-center text-center">
-                {/* Avatar */}
-                <Avatar className="w-32 h-32 mb-4">
-                  <AvatarImage
-                    src={organization.organizationProfiles?.avatarUrl || undefined}
-                    alt={
-                      organization.organizationProfiles?.organizationName ||
-                      "Organization"
-                    }
-                  />
-                  <AvatarFallback className="bg-[#008080] text-white text-4xl">
-                    {organization.organizationProfiles?.organizationName?.charAt(
-                      0
-                    ) || "O"}
-                  </AvatarFallback>
-                </Avatar>
-
-                {/* Name and Status */}
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  {organization.organizationProfiles?.organizationName ||
-                    "Chưa có tên"}
-                </h2>
-                <div className="mb-4">{getStatusBadge(organization.status)}</div>
-
-                {/* Basic Info */}
-                <div className="w-full space-y-3 text-left">
-                  <div className="border-t pt-3">
-                    <p className="text-sm text-gray-500">Email</p>
-                    <p className="font-medium text-gray-900">{organization.email}</p>
-                  </div>
-                  <div className="border-t pt-3">
-                    <p className="text-sm text-gray-500">Số điện thoại</p>
-                    <p className="font-medium text-gray-900">
-                      {organization.phoneNumber || "Chưa có"}
-                    </p>
-                  </div>
-                  <div className="border-t pt-3">
-                    <p className="text-sm text-gray-500">Ngày tạo</p>
-                    <p className="font-medium text-gray-900">
-                      {formatDate(organization.createdAt)}
-                    </p>
-                  </div>
+        <div className="lg:col-span-1 space-y-8">
+          {/* Profile Header Card */}
+          <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 p-8 relative overflow-hidden">
+            <div className="flex flex-col items-center relative z-10">
+              <div className="relative mb-5">
+                <div className="w-32 h-32 rounded-full bg-slate-100 flex items-center justify-center text-[#008080] text-5xl font-black overflow-hidden shadow-sm border-4 border-white ring-1 ring-slate-100">
+                  {organization.organizationProfiles?.avatarUrl ? (
+                    <img
+                      src={organization.organizationProfiles.avatarUrl}
+                      alt={organization.organizationProfiles.organizationName}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <span>{(organization.organizationProfiles?.organizationName || "O").charAt(0).toUpperCase()}</span>
+                  )}
                 </div>
               </div>
-            </CardContent>
-          </Card>
+
+              <h1 className="text-2xl font-black text-slate-900 mb-1 tracking-tight text-center">
+                {organization.organizationProfiles?.organizationName || "Chưa có tên"}
+              </h1>
+              <p className="text-sm font-bold text-[#008080] mb-4 uppercase tracking-widest text-center">Tổ Chức Xã Hội</p>
+              
+              <div className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm border mb-6 ${
+                organization.status === "ACTIVE" ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
+                organization.status === "BANNED" ? "bg-red-50 text-red-600 border-red-100" :
+                organization.status === "DENIED" ? "bg-slate-50 text-slate-600 border-slate-200" :
+                "bg-amber-50 text-amber-600 border-amber-100"
+              }`}>
+                {organization.status === "ACTIVE" ? "Đang hoạt động" : 
+                 organization.status === "BANNED" ? "Đã khóa" : 
+                 organization.status === "DENIED" ? "Từ chối" : "Chờ duyệt"}
+              </div>
+
+              {/* Basic Info list in card */}
+              <div className="w-full space-y-4 text-left border-t border-slate-100 pt-5 mt-2">
+                <div>
+                  <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Email</p>
+                  <p className="font-medium text-slate-800 break-all">{organization.email}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Số điện thoại</p>
+                  <p className="font-medium text-slate-800">
+                    {organization.phoneNumber || "Chưa có"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Ngày tham gia</p>
+                  <p className="font-medium text-slate-800">
+                    {formatDate(organization.createdAt)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Thong ke nhanh */}
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle className="text-lg">Thống kê</CardTitle>
+          <Card className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+            <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
+              <CardTitle className="text-lg font-bold text-slate-800">Thống kê hoạt động</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <MdCampaign className="text-blue-600 text-xl" />
-                  <span className="text-sm font-medium text-gray-700">
-                    Chiến dịch
+            <CardContent className="space-y-4 pt-6">
+              <div className="flex items-center justify-between p-4 bg-teal-50/50 rounded-2xl border border-teal-100 hover:bg-teal-50 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-teal-100 text-teal-600 rounded-xl">
+                    <MdCampaign className="text-xl" />
+                  </div>
+                  <span className="text-sm font-bold text-slate-700">
+                    Chiến dịch đã tạo
                   </span>
                 </div>
-                <span className="text-lg font-bold text-blue-600">
+                <span className="text-xl font-black text-teal-600">
                   {organization.campaigns?.length || 0}
                 </span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <MdArticle className="text-green-600 text-xl" />
-                  <span className="text-sm font-medium text-gray-700">
-                    Bài viết
+              <div className="flex items-center justify-between p-4 bg-amber-50/50 rounded-2xl border border-amber-100 hover:bg-amber-50 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-amber-100 text-amber-600 rounded-xl">
+                    <MdArticle className="text-xl" />
+                  </div>
+                  <span className="text-sm font-bold text-slate-700">
+                    Bài viết truyền thông
                   </span>
                 </div>
-                <span className="text-lg font-bold text-green-600">
+                <span className="text-xl font-black text-amber-600">
                   {organization.communicationPosts?.length || 0}
                 </span>
               </div>
@@ -345,17 +368,17 @@ export default function OrganizationDetailPage() {
         </div>
 
         {/* Right Column - Detailed Info */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-8">
           {/* Thong tin co ban */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Thông tin cơ bản</CardTitle>
+          <Card className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+            <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
+              <CardTitle className="text-lg font-bold text-slate-800">Thông tin cơ bản</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6 pt-6 tracking-wide">
               {isEditing ? (
                 <>
                   <div className="space-y-2">
-                    <Label htmlFor="organizationName">Tên tổ chức</Label>
+                    <Label htmlFor="organizationName" className="font-bold text-slate-700">Tên tổ chức</Label>
                     <Input
                       id="organizationName"
                       value={editForm.organizationName}
@@ -365,11 +388,12 @@ export default function OrganizationDetailPage() {
                           organizationName: e.target.value,
                         })
                       }
+                      className="h-11 rounded-xl bg-slate-50 border-slate-200 focus-visible:ring-[#008080] focus-visible:border-[#008080]"
                       placeholder="Nhập tên tổ chức"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="representativeName">Người đại diện</Label>
+                    <Label htmlFor="representativeName" className="font-bold text-slate-700">Người đại diện</Label>
                     <Input
                       id="representativeName"
                       value={editForm.representativeName}
@@ -379,102 +403,91 @@ export default function OrganizationDetailPage() {
                           representativeName: e.target.value,
                         })
                       }
+                      className="h-11 rounded-xl bg-slate-50 border-slate-200 focus-visible:ring-[#008080] focus-visible:border-[#008080]"
                       placeholder="Nhập tên người đại diện"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phoneNumber">Số điện thoại</Label>
+                    <Label htmlFor="phoneNumber" className="font-bold text-slate-700">Số điện thoại liên hệ</Label>
                     <Input
                       id="phoneNumber"
                       value={editForm.phoneNumber}
                       onChange={(e) =>
                         setEditForm({ ...editForm, phoneNumber: e.target.value })
                       }
+                      className="h-11 rounded-xl bg-slate-50 border-slate-200 focus-visible:ring-[#008080] focus-visible:border-[#008080]"
                       placeholder="Nhập số điện thoại"
                     />
                   </div>
                 </>
               ) : (
-                <>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-500">Tên tổ chức</p>
-                      <p className="font-medium text-gray-900">
-                        {organization.organizationProfiles?.organizationName ||
-                          "Chưa có"}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Người đại diện</p>
-                      <p className="font-medium text-gray-900">
-                        {organization.organizationProfiles?.representativeName ||
-                          "Chưa có"}
-                      </p>
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-1">
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Tên tổ chức</p>
+                    <p className="font-semibold text-slate-800 text-lg">
+                      {organization.organizationProfiles?.organizationName ||
+                        "Chưa có"}
+                    </p>
                   </div>
-                </>
+                  <div className="space-y-1">
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Người đại diện</p>
+                    <p className="font-semibold text-slate-800 text-lg">
+                      {organization.organizationProfiles?.representativeName ||
+                        "Chưa có"}
+                    </p>
+                  </div>
+                  
+                  {/* Địa chỉ */}
+                  <div className="col-span-1 md:col-span-2 space-y-1 border-t border-slate-100 pt-6">
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Quận/Huyện hoạt động</p>
+                    <p className="font-semibold text-slate-800 text-lg">
+                      {organization.organizationProfiles?.district
+                        ? formatDistrict(organization.organizationProfiles.district)
+                        : "Chưa có"}
+                    </p>
+                  </div>
+                  <div className="col-span-1 md:col-span-2 space-y-1 mt-2">
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Địa chỉ chi tiết</p>
+                    <p className="font-semibold text-slate-800 text-lg">
+                      {organization.organizationProfiles?.addressDetail || "Chưa có"}
+                    </p>
+                  </div>
+                </div>
               )}
             </CardContent>
           </Card>
 
-          {/* Dia chi */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Địa chỉ</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm text-gray-500">Quận/Huyện</p>
-                  <p className="font-medium text-gray-900">
-                    {organization.organizationProfiles?.district
-                      ? formatDistrict(organization.organizationProfiles.district)
-                      : "Chưa có"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Địa chỉ chi tiết</p>
-                  <p className="font-medium text-gray-900">
-                    {organization.organizationProfiles?.addressDetail || "Chưa có"}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Cac chien dich gan day */}
+          {/* Các chiến dịch gần đây */}
           {organization.campaigns && organization.campaigns.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Các chiến dịch gần đây</CardTitle>
+            <Card className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+              <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
+                <CardTitle className="text-lg font-bold text-slate-800">Các chiến dịch gần đây</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
+              <CardContent className="pt-6">
+                <div className="space-y-4">
                   {organization.campaigns.slice(0, 5).map((campaign) => (
                     <div
                       key={campaign.id}
-                      className="flex items-start justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="flex items-center justify-between p-4 border border-slate-100 rounded-2xl bg-white hover:border-teal-200 hover:shadow-sm transition-all shadow-sm"
                     >
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900">
+                      <div className="flex-1 pr-4">
+                        <p className="font-bold text-slate-800 truncate">
                           {campaign.title}
                         </p>
-                        <p className="text-sm text-gray-500 mt-1">
-                          {campaign.currentVolunteers}/{campaign.maxVolunteers} TNV
+                        <p className="text-sm font-medium text-slate-500 mt-1 flex items-center gap-1">
+                          <span className="text-teal-600 font-bold">{campaign.currentVolunteers}</span> / {campaign.maxVolunteers} TNV tham gia
                         </p>
                       </div>
-                      <Badge
-                        variant="outline"
-                        className={
-                          campaign.status === "ACTIVE"
-                            ? "bg-green-100 text-green-800"
+                      <div className={`px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${
+                          campaign.status === "ACTIVE" || campaign.status === "ONGOING"
+                            ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
                             : campaign.status === "COMPLETED"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-gray-100 text-gray-800"
-                        }
+                            ? "bg-blue-50 text-blue-600 border border-blue-100"
+                            : "bg-slate-50 text-slate-600 border border-slate-200"
+                        }`}
                       >
-                        {campaign.status}
-                      </Badge>
+                        {campaign.status === "ONGOING" ? "Đang diễn ra" : campaign.status === "COMPLETED" ? "Đã xong" : campaign.status}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -482,23 +495,23 @@ export default function OrganizationDetailPage() {
             </Card>
           )}
 
-          {/* Cac bai viet gan day */}
+          {/* Các bài viết truyền thông gần đây */}
           {organization.communicationPosts &&
             organization.communicationPosts.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Các bài viết gần đây</CardTitle>
+              <Card className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-800">Bài viết truyền thông gần đây</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
+                <CardContent className="pt-6">
+                  <div className="space-y-4">
                     {organization.communicationPosts.slice(0, 5).map((post) => (
                       <div
                         key={post.id}
-                        className="flex items-start justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="flex items-center justify-between p-4 border border-slate-100 rounded-2xl bg-white hover:border-teal-200 hover:shadow-sm transition-all shadow-sm"
                       >
-                        <div className="flex-1">
-                          <p className="font-medium text-gray-900">{post.title}</p>
-                          <p className="text-sm text-gray-500 mt-1">
+                        <div className="flex-1 pr-4">
+                          <p className="font-bold text-slate-800 truncate">{post.title}</p>
+                          <p className="text-sm font-medium text-slate-500 mt-1">
                             {formatDate(post.createdAt)}
                           </p>
                         </div>
@@ -508,27 +521,6 @@ export default function OrganizationDetailPage() {
                 </CardContent>
               </Card>
             )}
-
-          {/* Thong tin tai khoan */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Thông tin tài khoản</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-500">Trạng thái</p>
-                  {getStatusBadge(organization.status)}
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Ngày đăng ký</p>
-                  <p className="font-medium text-gray-900">
-                    {formatDate(organization.createdAt)}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>

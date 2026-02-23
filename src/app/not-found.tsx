@@ -37,12 +37,12 @@ export default function NotFound() {
             >
                <MdArrowBack className="w-5 h-5" /> Về trang chủ
             </Link>
-            <Link 
+            {/* <Link 
                href="/download" 
                className="flex items-center gap-2 px-8 py-4 rounded-full bg-white text-slate-700 font-bold border border-slate-200 shadow-sm hover:text-[#008080] hover:border-[#008080]/30 hover:shadow-md hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto justify-center"
             >
                Tải ứng dụng
-            </Link>
+            </Link> */}
          </div>
       </div>
     </div>

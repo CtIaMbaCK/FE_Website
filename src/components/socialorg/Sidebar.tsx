@@ -228,9 +228,9 @@ export default function Sidebar() {
         {/* Nut Logout */}
         <button
           onClick={handleLogout}
-          className="flex w-full justify-center items-center gap-10 p-2 bg-[#FFE4E6] text-[#CC4362] rounded-xl hover:bg-[#CC4362] hover:text-white transition-colors"
+          className="flex w-full justify-center items-center gap-10 p-2 bg-[#FFE4E6] text-[#CC4362] rounded-xl hover:bg-[#FFE4E6] hover:text-white transition-colors"
         >
-          <MdLogout className="text-xl" />
+          <MdLogout className="text-xl" />  
           <span className="text-sm font-medium">Đăng xuất</span>
         </button>
       </div>

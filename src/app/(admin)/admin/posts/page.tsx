@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Breadcrumb from "@/components/Breadcrumb";
-import { MdSearch, MdVisibility } from "react-icons/md";
+import { MdSearch, MdVisibility, MdCalendarToday, MdOutlineBusiness, MdNotes } from "react-icons/md";
 
 export default function PostsPage() {
   // State quan ly
@@ -114,113 +114,144 @@ export default function PostsPage() {
       </Card>
 
       {/* Table */}
-      <Card>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[80px]">Logo</TableHead>
-                <TableHead className="min-w-[250px]">Tiêu đề</TableHead>
-                <TableHead>Tổ chức XH</TableHead>
-                <TableHead>Nội dung</TableHead>
-                <TableHead>Ngày tạo</TableHead>
-                <TableHead className="text-right">Thao tác</TableHead>
+      <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-slate-50/50 border-b border-slate-100 hover:bg-slate-50/50">
+              <TableHead className="w-[80px] font-bold text-slate-500 text-xs uppercase tracking-wider py-4 pl-6">Logo</TableHead>
+              <TableHead className="min-w-[250px] font-bold text-slate-500 text-xs uppercase tracking-wider">Tiêu đề</TableHead>
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">Tổ Chức Xã Hội</TableHead>
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">Nội dung</TableHead>
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">Ngày đăng</TableHead>
+              <TableHead className="text-right font-bold text-slate-500 text-xs uppercase tracking-wider pr-6">Thao tác</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {loading ? (
+              <TableRow key="loading-row">
+                <TableCell colSpan={6} className="text-center py-16 bg-gray-50/30">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="relative">
+                      <div className="w-10 h-10 border-3 border-gray-200 rounded-full"></div>
+                      <div className="absolute inset-0 w-10 h-10 border-3 border-teal-600 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                    <span className="text-sm text-gray-500 font-medium">Đang tải dữ liệu...</span>
+                  </div>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8">
-                    <div className="flex justify-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#008080]"></div>
+            ) : posts.length === 0 ? (
+              <TableRow key="empty-row">
+                <TableCell colSpan={6} className="text-center py-16 bg-gray-50/30">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
+                      <MdNotes className="w-7 h-7 text-gray-400" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-gray-900">
+                        Không tìm thấy bài viết nào
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Thử điều chỉnh tìm kiếm của bạn
+                      </p>
+                    </div>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              posts.map((post) => (
+                <TableRow key={post.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+                  <TableCell className="pl-6">
+                    <Avatar className="w-10 h-10 border-2 border-white shadow-sm">
+                      <AvatarImage
+                        src={post.organization.organizationProfiles?.avatarUrl}
+                        alt={post.organization.organizationProfiles?.organizationName || "Org"}
+                        className="object-cover"
+                      />
+                      <AvatarFallback className="bg-gradient-to-br from-teal-500 to-teal-600 text-white font-bold text-sm">
+                        {post.organization.organizationProfiles?.organizationName?.charAt(0) || "O"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </TableCell>
+                  <TableCell>
+                    <div className="font-bold text-slate-800 text-sm line-clamp-2">
+                       {post.title}
                     </div>
                   </TableCell>
-                </TableRow>
-              ) : posts.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={6}
-                    className="text-center py-8 text-gray-500"
-                  >
-                    Không tìm thấy bài viết
+                  <TableCell className="text-sm font-medium text-slate-600">
+                    {post.organization.organizationProfiles?.organizationName || "Không rõ"}
                   </TableCell>
-                </TableRow>
-              ) : (
-                posts.map((post) => (
-                  <TableRow key={post.id}>
-                    <TableCell>
-                      <Avatar>
-                        <AvatarImage
-                          src={
-                            post.organization.organizationProfiles?.avatarUrl
-                          }
-                          alt={
-                            post.organization.organizationProfiles
-                              ?.organizationName || "Org"
-                          }
-                        />
-                        <AvatarFallback className="bg-[#008080] text-white">
-                          {post.organization.organizationProfiles?.organizationName?.charAt(
-                            0
-                          ) || "O"}
-                        </AvatarFallback>
-                      </Avatar>
-                    </TableCell>
-                    <TableCell className="font-medium">{post.title}</TableCell>
-                    <TableCell>
-                      {post.organization.organizationProfiles
-                        ?.organizationName || "Không rõ"}
-                    </TableCell>
-                    <TableCell className="text-sm text-gray-600">
-                      {truncateContent(post.content)}
-                    </TableCell>
-                    <TableCell>{formatDate(post.createdAt)}</TableCell>
-                    <TableCell className="text-right">
+                  <TableCell>
+                     <p className="text-xs text-slate-500 line-clamp-2 max-w-sm">
+                       {truncateContent(post.content, 100)}
+                     </p>
+                  </TableCell>
+                  <TableCell className="text-xs font-medium text-slate-500">
+                    {formatDate(post.createdAt)}
+                  </TableCell>
+                  <TableCell className="pr-6">
+                    <div className="flex justify-end gap-2 pr-2">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => {
                           window.location.href = `/admin/posts/${post.id}`;
                         }}
+                        className="h-9 px-3 rounded-xl border-slate-200 text-slate-600 hover:text-[#008080] hover:bg-white hover:border-[#008080]/30 shadow-sm transition-all text-xs font-bold"
                       >
-                        <MdVisibility className="mr-1" />
+                        <MdVisibility className="mr-1.5 w-4 h-4" />
                         Chi tiết
                       </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between px-4 py-4 border-t">
-            <div className="text-sm text-gray-600">
-              Trang {page} / {totalPages}
-            </div>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage(page - 1)}
-                disabled={page === 1}
-              >
-                Trước
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage(page + 1)}
-                disabled={page === totalPages}
-              >
-                Sau
-              </Button>
-            </div>
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 px-2">
+          <div className="text-sm text-slate-500 font-medium">
+            Hiển thị bài viết {" "}
+            <span className="font-bold text-slate-800">
+              {(page - 1) * limit + 1}
+            </span>{" "}
+            đến {" "}
+            <span className="font-bold text-slate-800">
+              {Math.min(page * limit, total)}
+            </span>{" "}
+            trên <span className="font-bold text-slate-800">{total}</span>
           </div>
-        )}
-      </Card>
+          <div className="flex items-center gap-2 bg-white/60 backdrop-blur-md p-1.5 rounded-2xl border border-slate-100 shadow-sm">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="h-10 px-4 rounded-xl border-transparent bg-transparent hover:bg-slate-100 text-slate-600 disabled:opacity-40 font-bold transition-colors"
+            >
+              Trước
+            </Button>
+            <div className="flex items-center">
+              <span className="w-10 h-10 flex items-center justify-center text-sm font-black text-white bg-[#008080] rounded-xl shadow-md">
+                {page}
+              </span>
+              <span className="px-3 text-sm font-bold text-slate-400">/ {totalPages}</span>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="h-10 px-4 rounded-xl border-transparent bg-transparent hover:bg-slate-100 text-slate-600 disabled:opacity-40 font-bold transition-colors"
+            >
+              Sau
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

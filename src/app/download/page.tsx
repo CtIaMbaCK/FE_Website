@@ -43,13 +43,13 @@ export default function DownloadPage() {
           </button>
         </div>
 
-        {/* Rating Mock */}
+        {/* Rating Mock
         <div className="flex flex-col items-center justify-center pt-8 border-t border-slate-200/60">
            <div className="flex gap-1 text-amber-500 mb-3">
               {[1,2,3,4,5].map(i => <MdOutlineStarBorder key={i} className="fill-current w-6 h-6" />)}
            </div>
            <p className="text-slate-600 font-medium">Được đánh giá <span className="text-slate-900 font-bold">4.9/5</span> dựa trên 10K+ lượt tải</p>
-        </div>
+        </div> */}
 
         <Link href="/" className="inline-flex items-center justify-center mt-12 text-[#008080] hover:text-[#006666] font-semibold flex gap-2 transition-colors px-6 py-3 bg-[#008080]/5 rounded-full hover:bg-[#008080]/10">
           <MdArrowBack /> Quay lại trang chủ

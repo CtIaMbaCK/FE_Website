@@ -94,6 +94,8 @@ export interface Post {
   updatedAt?: string;
   organizationId?: string;
   organization: {
+    email: string;
+    phoneNumber?: string;
     organizationProfiles?: {
       organizationName: string;
       avatarUrl?: string;
@@ -104,6 +106,8 @@ export interface Post {
 export interface Campaign {
   id: string;
   title: string;
+  description?: string;
+  coverImage?: string;
   status: string;
   startDate: string;
   endDate?: string;

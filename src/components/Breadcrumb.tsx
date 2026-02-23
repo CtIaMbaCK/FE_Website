@@ -19,12 +19,12 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
   const homeHref = isAdminRoute ? "/admin/dashboard" : "/socialorg/dashboard";
 
   return (
-    <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-4">
+    <nav className="flex items-center space-x-2 text-sm text-gray-500 font-medium">
       <Link
         href={homeHref}
-        className="flex items-center hover:text-teal-600 transition-colors"
+        className="flex items-center hover:text-[#008080] transition-colors"
       >
-        <Home className="w-4 h-4" />
+        <Home className="w-[18px] h-[18px]" />
       </Link>
 
       {items.map((item, index) => (
@@ -33,12 +33,12 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
           {item.href ? (
             <Link
               href={item.href}
-              className="hover:text-teal-600 transition-colors"
+              className="hover:text-[#008080] transition-colors"
             >
               {item.label}
             </Link>
           ) : (
-            <span className="text-gray-900 font-medium">{item.label}</span>
+            <span className="text-[#008080] font-bold">{item.label}</span>
           )}
         </div>
       ))}

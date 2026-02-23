@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
@@ -95,99 +94,124 @@ export default function ActivityLog() {
   };
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-          <MdHistory size={24} />
-          Nhật Ký Hoạt Động
-          <span className="ml-2 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
+    <div className="flex flex-col h-full bg-slate-50/50 rounded-3xl p-6 border border-slate-100 shadow-[inset_0_2px_10px_rgba(0,0,0,0.02)]">
+      
+      {/* Cấu trúc Header xếp cùng 1 hàng */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        {/* Nhóm Tiêu đề & Badge */}
+        <div className="flex items-center gap-3">
+          <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+            <MdHistory size={26} className="text-[#008080]" />
+            Nhật Ký Hoạt Động
+          </h2>
+          <span className="px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded-full text-xs font-semibold shadow-sm">
             {activities.length} hoạt động
           </span>
-        </h2>
-        <div className="flex gap-2">
+        </div>
+
+        {/* Nhóm Lọc và Làm mới */}
+        <div className="flex items-center gap-3 w-full sm:w-auto">
           <select
             value={limit}
             onChange={(e) => setLimit(Number(e.target.value))}
-            className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+            className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-[#008080]/20 focus:border-[#008080] outline-none transition-all shadow-sm text-slate-700 flex-1 sm:flex-none"
           >
-            <option value={50}>50 hoạt động</option>
-            <option value={100}>100 hoạt động</option>
-            <option value={200}>200 hoạt động</option>
+            <option value={50}>50 dòng</option>
+            <option value={100}>100 dòng</option>
+            <option value={200}>200 dòng</option>
           </select>
           <Button
             variant="outline"
-            size="sm"
             onClick={loadActivities}
-            className="text-gray-600"
+            className="rounded-lg border-slate-200 text-slate-600 hover:text-[#008080] hover:bg-slate-50 shadow-sm transition-all font-semibold px-4 py-2 h-auto"
           >
-            <MdRefresh className="mr-1" />
+            <MdRefresh className="mr-1.5 w-4 h-4" />
             Làm mới
           </Button>
         </div>
       </div>
 
+      {/* Danh sách */}
       {loading ? (
-        <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#008080]"></div>
+        <div className="flex-1 flex items-center justify-center py-16">
+          <div className="animate-spin rounded-full h-10 w-10 border-4 border-[#008080]/20 border-t-[#008080]"></div>
         </div>
       ) : activities.length === 0 ? (
-        <div className="text-center py-12">
-          <MdHistory className="mx-auto text-gray-400 mb-3" size={48} />
-          <p className="text-gray-500">Chưa có hoạt động nào</p>
+        <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
+          <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+            <MdHistory className="text-slate-300" size={40} />
+          </div>
+          <p className="text-slate-500 font-medium">Chưa có hoạt động nào được ghi nhận</p>
         </div>
       ) : (
-        <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
-          {activities.map((activity) => (
-            <div
-              key={activity.id}
-              className="flex items-start gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
-            >
-              {/* Icon */}
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                {TYPE_ICONS[activity.type] || <MdHistory />}
-              </div>
+        <div className="h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+          <div className="space-y-4">
+            {activities.map((activity) => (
+              <div
+                key={activity.id}
+                className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-md hover:border-slate-200 transition-all duration-300"
+              >
+                {/* Icon */}
+                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-xl shadow-sm">
+                  {TYPE_ICONS[activity.type] || <MdHistory className="text-slate-400" />}
+                </div>
 
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">
-                      {activity.action}
-                    </p>
-                    {activity.user && (
-                      <p className="text-xs text-gray-600 mt-1">
-                        <MdPerson className="inline mr-1" size={14} />
-                        {activity.user.phoneNumber} ({activity.user.role})
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-2">
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-slate-800 leading-snug">
+                        {activity.action}
                       </p>
+                      {activity.user && (
+                        <div className="flex items-center gap-1.5 mt-2 bg-slate-50 w-fit px-2 py-1 rounded-md border border-slate-100">
+                          <MdPerson className="text-slate-400" size={14} />
+                          <span className="text-xs font-medium text-slate-600">
+                            {activity.user.phoneNumber} <span className="text-slate-400">({activity.user.role})</span>
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    {/* Badge Trạng thái */}
+                    <span
+                      className={`px-3 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase whitespace-nowrap border self-start ${
+                        TYPE_COLORS[activity.type]?.includes("text-red-800") ? "bg-red-50 text-red-600 border-red-100" :
+                        TYPE_COLORS[activity.type]?.includes("text-blue-800") ? "bg-blue-50 text-blue-600 border-blue-100" :
+                        TYPE_COLORS[activity.type]?.includes("text-green-800") ? "bg-green-50 text-green-600 border-green-100" :
+                        TYPE_COLORS[activity.type]?.includes("text-green-900") ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
+                        TYPE_COLORS[activity.type]?.includes("text-purple-800") ? "bg-purple-50 text-purple-600 border-purple-100" :
+                        TYPE_COLORS[activity.type]?.includes("text-indigo-800") ? "bg-indigo-50 text-indigo-600 border-indigo-100" :
+                        TYPE_COLORS[activity.type]?.includes("text-yellow-800") ? "bg-amber-50 text-amber-600 border-amber-100" :
+                        TYPE_COLORS[activity.type]?.includes("text-pink-800") ? "bg-pink-50 text-pink-600 border-pink-100" :
+                        TYPE_COLORS[activity.type]?.includes("text-orange-800") ? "bg-orange-50 text-orange-600 border-orange-100" :
+                        TYPE_COLORS[activity.type]?.includes("text-teal-800") ? "bg-teal-50 text-teal-600 border-teal-100" :
+                        TYPE_COLORS[activity.type]?.includes("text-cyan-800") ? "bg-cyan-50 text-cyan-600 border-cyan-100" :
+                        "bg-slate-100 text-slate-600 border-slate-200"
+                      }`}
+                    >
+                      {activity.type.replace(/_/g, " ")}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-slate-50">
+                    <span className="text-xs font-medium text-slate-400">
+                      {getRelativeTime(activity.createdAt)}
+                    </span>
+                    {activity.metadata && Object.keys(activity.metadata).length > 0 && activity.metadata.status && (
+                      <>
+                        <span className="text-[10px] text-slate-300">•</span>
+                        <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                          Trạng thái: {activity.metadata.status}
+                        </span>
+                      </>
                     )}
                   </div>
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
-                      TYPE_COLORS[activity.type] || "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {activity.type.replace(/_/g, " ")}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-xs text-gray-500">
-                    {getRelativeTime(activity.createdAt)}
-                  </span>
-                  {activity.metadata && Object.keys(activity.metadata).length > 0 && (
-                    <span className="text-xs text-gray-400">•</span>
-                  )}
-                  {activity.metadata?.status && (
-                    <span className="text-xs text-gray-500">
-                      Trạng thái: {activity.metadata.status}
-                    </span>
-                  )}
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
-    </Card>
+    </div>
   );
 }

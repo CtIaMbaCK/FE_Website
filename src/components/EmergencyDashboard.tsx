@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { emergencyService, EmergencyRequest } from "@/services/emergency.service";
-import { MdWarning, MdCheckCircle, MdPhone, MdEmail } from "react-icons/md";
+import { MdCrisisAlert, MdCheckCircle, MdPhone, MdEmail } from "react-icons/md";
 import { io, Socket } from "socket.io-client";
 
 export default function EmergencyDashboard() {
@@ -93,12 +93,18 @@ export default function EmergencyDashboard() {
 
   return (
     <Card className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-          <MdWarning className="text-red-600" size={24} />
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+          <div className="relative">
+            <MdCrisisAlert className="text-red-600" size={26} />
+            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+            </span>
+          </div>
           SOS Khẩn Cấp
           {emergencies.length > 0 && (
-            <span className="ml-2 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-semibold">
+            <span className="ml-2 px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold inline-block border border-red-200 shadow-sm">
               {emergencies.length}
             </span>
           )}
@@ -107,7 +113,7 @@ export default function EmergencyDashboard() {
           variant="outline"
           size="sm"
           onClick={loadEmergencies}
-          className="text-gray-600"
+          className="text-slate-600 border-slate-200 rounded-lg hover:bg-slate-50"
         >
           Làm mới
         </Button>
@@ -125,20 +131,23 @@ export default function EmergencyDashboard() {
           {emergencies.map((emergency) => (
             <div
               key={emergency.id}
-              className="border-2 border-red-500 rounded-lg p-4 bg-red-50 hover:bg-red-100 transition-colors"
+              className="border border-red-200 rounded-2xl p-5 bg-gradient-to-br from-white to-red-50/50 hover:shadow-md hover:border-red-300 transition-all duration-300 relative overflow-hidden"
             >
+              {/* Vạch báo đỏ mỏng bên mép trái */}
+              <div className="absolute top-0 left-0 w-1.5 h-full bg-red-500"></div>
+              
               <div className="flex items-start justify-between">
-                <div className="flex-1">
+                <div className="flex-1 pl-2">
                   {/* Header */}
-                  <div className="flex items-center gap-3 mb-3">
+                  <div className="flex items-center gap-3 mb-4">
                     {emergency.beneficiary.avatarUrl ? (
                       <img
                         src={emergency.beneficiary.avatarUrl}
                         alt={emergency.beneficiary.fullName}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-red-600"
+                        className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm ring-2 ring-red-100"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center text-white font-bold">
+                      <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-700 font-bold border border-red-200 shadow-sm">
                         {emergency.beneficiary.fullName.charAt(0)}
                       </div>
                     )}
@@ -153,21 +162,25 @@ export default function EmergencyDashboard() {
                   </div>
 
                   {/* Thông tin liên hệ */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                    <div className="flex items-center gap-2 text-gray-700">
-                      <MdPhone className="text-red-600" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div className="flex items-center gap-2 text-slate-600 bg-white px-3 py-2 rounded-xl border border-red-100 shadow-sm w-fit group">
+                      <div className="p-1.5 bg-red-50 rounded-lg group-hover:bg-red-100 transition-colors">
+                        <MdPhone className="text-red-600" size={16} />
+                      </div>
                       <a
                         href={`tel:${emergency.beneficiary.user.phoneNumber}`}
-                        className="font-medium hover:text-red-600 underline"
+                        className="font-medium hover:text-red-700 transition-colors text-sm pr-2"
                       >
                         {emergency.beneficiary.user.phoneNumber}
                       </a>
                     </div>
-                    <div className="flex items-center gap-2 text-gray-700">
-                      <MdEmail className="text-red-600" />
+                    <div className="flex items-center gap-2 text-slate-600 bg-white px-3 py-2 rounded-xl border border-red-100 shadow-sm w-fit group">
+                      <div className="p-1.5 bg-red-50 rounded-lg group-hover:bg-red-100 transition-colors">
+                        <MdEmail className="text-red-600" size={16} />
+                      </div>
                       <a
                         href={`mailto:${emergency.beneficiary.user.email}`}
-                        className="font-medium hover:text-red-600 underline text-sm"
+                        className="font-medium hover:text-red-700 transition-colors text-sm pr-2"
                       >
                         {emergency.beneficiary.user.email}
                       </a>
@@ -195,15 +208,15 @@ export default function EmergencyDashboard() {
 
                   {/* Người giám hộ */}
                   {emergency.beneficiary.guardianName && (
-                    <div className="bg-white rounded p-3 border border-red-200">
-                      <p className="text-sm font-semibold text-gray-700 mb-1">
-                        Người giám hộ:
+                    <div className="bg-white rounded-xl p-3 border border-slate-200 inline-block">
+                      <p className="text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wide">
+                        Người giám hộ
                       </p>
-                      <p className="text-sm text-gray-600">
-                        {emergency.beneficiary.guardianName} -{' '}
+                      <p className="text-sm text-slate-700">
+                        <span className="font-medium">{emergency.beneficiary.guardianName}</span> -{' '}
                         <a
                           href={`tel:${emergency.beneficiary.guardianPhone}`}
-                          className="text-red-600 hover:underline font-medium"
+                          className="text-[#008080] hover:text-[#00A79D] font-medium transition-colors"
                         >
                           {emergency.beneficiary.guardianPhone}
                         </a>
@@ -213,13 +226,13 @@ export default function EmergencyDashboard() {
                 </div>
 
                 {/* Button xử lý */}
-                <div className="ml-4">
+                <div className="ml-4 flex flex-col items-end gap-2">
                   <Button
                     onClick={() => handleComplete(emergency.id)}
-                    className="bg-green-600 hover:bg-green-700 text-white"
+                    className="bg-[#008080] hover:bg-[#00A79D] text-white shadow-sm rounded-xl py-5 hover:-translate-y-0.5 transition-all"
                     size="sm"
                   >
-                    <MdCheckCircle className="mr-1" />
+                    <MdCheckCircle className="mr-1.5 w-4 h-4" />
                     Đã xử lý
                   </Button>
                 </div>

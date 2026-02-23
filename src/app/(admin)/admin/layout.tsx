@@ -79,7 +79,7 @@ export default function AdminLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#f8fafc] font-sans selection:bg-teal-100 selection:text-teal-900">
       {/* Mobile menu button */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
@@ -92,14 +92,14 @@ export default function AdminLayout({
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${
+        className={`fixed top-0 left-0 z-40 w-72 h-screen transition-transform duration-300 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 bg-white border-r border-gray-200`}
+        } lg:translate-x-0 bg-white/80 backdrop-blur-2xl border-r border-slate-100 shadow-[4px_0_24px_rgba(0,0,0,0.02)]`}
       >
-        <div className="h-full px-3 py-4 overflow-y-auto flex flex-col">
+        <div className="h-full px-4 py-6 overflow-y-auto flex flex-col scrollbar-hide">
           {/* Logo va Ten */}
-          <div className="flex items-center gap-3 px-3 mb-8 pb-4 border-b border-gray-200">
-            <div className="w-10 h-10">
+          <div className="flex items-center gap-3 px-4 mb-8 pb-6 border-b border-slate-100/60 mt-2">
+            <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-100 p-2 flex items-center justify-center">
               <Image
                 src="/images/Logo.png"
                 width={40}
@@ -109,10 +109,10 @@ export default function AdminLayout({
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-bold text-gray-900">
+              <span className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-[#008080] tracking-tight">
                 BetterUS
               </span>
-              <span className="text-xs text-gray-500">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
                 Admin Panel
               </span>
             </div>
@@ -122,21 +122,27 @@ export default function AdminLayout({
           <ul className="space-y-2 flex-1">
             {menuItems.map((item) => {
               const Icon = item.icon;
-              const isActive = pathname === item.href;
+              const isActive =
+                pathname === item.href ||
+                (item.href !== "/admin/dashboard" &&
+                  pathname.startsWith(item.href + "/"));
 
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
                     onClick={() => setSidebarOpen(false)}
-                    className={`flex items-center p-3 rounded-lg transition-colors ${
+                    className={`flex items-center px-4 py-3.5 rounded-2xl transition-all duration-300 group relative overflow-hidden ${
                       isActive
-                        ? "bg-custom-teal text-white"
-                        : "text-gray-700 hover:bg-gray-100"
+                        ? "bg-gradient-to-r from-teal-500 to-[#008080] text-white shadow-md shadow-teal-500/20 font-bold"
+                        : "text-slate-500 hover:bg-teal-50/50 hover:text-teal-700 font-medium"
                     }`}
                   >
-                    <Icon className="text-xl" />
-                    <span className="ml-3 font-medium">{item.label}</span>
+                    {isActive && (
+                       <div className="absolute top-0 right-0 w-16 h-16 bg-white/20 rounded-bl-full -z-10"></div>
+                    )}
+                    <Icon className={`text-2xl transition-transform duration-300 ${isActive ? "scale-110" : "group-hover:scale-110"}`} />
+                    <span className="ml-3.5">{item.label}</span>
                   </Link>
                 </li>
               );
@@ -144,33 +150,33 @@ export default function AdminLayout({
           </ul>
 
           {/* Admin Info va Logout o duoi cung */}
-          <div className="border-t border-gray-200 pt-4 mt-4">
-            <div className="flex items-center gap-3 px-3 mb-3">
-              <div className="w-10 h-10 bg-[#008080] rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">A</span>
+          <div className="border-t border-slate-100/60 pt-6 mt-4 pb-2 px-2">
+            <div className="flex items-center gap-3 px-3 mb-4 p-2 rounded-2xl bg-slate-50 border border-slate-100/50">
+              <div className="w-10 h-10 bg-gradient-to-br from-teal-400 to-[#008080] rounded-xl flex items-center justify-center shadow-sm">
+                <span className="text-white font-black text-lg">A</span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 truncate">
+                <p className="text-sm font-bold text-slate-800 truncate">
                   Administrator
                 </p>
-                <p className="text-xs text-gray-500">Quản trị viên</p>
+                <p className="text-xs font-medium text-slate-500">Quản trị viên</p>
               </div>
             </div>
 
             {/* Nut Logout */}
             <button
               onClick={handleLogout}
-              className="flex w-full justify-center items-center gap-10 p-2 bg-[#FFE4E6] text-[#CC4362] rounded-xl hover:bg-[#CC4362] hover:text-white transition-colors"
+              className="flex w-full justify-center items-center gap-2 p-3 bg-red-50/50 text-red-600 rounded-2xl hover:bg-red-500 hover:text-white hover:shadow-md hover:shadow-red-500/20 transition-all font-bold text-sm"
             >
-              <MdLogout className="text-xl" />
-              <span className="text-sm font-medium">Đăng xuất</span>
+              <MdLogout className="text-lg" />
+              <span>Đăng xuất</span>
             </button>
           </div>
         </div>
       </aside>
 
       {/* Main content */}
-      <div className="lg:ml-64">
+      <div className="lg:ml-72 transition-all duration-300">
         <main className="p-4 sm:p-6 md:p-8">{children}</main>
       </div>
 

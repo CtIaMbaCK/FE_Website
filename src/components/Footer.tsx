@@ -73,7 +73,7 @@ export default function Footer() {
                </li>
                <li className="flex items-center gap-3">
                  <MdEmail className="w-5 h-5 text-[#008080] shrink-0" />
-                 <a href="mailto:support@betterus.com" className="hover:text-[#008080] transition-colors">support@betterus.com</a>
+                 <a href="mailto:hotro.betterus@gmail.com" className="hover:text-[#008080] transition-colors">hotro.betterus@gmail.com</a>
                </li>
              </ul>
           </div>

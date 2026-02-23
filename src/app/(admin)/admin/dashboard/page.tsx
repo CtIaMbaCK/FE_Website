@@ -8,7 +8,6 @@ import {
   getAllOrganizations,
   getAllPosts,
 } from "@/services/admin.service";
-import { Card } from "@/components/ui/card";
 import Breadcrumb from "@/components/Breadcrumb";
 import EmergencyDashboard from "@/components/EmergencyDashboard";
 import ActivityLog from "@/components/ActivityLog";
@@ -18,38 +17,41 @@ import {
   MdBusiness,
   MdArticle,
 } from "react-icons/md";
+import Link from "next/link";
 
-// Component Card thong ke
+// Component Card thong ke Soft UI
 interface StatsCardProps {
   title: string;
   value: number;
   icon: React.ReactNode;
-  color: string;
+  colorClass: string;
+  iconBgClass: string;
   loading?: boolean;
 }
 
-function StatsCard({ title, value, icon, color, loading }: StatsCardProps) {
+function StatsCard({ title, value, icon, colorClass, iconBgClass, loading }: StatsCardProps) {
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between">
+    <div className="bg-white/90 backdrop-blur-xl rounded-[2rem] p-6 shadow-sm border border-slate-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative overflow-hidden group flex flex-col justify-center">
+      
+      <div className="flex items-center justify-between z-10">
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
+          <p className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-widest">{title}</p>
           {loading ? (
             <div className="flex items-center gap-2">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#008080]"></div>
-              <span className="text-gray-400">Đang tải...</span>
+              <div className="animate-spin rounded-full h-5 w-5 border-2 border-[#008080]/20 border-t-[#008080]"></div>
+              <span className="text-slate-400 text-sm font-medium">Đang tải...</span>
             </div>
           ) : (
-            <p className="text-3xl font-bold text-gray-900">{value.toLocaleString()}</p>
+            <p className="text-4xl font-black text-slate-800 tracking-tight">{value.toLocaleString()}</p>
           )}
         </div>
         <div
-          className={`w-14 h-14 rounded-lg flex items-center justify-center text-white ${color}`}
+          className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-sm ${iconBgClass}`}
         >
           {icon}
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
 
@@ -71,7 +73,7 @@ export default function DashboardPage() {
       // Goi tat ca API song song de lay total count
       const [beneficiariesRes, volunteersRes, organizationsRes, postsRes] =
         await Promise.all([
-          getAllBeneficiaries(undefined, undefined, 1, 1), // Chi can lay page 1 voi limit 1 de lay total
+          getAllBeneficiaries(undefined, undefined, 1, 1),
           getAllVolunteers(undefined, undefined, undefined, 1, 1),
           getAllOrganizations(undefined, undefined, 1, 1),
           getAllPosts(undefined, undefined, 1, 1),
@@ -97,20 +99,25 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 font-sans pb-10">
       {/* Breadcrumb */}
-      <Breadcrumb
-        items={[
-          { label: "Tổng quan" }
-        ]}
-      />
+      <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center">
+        <Breadcrumb
+          items={[
+            { label: "Tổng quan" }
+          ]}
+        />
+      </div>
 
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Tổng quan</h1>
-        <p className="text-gray-600 mt-2">
-          Thống kê tổng quan hệ thống quản lý
-        </p>
+      <div className="flex items-center gap-4">
+        <div className="w-2 h-10 bg-gradient-to-b from-[#008080] to-[#00A79D] rounded-full"></div>
+        <div>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Tổng quan hệ thống</h1>
+          <p className="text-slate-500 font-medium mt-1">
+            Theo dõi số lượng và các hoạt động đang diễn ra
+          </p>
+        </div>
       </div>
 
       {/* Stats Grid */}
@@ -118,85 +125,99 @@ export default function DashboardPage() {
         <StatsCard
           title="Người cần giúp đỡ"
           value={stats.beneficiaries}
-          icon={<MdPeople size={28} />}
-          color="bg-blue-500"
+          icon={<MdPeople />}
+          colorClass="bg-blue-500"
+          iconBgClass="bg-blue-50 text-blue-600"
           loading={loading}
         />
 
         <StatsCard
           title="Tình nguyện viên"
           value={stats.volunteers}
-          icon={<MdVolunteerActivism size={28} />}
-          color="bg-[#008080]"
+          icon={<MdVolunteerActivism />}
+          colorClass="bg-[#008080]"
+          iconBgClass="bg-gradient-to-br from-[#008080] to-[#00A79D] text-white shadow-[#008080]/30"
           loading={loading}
         />
 
         <StatsCard
           title="Tổ chức xã hội"
           value={stats.organizations}
-          icon={<MdBusiness size={28} />}
-          color="bg-purple-500"
+          icon={<MdBusiness />}
+          colorClass="bg-purple-500"
+          iconBgClass="bg-purple-50 text-purple-600"
           loading={loading}
         />
 
         <StatsCard
-          title="Bài viết"
+          title="Bài viết truyền thông"
           value={stats.posts}
-          icon={<MdArticle size={28} />}
-          color="bg-orange-500"
+          icon={<MdArticle />}
+          colorClass="bg-amber-500"
+          iconBgClass="bg-amber-50 text-amber-600"
           loading={loading}
         />
       </div>
 
-      {/* Emergency SOS Section */}
-      <EmergencyDashboard />
-
-      {/* Activity Log Section */}
-      <ActivityLog />
+      {/* Emergency & Activity Sections */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+         <div className="space-y-8">
+            <div className="bg-white/80 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
+               <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">SOS Mới nhất</h2>
+               <div className="bg-rose-50/50 rounded-2xl p-1 overflow-hidden border border-rose-100/50">
+                 <EmergencyDashboard />
+               </div>
+            </div>
+         </div>
+         <div className="space-y-8">
+            <div className="bg-white/80 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-sm border border-slate-100 h-full flex flex-col">
+               <div className="flex-1">
+                 <ActivityLog />
+               </div>
+            </div>
+         </div>
+      </div>
 
       {/* Quick Links */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-              <MdPeople size={24} className="text-blue-600" />
+      <div>
+        <h2 className="text-xl font-bold text-slate-800 mb-6 mt-4">Truy cập nhanh</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Link href="/admin/beneficiaries" className="block p-6 bg-white/80 backdrop-blur-md rounded-3xl shadow-sm border border-slate-100 hover:shadow-md hover:border-blue-200 transition-all hover:-translate-y-1 group">
+            <div className="flex items-center gap-5">
+              <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <MdPeople className="text-blue-500 text-2xl" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-800 text-lg">Quản lý NCGĐ</h3>
+                <p className="text-sm text-slate-500 font-medium">Truy cập danh sách</p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">Quản lý NCGĐ</h3>
-              <p className="text-sm text-gray-600">
-                Xem và quản lý người cần giúp đỡ
-              </p>
-            </div>
-          </div>
-        </Card>
+          </Link>
 
-        <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-lg bg-teal-100 flex items-center justify-center">
-              <MdVolunteerActivism size={24} className="text-[#008080]" />
+          <Link href="/admin/volunteers" className="block p-6 bg-white/80 backdrop-blur-md rounded-3xl shadow-sm border border-slate-100 hover:shadow-md hover:border-[#008080]/30 transition-all hover:-translate-y-1 group">
+            <div className="flex items-center gap-5">
+              <div className="w-14 h-14 rounded-2xl bg-[#008080]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <MdVolunteerActivism className="text-[#008080] text-2xl" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-800 text-lg">Quản lý TNV</h3>
+                <p className="text-sm text-slate-500 font-medium">Báo cáo & phê duyệt</p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">Quản lý TNV</h3>
-              <p className="text-sm text-gray-600">
-                Xem và quản lý tình nguyện viên
-              </p>
-            </div>
-          </div>
-        </Card>
+          </Link>
 
-        <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center">
-              <MdBusiness size={24} className="text-purple-600" />
+          <Link href="/admin/organizations" className="block p-6 bg-white/80 backdrop-blur-md rounded-3xl shadow-sm border border-slate-100 hover:shadow-md hover:border-purple-200 transition-all hover:-translate-y-1 group">
+            <div className="flex items-center gap-5">
+              <div className="w-14 h-14 rounded-2xl bg-purple-50 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <MdBusiness className="text-purple-500 text-2xl" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-800 text-lg">Quản lý TCXH</h3>
+                <p className="text-sm text-slate-500 font-medium">Đối tác thiện nguyện</p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">Quản lý TCXH</h3>
-              <p className="text-sm text-gray-600">
-                Xem và quản lý tổ chức xã hội
-              </p>
-            </div>
-          </div>
-        </Card>
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -123,75 +123,81 @@ export default function BeneficiariesPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 font-sans pb-10">
       {/* Breadcrumb */}
-      <Breadcrumb items={[{ label: "Quản lý người cần giúp đỡ" }]} />
+      <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center">
+        <Breadcrumb items={[{ label: "Quản lý Người cần giúp đỡ" }]} />
+      </div>
 
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">
-          Quản lý Người cần giúp đỡ
-        </h1>
-        <p className="text-gray-600 mt-2">Tổng số: {total} người cần giúp đỡ</p>
+      <div className="flex items-center gap-4">
+        <div className="w-2 h-10 bg-gradient-to-b from-[#008080] to-[#00A79D] rounded-full"></div>
+        <div>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+            Người Cần Giúp Đỡ
+          </h1>
+          <p className="text-slate-500 font-medium mt-1">Tổng cộng: <span className="text-[#008080] font-bold">{total}</span> hồ sơ trên hệ thống</p>
+        </div>
       </div>
 
       {/* Filters */}
-      <Card className="p-4">
-        <div className="flex flex-col sm:flex-row gap-4">
+      <div className="bg-white/80 backdrop-blur-xl p-6 rounded-[2rem] shadow-sm border border-slate-100 relative overflow-hidden group">
+        <div className="absolute -right-10 -top-10 w-32 h-32 rounded-full blur-3xl opacity-20 bg-[#008080] group-hover:opacity-30 transition-opacity"></div>
+        <div className="flex flex-col sm:flex-row gap-4 relative z-10 w-full xl:w-2/3">
           {/* Search box */}
           <div className="flex-1 relative">
-            <MdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl" />
             <Input
-              placeholder="Tìm theo tên, email, số điện thoại..."
+              placeholder="Tìm theo tên, email, số điện thoại"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10"
+              className="pl-12 bg-slate-50/50 border-slate-200 rounded-xl h-11 focus-visible:ring-[#008080] focus-visible:ring-offset-0 focus-visible:border-[#008080] transition-colors"
             />
           </div>
 
           {/* Status filter */}
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-full sm:w-[200px]">
-              <SelectValue placeholder="Lọc theo trạng thái" />
+            <SelectTrigger className="w-full sm:w-[200px] bg-slate-50/50 border-slate-200 rounded-xl h-11 focus:ring-[#008080] focus:ring-offset-0">
+              <SelectValue placeholder="Lọc trạng thái" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Tất cả</SelectItem>
-              <SelectItem value="ACTIVE">Hoạt động</SelectItem>
-              <SelectItem value="PENDING">Chờ duyệt</SelectItem>
-              <SelectItem value="BANNED">Đã khóa</SelectItem>
+            <SelectContent className="rounded-xl border-slate-100 shadow-xl">
+              <SelectItem value="all" className="rounded-lg">Tất cả trạng thái</SelectItem>
+              <SelectItem value="ACTIVE" className="rounded-lg">Hoạt động</SelectItem>
+              <SelectItem value="PENDING" className="rounded-lg">Chờ duyệt</SelectItem>
+              <SelectItem value="BANNED" className="rounded-lg">Đã khóa</SelectItem>
             </SelectContent>
           </Select>
         </div>
-      </Card>
+      </div>
 
       {/* Table */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50/50 border-b border-gray-200">
-              <TableHead className="w-[60px] font-medium text-gray-700 text-xs uppercase tracking-wide">
+            <TableRow className="bg-slate-50/50 border-b border-slate-100 hover:bg-slate-50/50">
+              <TableHead className="w-[60px] font-bold text-slate-500 text-xs uppercase tracking-wider pl-6">
                 STT
               </TableHead>
-              <TableHead className="font-medium text-gray-700 text-xs uppercase tracking-wide">
-                Người cần giúp đỡ
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">
+                Người Cần Giúp Đỡ
               </TableHead>
-              <TableHead className="font-medium text-gray-700 text-xs uppercase tracking-wide">
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">
                 Email
               </TableHead>
-              <TableHead className="font-medium text-gray-700 text-xs uppercase tracking-wide">
-                Số điện thoại
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">
+                Số Điện Thoại
               </TableHead>
-              <TableHead className="font-medium text-gray-700 text-xs uppercase tracking-wide">
-                Tổ chức XH
+              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider">
+                Tổ Chức Xã Hội
               </TableHead>
-              <TableHead className="w-[120px] font-medium text-gray-700 text-xs uppercase tracking-wide">
-                Trạng thái
+              <TableHead className="w-[120px] font-bold text-slate-500 text-xs uppercase tracking-wider">
+                Trạng Thái
               </TableHead>
-              <TableHead className="w-[110px] font-medium text-gray-700 text-xs uppercase tracking-wide">
-                Ngày tạo
+              <TableHead className="w-[110px] font-bold text-slate-500 text-xs uppercase tracking-wider">
+                Ngày Tạo
               </TableHead>
-              <TableHead className="text-right font-medium text-gray-700 text-xs uppercase tracking-wide w-[200px]">
-                Thao tác
+              <TableHead className="text-right font-bold text-slate-500 text-xs uppercase tracking-wider w-[220px] pr-6">
+                Thao Tác
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -250,31 +256,31 @@ export default function BeneficiariesPage() {
               beneficiaries.map((beneficiary, index) => (
                 <TableRow
                   key={beneficiary.id}
-                  className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors"
+                  className="border-b border-slate-50 hover:bg-slate-50/80 transition-colors"
                 >
-                  <TableCell className="text-sm text-gray-500 font-medium">
+                  <TableCell className="text-sm text-slate-500 font-medium pl-6">
                     {(page - 1) * limit + index + 1}
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center text-white font-semibold text-sm">
+                      <div className="w-10 h-10 rounded-2xl bg-[#008080]/10 flex items-center justify-center text-[#008080] font-bold text-sm ring-1 ring-[#008080]/20">
                         {(beneficiary.bficiaryProfile?.fullName || "?")
                           .charAt(0)
                           .toUpperCase()}
                       </div>
-                      <div className="font-medium text-gray-900 text-sm">
+                      <div className="font-bold text-slate-800 text-sm">
                         {beneficiary.bficiaryProfile?.fullName ||
                           "Chưa cập nhật"}
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600">
+                  <TableCell className="text-sm font-medium text-slate-600">
                     {beneficiary.email}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600">
+                  <TableCell className="text-sm font-medium text-slate-600">
                     {beneficiary.phoneNumber || "Chưa có"}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600">
+                  <TableCell className="text-sm font-medium text-slate-600">
                     {beneficiary.bficiaryProfile?.organization
                       ?.organizationProfiles?.organizationName || "Chưa có"}
                   </TableCell>
@@ -282,23 +288,23 @@ export default function BeneficiariesPage() {
                     <button
                       onClick={() => handleToggleStatus(beneficiary)}
                       disabled={beneficiary.status === "PENDING"}
-                      className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                      className={`px-3 py-1.5 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all border ${
                         beneficiary.status === "PENDING"
                           ? "cursor-not-allowed opacity-50"
-                          : "cursor-pointer hover:opacity-80"
+                          : "cursor-pointer hover:shadow-sm"
                       } ${
                         beneficiary.status === "ACTIVE"
-                          ? "bg-green-100 text-green-800"
+                          ? "bg-emerald-50 text-emerald-600 border-emerald-100"
                           : beneficiary.status === "PENDING"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
+                            ? "bg-amber-50 text-amber-600 border-amber-100"
+                            : "bg-red-50 text-red-600 border-red-100"
                       }`}
                       title={
                         beneficiary.status === "PENDING"
-                          ? "Khong the khoa tai khoan dang cho duyet"
+                          ? "Không thể khóa tài khoản đang chờ duyệt"
                           : beneficiary.status === "ACTIVE"
-                            ? "Khóa tai khoan"
-                            : "Mở khóa tai khoan"
+                            ? "Khóa tài khoản"
+                            : "Mở khóa tài khoản"
                       }
                     >
                       {beneficiary.status === "ACTIVE"
@@ -308,10 +314,10 @@ export default function BeneficiariesPage() {
                           : "Đã khóa"}
                     </button>
                   </TableCell>
-                  <TableCell className="text-xs text-gray-500">
+                  <TableCell className="text-sm font-medium text-slate-500">
                     {formatDate(beneficiary.createdAt)}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="pr-6">
                     <div className="flex justify-end gap-2">
                       <Button
                         variant="outline"
@@ -319,9 +325,9 @@ export default function BeneficiariesPage() {
                         onClick={() => {
                           window.location.href = `/admin/beneficiaries/${beneficiary.id}`;
                         }}
-                        className="h-8 text-xs font-medium border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+                        className="h-9 px-3 rounded-xl border-slate-200 text-slate-600 hover:text-[#008080] hover:bg-white hover:border-[#008080]/30 shadow-sm transition-all text-xs font-bold"
                       >
-                        <MdVisibility className="mr-1.5 w-3.5 h-3.5" />
+                        <MdVisibility className="mr-1.5 w-4 h-4" />
                         Chi tiết
                       </Button>
                       <Button
@@ -333,27 +339,27 @@ export default function BeneficiariesPage() {
                         size="sm"
                         onClick={() => handleToggleStatus(beneficiary)}
                         disabled={beneficiary.status === "PENDING"}
-                        className={`h-8 text-xs font-medium ${
+                        className={`h-9 px-3 rounded-xl shadow-sm text-xs font-bold transition-all ${
                           beneficiary.status === "BANNED"
-                            ? "bg-[#008080] hover:bg-[#006666]"
-                            : ""
+                            ? "bg-[#008080] hover:bg-[#00A79D] text-white"
+                            : "bg-white border border-red-200 text-red-600 hover:bg-red-50"
                         }`}
                         title={
                           beneficiary.status === "PENDING"
-                            ? "Khong the khoa tai khoan dang cho duyet"
+                            ? "Không thể khóa tài khoản đang chờ duyệt"
                             : beneficiary.status === "ACTIVE"
-                              ? "Khóa tai khoan"
-                              : "Mở khóa tai khoan"
+                              ? "Khóa tài khoản"
+                              : "Mở khóa tài khoản"
                         }
                       >
                         {beneficiary.status === "ACTIVE" ? (
                           <>
-                            <MdLock className="mr-1.5 w-3.5 h-3.5" />
+                            <MdLock className="mr-1.5 w-4 h-4" />
                             Khóa
                           </>
                         ) : (
                           <>
-                            <MdLockOpen className="mr-1.5 w-3.5 h-3.5" />
+                            <MdLockOpen className="mr-1.5 w-4 h-4" />
                             Mở khóa
                           </>
                         )}
@@ -369,32 +375,32 @@ export default function BeneficiariesPage() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-between items-center mt-6 px-1">
-          <div className="text-sm text-gray-600">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 px-2">
+          <div className="text-sm text-slate-500 font-medium">
             Hiển thị{" "}
-            <span className="font-medium text-gray-900">
+            <span className="font-bold text-slate-800">
               {(page - 1) * limit + 1}
             </span>{" "}
             đến{" "}
-            <span className="font-medium text-gray-900">
+            <span className="font-bold text-slate-800">
               {Math.min(page * limit, total)}
             </span>{" "}
-            trên {total}
+            trên <span className="font-bold text-slate-800">{total}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 bg-white/60 backdrop-blur-md p-1.5 rounded-2xl border border-slate-100 shadow-sm">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="h-9 px-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-10 px-4 rounded-xl border-transparent bg-transparent hover:bg-slate-100 text-slate-600 disabled:opacity-40 font-bold transition-colors"
             >
               <svg
-                className="w-4 h-4 mr-1"
+                className="w-4 h-4 mr-1.5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                strokeWidth={2}
+                strokeWidth={2.5}
               >
                 <path
                   strokeLinecap="round"
@@ -404,26 +410,26 @@ export default function BeneficiariesPage() {
               </svg>
               Trước
             </Button>
-            <div className="flex items-center gap-1">
-              <span className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md">
+            <div className="flex items-center">
+              <span className="w-10 h-10 flex items-center justify-center text-sm font-black text-white bg-[#008080] rounded-xl shadow-md">
                 {page}
               </span>
-              <span className="text-sm text-gray-500">/ {totalPages}</span>
+              <span className="px-3 text-sm font-bold text-slate-400">/ {totalPages}</span>
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="h-9 px-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-10 px-4 rounded-xl border-transparent bg-transparent hover:bg-slate-100 text-slate-600 disabled:opacity-40 font-bold transition-colors"
             >
               Sau
               <svg
-                className="w-4 h-4 ml-1"
+                className="w-4 h-4 ml-1.5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                strokeWidth={2}
+                strokeWidth={2.5}
               >
                 <path
                   strokeLinecap="round"

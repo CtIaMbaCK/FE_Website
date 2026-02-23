@@ -236,7 +236,7 @@ export default function HomePage() {
                 </div>
                 <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden bg-slate-100 block">
                   <Image
-                    src="/images/test2.png"
+                    src="/images/betterus.png"
                     alt="App Screenshot"
                     width={320}
                     height={660}
@@ -271,6 +271,25 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="mt-10  ">
+            <div className="bg-[#008080]/80 w-full gap-10 flex items-center justify-center rounded-lg">
+            <div className="relative p-8 md:p-12 text-center text-white">
+            <h3 className="text-2xl md:text-3xl font-bold mb-4">
+              Sẵn sàng nâng cao hiệu suất công việc của bạn?
+            </h3>
+            <p className="text-lg md:text-xl text-white/90 mb-6 max-w-2xl mx-auto">
+              Khám phá ngay hôm nay cách BetterUS kết nối cộng đồng lại với nhau để có thể trở nên tốt đẹp hơn.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link href="/download" className="bg-white text-[#008080] font-bold hover:bg-white/90 px-6 py-3 rounded-lg transition-all">
+                Tải ứng dụng
+              </Link>
+            </div>
+          </div>
+            </div>
+            
           </div>
         </section>
 
