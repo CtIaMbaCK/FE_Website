@@ -69,95 +69,92 @@ export default function CreateBlogPage() {
 
   return (
     <div className="min-h-screen pb-10">
-      <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center ml-6 mt-4">
-        <Breadcrumb
-          items={[
-            { label: "Quản lý Truyền thông", href: "/socialorg/blogs" },
-            { label: "Tạo bài viết mới" },
-          ]}
-        />
+      <div className="mx-auto px-6 py-4">
+        <div className="bg-white/60 backdrop-blur-md rounded-[2rem] px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center mb-4">
+          <Breadcrumb
+            items={[
+              { label: "Quản lý Truyền thông", href: "/socialorg/blogs" },
+              { label: "Tạo bài viết mới" },
+            ]}
+          />
+        </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-4">
+      <div className="mx-auto px-6 mb-4">
         <Link href="/socialorg/blogs">
-          <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
-            <ArrowLeft className="h-4 w-4 mr-1.5" />
-            Quay lại
+          <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl h-10 px-4 transition-colors font-medium">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Quay lại danh sách
           </Button>
         </Link>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-4">
+      <div className="mx-auto px-6">
         {/* Header */}
-        <div className="relative overflow-hidden bg-linear-to-r from-[#008080] to-[#17a5a5]  rounded-2xl shadow-lg p-8 mb-8">
-          <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-3 bg-white/10 backdrop-blur-sm rounded-xl">
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-              </div>
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-white">
-                  Tạo bài viết mới
-                </h1>
-                <p className="text-purple-100 text-sm mt-1">
-                  Chia sẻ hoạt động và câu chuyện của tổ chức
-                </p>
-              </div>
-            </div>
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-2 h-10 bg-gradient-to-b from-purple-600 to-pink-500 rounded-full"></div>
+          <div>
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+              Tạo bài viết mới
+            </h1>
+            <p className="text-sm font-medium text-slate-500 mt-1">
+              Chia sẻ hoạt động và câu chuyện của tổ chức
+            </p>
           </div>
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"></div>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-            <div className="p-6 sm:p-8 space-y-6">
+          <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+            <div className="p-8 space-y-8">
               {/* Title */}
               <div className="space-y-2">
-                <Label htmlFor="title" className="text-sm font-medium text-gray-700">
-                  Tiêu đề <span className="text-red-600">*</span>
+                <Label htmlFor="title" className="text-sm font-bold text-slate-700">
+                  Tiêu đề <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Nhập tiêu đề bài viết..."
-                  className="h-11 border-gray-300 focus:border-purple-500 focus:ring-purple-500/10"
+                  className="h-12 bg-gray-50/50 border-slate-200 focus:border-purple-500 focus:ring-purple-500/10 rounded-xl w-full"
                   required
                 />
               </div>
 
               {/* Cover Image */}
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
+                <Label className="text-sm font-bold text-slate-700">
                   Ảnh bìa
                 </Label>
                 {imagePreview ? (
-                  <div className="relative">
+                  <div className="relative group">
                     <img
                       src={imagePreview}
                       alt="Preview"
-                      className="w-full h-64 object-cover rounded-lg border border-gray-200"
+                      className="w-full h-80 object-cover rounded-2xl border border-slate-200 shadow-sm"
                     />
-                    <button
-                      type="button"
-                      onClick={removeImage}
-                      className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
+                    <div className="absolute inset-0 bg-black/40 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <button
+                        type="button"
+                        onClick={removeImage}
+                        className="bg-white text-red-600 p-3 rounded-xl hover:bg-red-50 font-bold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all"
+                      >
+                        <X className="w-5 h-5" />
+                        Bỏ chọn ảnh
+                      </button>
+                    </div>
                   </div>
                 ) : (
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-400 transition-colors">
-                    <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+                  <div className="border-2 border-dashed border-slate-300 bg-slate-50/50 rounded-2xl p-10 text-center hover:border-purple-500 hover:bg-purple-50/50 transition-all duration-300 group">
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                      <Upload className="w-8 h-8 text-slate-400 group-hover:text-purple-500" />
+                    </div>
                     <label htmlFor="coverImage" className="cursor-pointer">
-                      <span className="text-sm text-purple-600 font-medium hover:text-purple-700">
+                      <span className="text-sm text-purple-600 font-bold hover:text-purple-700">
                         Tải ảnh lên
                       </span>
-                      <span className="text-sm text-gray-500 ml-1">
+                      <span className="text-sm text-slate-500 font-medium ml-1">
                         hoặc kéo thả vào đây
                       </span>
                       <input
@@ -168,7 +165,7 @@ export default function CreateBlogPage() {
                         className="hidden"
                       />
                     </label>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-slate-400 font-medium mt-2">
                       PNG, JPG, GIF tối đa 10MB
                     </p>
                   </div>
@@ -177,8 +174,8 @@ export default function CreateBlogPage() {
 
               {/* Content */}
               <div className="space-y-2">
-                <Label htmlFor="content" className="text-sm font-medium text-gray-700">
-                  Nội dung <span className="text-red-600">*</span>
+                <Label htmlFor="content" className="text-sm font-bold text-slate-700">
+                  Nội dung <span className="text-red-500">*</span>
                 </Label>
                 <Textarea
                   id="content"
@@ -186,32 +183,33 @@ export default function CreateBlogPage() {
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Nhập nội dung bài viết..."
                   rows={12}
-                  className="resize-none border-gray-300 focus:border-purple-500 focus:ring-purple-500/10"
+                  className="resize-none bg-gray-50/50 border-slate-200 focus:border-purple-500 focus:ring-purple-500/10 rounded-xl w-full p-4"
                   required
                 />
-                <p className="text-xs text-gray-500">
+                <p className="text-xs font-medium text-slate-500 text-right mt-2">
                   {content.length} ký tự
                 </p>
               </div>
 
               {/* Actions */}
-              <div className="flex items-center justify-end gap-3 pt-4">
+              <div className="flex items-center justify-end gap-4 pt-6 border-t border-slate-100">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => router.push("/socialorg/blogs")}
                   disabled={submitting}
+                  className="h-12 px-6 rounded-xl font-bold bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all shadow-sm"
                 >
-                  Hủy
+                  Hủy bỏ
                 </Button>
                 <Button
                   type="submit"
                   disabled={submitting}
-                  className="bg-purple-600 hover:bg-purple-700 text-white"
+                  className="h-12 px-8 rounded-xl font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-sm transition-all"
                 >
                   {submitting ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2"></div>
                       Đang tạo...
                     </>
                   ) : (

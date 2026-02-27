@@ -319,23 +319,27 @@ export default function OrganizationProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen pb-10">
       {/* Breadcrumb */}
-      <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center ml-6 mt-4">
-        <Breadcrumb
-          items={[
-            { label: "Dashboard", href: "/socialorg/dashboard" },
-            { label: "Thông tin cá nhân" },
-          ]}
-        />
+      <div className="mx-auto px-6 py-4">
+        <div className="bg-white/60 backdrop-blur-md rounded-[2rem] px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center mb-2">
+          <Breadcrumb
+            items={[
+               { label: "Thông tin cá nhân" },
+            ]}
+          />
+        </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="flex-1 flex flex-col px-6 mx-auto w-full">
         {/* Profile Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
-          <div className="flex flex-col items-center">
-            <div className="relative mb-4 group">
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[#008080] to-teal-600 flex items-center justify-center text-white text-4xl font-bold overflow-hidden">
+        <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 p-8 mb-8 relative overflow-hidden flex items-center gap-8">
+          <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none">
+             <div className="w-64 h-64 bg-teal-300 rounded-full blur-3xl"></div>
+          </div>
+          <div className="flex items-center gap-8 relative z-10 w-full">
+            <div className="relative group shrink-0">
+              <div className="w-32 h-32 rounded-[2rem] bg-gradient-to-br from-[#008080] to-teal-600 flex items-center justify-center text-white text-4xl font-black shadow-md overflow-hidden rotate-3 hover:rotate-0 transition-transform">
                 {previews.avatar ? (
                   <img
                     src={previews.avatar}
@@ -349,9 +353,11 @@ export default function OrganizationProfilePage() {
               {/* Upload/Remove overlay */}
               <label
                 htmlFor="avatar-upload"
-                className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex items-center justify-center"
+                className="absolute inset-0 bg-slate-900/60 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex items-center justify-center rotate-3 hover:rotate-0"
               >
-                <Upload className="w-8 h-8 text-white" />
+                <div className="bg-white/20 p-3 rounded-full backdrop-blur-md">
+                   <Upload className="w-6 h-6 text-white" />
+                </div>
                 <input
                   id="avatar-upload"
                   type="file"
@@ -364,43 +370,46 @@ export default function OrganizationProfilePage() {
                 <button
                   type="button"
                   onClick={() => handleRemoveSingleImage("avatar")}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors shadow-lg"
+                  className="absolute -top-3 -right-3 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors shadow-lg z-20"
                 >
                   <X className="w-4 h-4" />
                 </button>
               )}
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">
-              {formData.organizationName || "Tổ chức chưa hoàn thiện"}
-            </h1>
-            <p className="text-sm text-gray-500 mb-1">HỒ SƠ TỔ CHỨC XÃ HỘI</p>
-            <div className="inline-flex items-center px-3 py-1 bg-teal-50 text-teal-700 rounded-full text-xs font-medium">
-              Đã xác thực
+            
+            <div className="flex flex-col flex-1 min-w-0">
+               <div className="inline-flex items-center px-3 py-1 bg-teal-50 text-teal-700 rounded-lg text-xs font-bold uppercase tracking-wider mb-2 w-fit border border-teal-100">
+                 Đã xác thực
+               </div>
+               <h1 className="text-3xl font-black text-slate-800 tracking-tight mb-1 truncate">
+                 {formData.organizationName || "Tổ chức chưa hoàn thiện"}
+               </h1>
+               <p className="text-slate-500 flex items-center gap-2 mt-2 font-medium">
+                  <MapPin className="w-4 h-4" />
+                 {formData.district && DISTRICTS.find(d => d.value === formData.district)?.label} • {formData.addressDetail || "Chưa cập nhật địa chỉ"}
+               </p>
             </div>
-            <p className="text-xs text-gray-400 mt-2">
-              {formData.district && DISTRICTS.find(d => d.value === formData.district)?.label} • {formData.addressDetail || "Chưa cập nhật địa chỉ"}
-            </p>
           </div>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
           {/* Two Column Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-4">
             {/* Left Column - Basic Info */}
-            <div className="space-y-6">
+            <div className="space-y-8">
               {/* Thông tin cơ bản */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <Building2 className="w-5 h-5 text-gray-600" />
-                    <CardTitle className="text-base">Thông tin tổ chức</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="organizationName" className="text-sm font-medium text-gray-700">
-                      Tên tổ chức <span className="text-red-600">*</span>
+              <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2rem] shadow-sm relative overflow-hidden">
+                <div className="p-6 border-b border-slate-100/60 bg-slate-50/30 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center shadow-sm border border-teal-100/50">
+                       <Building2 className="w-5 h-5" />
+                    </div>
+                    <h2 className="text-lg font-black text-slate-800">Thông tin tổ chức</h2>
+                </div>
+                <div className="p-6 space-y-5">
+                  <div className="space-y-2.5">
+                    <Label htmlFor="organizationName" className="text-sm font-bold text-slate-700 uppercase tracking-wider text-[11px]">
+                      Tên tổ chức <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="organizationName"
@@ -412,15 +421,15 @@ export default function OrganizationProfilePage() {
                           organizationName: e.target.value,
                         })
                       }
-                      className="h-10 border-gray-300 focus:border-[#008080] focus:ring-[#008080]/10"
+                      className="h-12 border-slate-200 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 rounded-xl outline-none text-sm transition-all"
                       placeholder="Nhập tên đầy đủ của tổ chức"
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="representativeName" className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                      <User className="w-4 h-4 text-gray-400" />
-                      Người đại diện <span className="text-red-600">*</span>
+                  <div className="space-y-2.5">
+                    <Label htmlFor="representativeName" className="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2 w-fit">
+                      <User className="w-4 h-4 text-slate-400" />
+                      Người đại diện <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="representativeName"
@@ -432,13 +441,13 @@ export default function OrganizationProfilePage() {
                           representativeName: e.target.value,
                         })
                       }
-                      className="h-10 border-gray-300 focus:border-[#008080] focus:ring-[#008080]/10"
+                      className="h-12 border-slate-200 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 rounded-xl outline-none text-sm transition-all"
                       placeholder="Họ và tên người đại diện"
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="description" className="text-sm font-medium text-gray-700">
+                  <div className="space-y-2.5">
+                    <Label htmlFor="description" className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">
                       Mô tả tổ chức
                     </Label>
                     <Textarea
@@ -448,14 +457,14 @@ export default function OrganizationProfilePage() {
                         setFormData({ ...formData, description: e.target.value })
                       }
                       rows={4}
-                      className="resize-none border-gray-300 focus:border-[#008080] focus:ring-[#008080]/10"
+                      className="resize-none border-slate-200 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 rounded-xl outline-none text-sm transition-all py-3"
                       placeholder="Giới thiệu về tổ chức, lĩnh vực hoạt động, mục tiêu..."
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="website" className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-gray-400" />
+                  <div className="space-y-2.5">
+                    <Label htmlFor="website" className="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                      <Globe className="w-4 h-4 text-slate-400" />
                       Website
                     </Label>
                     <Input
@@ -465,30 +474,30 @@ export default function OrganizationProfilePage() {
                       onChange={(e) =>
                         setFormData({ ...formData, website: e.target.value })
                       }
-                      className="h-10 border-gray-300 focus:border-[#008080] focus:ring-[#008080]/10"
+                      className="h-12 border-slate-200 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 rounded-xl outline-none text-sm transition-all"
                       placeholder="https://example.org"
                     />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
 
               {/* Địa chỉ */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-gray-600" />
-                    <CardTitle className="text-base">Địa chỉ</CardTitle>
+              <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2rem] shadow-sm relative overflow-hidden">
+                <div className="p-6 border-b border-slate-100/60 bg-slate-50/30 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shadow-sm border border-orange-100/50">
+                     <MapPin className="w-5 h-5" />
                   </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="district" className="text-sm font-medium text-gray-700">
-                      Quận/Huyện <span className="text-red-600">*</span>
+                  <h2 className="text-lg font-black text-slate-800">Địa chỉ</h2>
+                </div>
+                <div className="p-6 space-y-5">
+                  <div className="space-y-2.5">
+                    <Label htmlFor="district" className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                      Quận/Huyện <span className="text-red-500">*</span>
                     </Label>
                     <select
                       id="district"
                       required
-                      className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:border-[#008080] focus:ring-[#008080]/10 focus:outline-none"
+                      className="w-full h-12 px-4 border border-slate-200 rounded-xl text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:outline-none transition-all outline-none bg-white font-medium"
                       value={formData.district}
                       onChange={(e) =>
                         setFormData({ ...formData, district: e.target.value })
@@ -496,16 +505,16 @@ export default function OrganizationProfilePage() {
                     >
                       <option value="">Chọn quận/huyện</option>
                       {DISTRICTS.map((district) => (
-                        <option key={district.value} value={district.value}>
+                        <option key={district.value} value={district.value} className="py-2">
                           {district.label}
                         </option>
                       ))}
                     </select>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="addressDetail" className="text-sm font-medium text-gray-700">
-                      Địa chỉ chi tiết <span className="text-red-600">*</span>
+                  <div className="space-y-2.5">
+                    <Label htmlFor="addressDetail" className="text-[11px] text-slate-700 font-bold uppercase tracking-wider">
+                      Địa chỉ chi tiết <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="addressDetail"
@@ -514,45 +523,48 @@ export default function OrganizationProfilePage() {
                       onChange={(e) =>
                         setFormData({ ...formData, addressDetail: e.target.value })
                       }
-                      className="h-10 border-gray-300 focus:border-[#008080] focus:ring-[#008080]/10"
+                      className="h-12 border-slate-200 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 rounded-xl outline-none text-sm transition-all"
                       placeholder="Số nhà, tên đường..."
                     />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </div>
 
             {/* Right Column - Documents */}
-            <div className="space-y-6">
+            <div className="space-y-8">
               {/* Giấy phép kinh doanh */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-gray-600" />
-                    <CardTitle className="text-base">Giấy phép hoạt động</CardTitle>
+              <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2rem] shadow-sm relative overflow-hidden">
+                <div className="p-6 border-b border-slate-100/60 bg-slate-50/30 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-sm border border-blue-100/50">
+                    <FileText className="w-5 h-5" />
                   </div>
-                </CardHeader>
-                <CardContent>
+                  <h2 className="text-lg font-black text-slate-800">Giấy phép hoạt động</h2>
+                </div>
+                <div className="p-6">
                   {previews.businessLicense ? (
-                    <div className="relative w-full h-48 group">
+                    <div className="relative w-full aspect-video rounded-2xl group overflow-hidden border border-slate-200">
                       <img
                         src={previews.businessLicense}
                         alt="Business license"
-                        className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+                        className="w-full h-full object-cover"
                       />
                       <button
                         type="button"
                         onClick={() => handleRemoveSingleImage("businessLicense")}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors shadow-lg"
+                        className="absolute top-3 right-3 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors shadow-lg z-20"
                       >
                         <X className="w-4 h-4" />
                       </button>
                       {/* Replace overlay */}
                       <label
                         htmlFor="business-license-upload"
-                        className="absolute inset-0 bg-black/50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex items-center justify-center"
+                        className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex items-center justify-center"
                       >
-                        <span className="text-white text-sm font-medium">Thay đổi ảnh</span>
+                        <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md flex flex-col items-center gap-2">
+                            <Upload className="text-white w-6 h-6" />
+                            <span className="text-white text-sm font-bold">Thay đổi ảnh</span>
+                        </div>
                         <input
                           id="business-license-upload"
                           type="file"
@@ -563,11 +575,13 @@ export default function OrganizationProfilePage() {
                       </label>
                     </div>
                   ) : (
-                    <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#008080] transition-colors bg-gray-50">
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        <Upload className="w-10 h-10 text-gray-400 mb-3" />
-                        <p className="text-sm text-gray-600 font-medium">Nhấn để chọn ảnh</p>
-                        <p className="text-xs text-gray-400 mt-1">PNG, JPG (max 5MB)</p>
+                    <label className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-slate-200 rounded-2xl cursor-pointer hover:border-teal-500 hover:bg-teal-50/50 transition-all bg-slate-50 relative group">
+                      <div className="flex flex-col items-center justify-center p-6 text-center">
+                        <div className="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mb-4 group-hover:-translate-y-1 transition-transform">
+                          <Upload className="w-8 h-8 text-teal-500" />
+                        </div>
+                        <p className="text-sm font-bold text-slate-700">Tải ảnh lên hoặc kéo thả vào đây</p>
+                        <p className="text-xs font-medium text-slate-400 mt-2">PNG, JPG (tối đa 5MB)</p>
                       </div>
                       <input
                         type="file"
@@ -579,28 +593,30 @@ export default function OrganizationProfilePage() {
                       />
                     </label>
                   )}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
 
               {/* Tài liệu xác minh */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <ImageIcon className="w-5 h-5 text-gray-600" />
-                      <CardTitle className="text-base">Tài liệu xác minh</CardTitle>
+              <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2rem] shadow-sm relative overflow-hidden">
+                <div className="p-6 border-b border-slate-100/60 bg-slate-50/30 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shadow-sm border border-purple-100/50">
+                      <ImageIcon className="w-5 h-5" />
                     </div>
-                    <span className="text-xs text-gray-500 font-medium">
-                      {previews.verificationDocs.length} tài liệu
-                    </span>
+                    <h2 className="text-lg font-black text-slate-800">Tài liệu xác minh</h2>
                   </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#008080] transition-colors bg-gray-50">
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                      <p className="text-xs text-gray-600 font-medium">Chọn thêm tài liệu</p>
-                      <p className="text-xs text-gray-400">PNG, JPG (max 5MB/ảnh)</p>
+                  <span className="text-[11px] uppercase tracking-wider text-teal-600 font-bold bg-teal-50 px-3 py-1.5 rounded-lg border border-teal-100">
+                    {previews.verificationDocs.length} tài liệu
+                  </span>
+                </div>
+                <div className="p-6 space-y-4">
+                  <label className="flex flex-col items-center justify-center w-full min-h-36 border-2 border-dashed border-slate-200 rounded-2xl cursor-pointer hover:border-teal-500 hover:bg-teal-50/50 transition-all bg-slate-50 group">
+                    <div className="flex flex-col items-center justify-center py-6">
+                      <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm mb-3 group-hover:-translate-y-1 transition-transform">
+                         <Upload className="w-6 h-6 text-teal-500" />
+                      </div>
+                      <p className="text-sm font-bold text-slate-700">Chọn thêm tài liệu (*)</p>
+                      <p className="text-xs font-medium text-slate-400 mt-1">Nhiều ảnh, tối đa 5MB/ảnh</p>
                     </div>
                     <input
                       type="file"
@@ -612,59 +628,61 @@ export default function OrganizationProfilePage() {
                   </label>
 
                   {previews.verificationDocs.length > 0 && (
-                    <div className="grid grid-cols-2 gap-3 p-4 border border-gray-200 rounded-lg bg-gray-50/50">
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 pt-4">
                       {previews.verificationDocs.map((preview, index) => (
-                        <div key={index} className="relative aspect-square group">
+                        <div key={index} className="relative aspect-square rounded-2xl group overflow-hidden border border-slate-200">
                           <img
                             src={preview}
                             alt={`Document ${index + 1}`}
-                            className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+                            className="w-full h-full object-cover"
                           />
-                          <button
-                            type="button"
-                            onClick={() =>
-                              handleRemoveMultipleImage(
-                                index,
-                                index >= currentUrls.verificationDocs.length
-                              )
-                            }
-                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition-colors shadow-lg"
-                          >
-                            <X className="w-3 h-3" />
-                          </button>
+                          <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                             <button
+                               type="button"
+                               onClick={() =>
+                                 handleRemoveMultipleImage(
+                                   index,
+                                   index >= currentUrls.verificationDocs.length
+                                 )
+                               }
+                               className="bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors shadow-lg scale-75 group-hover:scale-100"
+                             >
+                               <X className="w-5 h-5" />
+                             </button>
+                          </div>
                         </div>
                       ))}
                     </div>
                   )}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex justify-end gap-3">
+          <div className="flex justify-end gap-3 mt-4 mb-2">
             <Button
               type="button"
               variant="outline"
               onClick={() => router.push("/socialorg/dashboard")}
-              className="border-gray-300"
+              className="h-12 border-slate-200 font-bold text-slate-600 rounded-xl hover:bg-slate-50 px-8"
             >
               Hủy
             </Button>
             <Button
               type="submit"
               disabled={isSaving}
-              className="bg-[#008080] hover:bg-[#006666] text-white px-6"
+              className="h-12 bg-gradient-to-r from-[#008080] to-teal-500 hover:from-[#006666] hover:to-[#008080] text-white px-8 rounded-xl font-bold tracking-wide shadow-md hover:shadow-lg transition-all"
             >
               {isSaving ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-3"></div>
                   Đang lưu...
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4 mr-2" />
-                  Lưu thay đổi
+                  <Save className="w-5 h-5 mr-2" />
+                  Lưu thay đổi hồ sơ
                 </>
               )}
             </Button>

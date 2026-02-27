@@ -127,64 +127,69 @@ export default function CreateBeneficiaryPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-6 pt-4">
-        <Breadcrumb
-          items={[
-            { label: "Quản lý tài khoản", href: "/socialorg/accounts" },
-            { label: "Tạo tài khoản NCGĐ" },
-          ]}
-        />
-      </div>
-
       {/* Top Actions Bar */}
       <div className="max-w-7xl mx-auto px-6 py-4">
-        <Link href="/socialorg/accounts">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-600 hover:text-gray-900"
-          >
-            <ArrowLeft className="h-4 w-4 mr-1.5" />
-            Quay lại
-          </Button>
-        </Link>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="bg-white/60 backdrop-blur-md rounded-[2rem] px-6 py-4 shadow-sm border border-white/50 inline-flex items-center">
+            <Breadcrumb
+              items={[
+                { label: "Quản lý tài khoản", href: "/socialorg/accounts" },
+                { label: "Tạo tài khoản NCGĐ" },
+              ]}
+            />
+          </div>
+
+          <div className="flex gap-3 items-center">
+            <Link href="/socialorg/accounts">
+              <Button
+                variant="outline"
+                className="bg-white hover:bg-slate-50 text-slate-700 border-slate-200 shadow-sm rounded-xl h-11 px-6 font-bold transition-all flex items-center gap-2"
+              >
+                <ArrowLeft className="h-5 w-5" />
+                Quay lại
+              </Button>
+            </Link>
+          </div>
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Page Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">
+        <div className="mb-8">
+          <h1 className="text-3xl font-black text-slate-800 tracking-tight">
             Tạo tài khoản Người cần giúp đỡ
           </h1>
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-slate-500 font-medium mt-2">
             Nhập thông tin để tạo tài khoản mới cho người cần giúp đỡ
           </p>
         </div>
 
         {/* Two Column Layout */}
         <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column - Personal Info */}
             <div className="space-y-6">
               {/* Thông tin đăng nhập */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="p-5 border-b border-gray-100">
-                  <div className="flex items-center gap-2">
-                    <Lock className="w-5 h-5 text-gray-600" />
-                    <h2 className="text-base font-semibold text-gray-900">
+              <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden group hover:shadow-md transition-all duration-300 relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full opacity-50 -z-10 group-hover:scale-110 transition-transform duration-700"></div>
+                <div className="p-6 border-b border-slate-100 bg-white/50 relative z-10">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-[#008080] shadow-sm">
+                      <Lock className="w-5 h-5" />
+                    </div>
+                    <h2 className="text-lg font-bold text-slate-800">
                       Thông tin đăng nhập
                     </h2>
                   </div>
                 </div>
-                <div className="p-5 space-y-4">
+                <div className="p-6 space-y-5 relative z-10">
                   <div className="space-y-2">
                     <Label
                       htmlFor="email"
-                      className="text-sm font-medium text-gray-700 flex items-center gap-2"
+                      className="text-sm font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2"
                     >
-                      <Mail className="w-4 h-4 text-gray-400" />
-                      Email <span className="text-red-600">*</span>
+                      <Mail className="w-4 h-4 text-slate-400" />
+                      Email <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="email"
@@ -193,17 +198,17 @@ export default function CreateBeneficiaryPage() {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Nhập email"
                       required
-                      className="h-10 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500/10"
+                      className="h-12 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl bg-gray-50/50 shadow-sm font-medium"
                     />
                   </div>
 
                   <div className="space-y-2">
                     <Label
                       htmlFor="password"
-                      className="text-sm font-medium text-gray-700 flex items-center gap-2"
+                      className="text-sm font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2"
                     >
-                      <Lock className="w-4 h-4 text-gray-400" />
-                      Mật khẩu <span className="text-red-600">*</span>
+                      <Lock className="w-4 h-4 text-slate-400" />
+                      Mật khẩu <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="password"
@@ -212,29 +217,32 @@ export default function CreateBeneficiaryPage() {
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Nhập mật khẩu (ít nhất 6 ký tự)"
                       required
-                      className="h-10 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500/10"
+                      className="h-12 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl bg-gray-50/50 shadow-sm font-medium"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Thông tin cá nhân */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="p-5 border-b border-gray-100">
-                  <div className="flex items-center gap-2">
-                    <User className="w-5 h-5 text-gray-600" />
-                    <h2 className="text-base font-semibold text-gray-900">
+              <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden group hover:shadow-md transition-all duration-300 relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full opacity-50 -z-10 group-hover:scale-110 transition-transform duration-700"></div>
+                <div className="p-6 border-b border-slate-100 bg-white/50 relative z-10">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-[#008080] shadow-sm">
+                      <User className="w-5 h-5" />
+                    </div>
+                    <h2 className="text-lg font-bold text-slate-800">
                       Thông tin cá nhân
                     </h2>
                   </div>
                 </div>
-                <div className="p-5 space-y-4">
+                <div className="p-6 space-y-5 relative z-10">
                   <div className="space-y-2">
                     <Label
                       htmlFor="fullName"
-                      className="text-sm font-medium text-gray-700"
+                      className="text-sm font-bold text-slate-600 uppercase tracking-wider"
                     >
-                      Họ và tên <span className="text-red-600">*</span>
+                      Họ và tên <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="fullName"
@@ -242,17 +250,17 @@ export default function CreateBeneficiaryPage() {
                       onChange={(e) => setFullName(e.target.value)}
                       placeholder="Nhập họ và tên đầy đủ"
                       required
-                      className="h-10 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500/10"
+                      className="h-12 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl bg-gray-50/50 shadow-sm font-medium"
                     />
                   </div>
 
                   <div className="space-y-2">
                     <Label
                       htmlFor="phoneNumber"
-                      className="text-sm font-medium text-gray-700 flex items-center gap-2"
+                      className="text-sm font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2"
                     >
-                      <Phone className="w-4 h-4 text-gray-400" />
-                      Số điện thoại <span className="text-red-600">*</span>
+                      <Phone className="w-4 h-4 text-slate-400" />
+                      Số điện thoại <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="phoneNumber"
@@ -260,38 +268,41 @@ export default function CreateBeneficiaryPage() {
                       onChange={(e) => setPhoneNumber(e.target.value)}
                       placeholder="Nhập số điện thoại"
                       required
-                      className="h-10 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500/10"
+                      className="h-12 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl bg-gray-50/50 shadow-sm font-medium"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Thông tin hoàn cảnh */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="p-5 border-b border-gray-100">
-                  <div className="flex items-center gap-2">
-                    <Heart className="w-5 h-5 text-gray-600" />
-                    <h2 className="text-base font-semibold text-gray-900">
+              <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden group hover:shadow-md transition-all duration-300 relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-bl-full opacity-50 -z-10 group-hover:scale-110 transition-transform duration-700"></div>
+                <div className="p-6 border-b border-slate-100 bg-white/50 relative z-10">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-red-500 shadow-sm">
+                      <Heart className="w-5 h-5" />
+                    </div>
+                    <h2 className="text-lg font-bold text-slate-800">
                       Thông tin hoàn cảnh
                     </h2>
                   </div>
                 </div>
-                <div className="p-5 space-y-4">
+                <div className="p-6 space-y-5 relative z-10">
                   <div className="space-y-2">
-                    <Label htmlFor="vulnerabilityType">
-                      Loại đối tượng <span className="text-red-600">*</span>
+                    <Label htmlFor="vulnerabilityType" className="text-sm font-bold text-slate-600 uppercase tracking-wider">
+                      Loại đối tượng <span className="text-red-500">*</span>
                     </Label>
                     <Select
                       value={vulnerabilityType}
                       onValueChange={setVulnerabilityType}
                       required
                     >
-                      <SelectTrigger className="h-10 border-gray-300 focus:border-emerald-500">
+                      <SelectTrigger className="h-12 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl bg-gray-50/50 shadow-sm font-medium">
                         <SelectValue placeholder="Chọn loại đối tượng" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="rounded-xl border-slate-200 shadow-xl font-medium">
                         {VULNERABILITY_TYPES.map((type) => (
-                          <SelectItem key={type.value} value={type.value}>
+                          <SelectItem key={type.value} value={type.value} className="cursor-pointer">
                             {type.label}
                           </SelectItem>
                         ))}
@@ -300,7 +311,7 @@ export default function CreateBeneficiaryPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="situationDescription">
+                    <Label htmlFor="situationDescription" className="text-sm font-bold text-slate-600 uppercase tracking-wider">
                       Mô tả tình huống
                     </Label>
                     <Textarea
@@ -309,12 +320,12 @@ export default function CreateBeneficiaryPage() {
                       onChange={(e) => setSituationDescription(e.target.value)}
                       placeholder="Mô tả hoàn cảnh hiện tại..."
                       rows={4}
-                      className="resize-none border-gray-300 focus:border-emerald-500 focus:ring-emerald-500/10"
+                      className="resize-none border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl bg-gray-50/50 shadow-sm font-medium"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="healthCondition">
+                    <Label htmlFor="healthCondition" className="text-sm font-bold text-slate-600 uppercase tracking-wider">
                       Tình trạng sức khỏe
                     </Label>
                     <Textarea
@@ -323,37 +334,42 @@ export default function CreateBeneficiaryPage() {
                       onChange={(e) => setHealthCondition(e.target.value)}
                       placeholder="Tình trạng sức khỏe..."
                       rows={3}
-                      className="resize-none border-gray-300 focus:border-emerald-500 focus:ring-emerald-500/10"
+                      className="resize-none border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl bg-gray-50/50 shadow-sm font-medium"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Thông tin người giám hộ */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="p-5 border-b border-gray-100">
-                  <div className="flex items-center gap-2">
-                    <Shield className="w-5 h-5 text-gray-600" />
-                    <h2 className="text-base font-semibold text-gray-900">
+              <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden group hover:shadow-md transition-all duration-300 relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full opacity-50 -z-10 group-hover:scale-110 transition-transform duration-700"></div>
+                <div className="p-6 border-b border-slate-100 bg-white/50 relative z-10 flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 shadow-sm">
+                      <Shield className="w-5 h-5" />
+                    </div>
+                    <h2 className="text-lg font-bold text-slate-800">
                       Thông tin người giám hộ
                     </h2>
                   </div>
-                  <p className="text-xs text-gray-500 mt-0.5">Nếu có</p>
+                  <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold shadow-sm">
+                    Nếu có
+                  </span>
                 </div>
-                <div className="p-5 space-y-4">
+                <div className="p-6 space-y-5 relative z-10">
                   <div className="space-y-2">
-                    <Label htmlFor="guardianName">Tên người giám hộ</Label>
+                    <Label htmlFor="guardianName" className="text-sm font-bold text-slate-600 uppercase tracking-wider">Tên người giám hộ</Label>
                     <Input
                       id="guardianName"
                       value={guardianName}
                       onChange={(e) => setGuardianName(e.target.value)}
                       placeholder="Nhập tên người giám hộ"
-                      className="h-10 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500/10"
+                      className="h-12 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl bg-gray-50/50 shadow-sm font-medium"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="guardianPhone">
+                    <Label htmlFor="guardianPhone" className="text-sm font-bold text-slate-600 uppercase tracking-wider">
                       Số điện thoại người giám hộ
                     </Label>
                     <Input
@@ -361,22 +377,22 @@ export default function CreateBeneficiaryPage() {
                       value={guardianPhone}
                       onChange={(e) => setGuardianPhone(e.target.value)}
                       placeholder="Nhập số điện thoại"
-                      className="h-10 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500/10"
+                      className="h-12 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl bg-gray-50/50 shadow-sm font-medium"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="guardianRelation">Mối quan hệ</Label>
+                    <Label htmlFor="guardianRelation" className="text-sm font-bold text-slate-600 uppercase tracking-wider">Mối quan hệ</Label>
                     <Select
                       value={guardianRelation}
                       onValueChange={setGuardianRelation}
                     >
-                      <SelectTrigger className="h-10 border-gray-300 focus:border-emerald-500">
+                      <SelectTrigger className="h-12 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl bg-gray-50/50 shadow-sm font-medium">
                         <SelectValue placeholder="Chọn mối quan hệ" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="rounded-xl border-slate-200 shadow-xl font-medium">
                         {GUARDIAN_RELATIONS.map((relation) => (
-                          <SelectItem key={relation.value} value={relation.value}>
+                          <SelectItem key={relation.value} value={relation.value} className="cursor-pointer">
                             {relation.label}
                           </SelectItem>
                         ))}
@@ -390,13 +406,20 @@ export default function CreateBeneficiaryPage() {
             {/* Right Column - Documents */}
             <div className="space-y-6">
               {/* CCCD/CMND */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="p-5 border-b border-gray-100">
-                  <h2 className="text-base font-semibold text-gray-900">
-                    Giấy tờ tùy thân
-                  </h2>
+              <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden relative">
+                <div className="p-6 border-b border-slate-100 bg-white/50">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500 shadow-sm">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h3m-6 0a3.001 3.001 0 00-2.83-2" />
+                      </svg>
+                    </div>
+                    <h2 className="text-lg font-bold text-slate-800">
+                      Giấy tờ tùy thân
+                    </h2>
+                  </div>
                 </div>
-                <div className="p-5 space-y-4">
+                <div className="p-6 space-y-5">
                   {/* CCCD Mặt trước */}
                   <ImageUploadZone
                     label="CCCD Mặt trước"
@@ -416,15 +439,15 @@ export default function CreateBeneficiaryPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-start gap-3">
+              <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 p-6 flex flex-col sm:flex-row items-center gap-3">
                 <Button
                   type="submit"
                   disabled={submitting}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-6"
+                  className="w-full sm:w-auto bg-[#008080] hover:bg-[#008080]/90 text-white h-12 px-8 rounded-xl font-bold shadow-sm transition-all"
                 >
                   {submitting ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
                       Đang tạo...
                     </>
                   ) : (
@@ -436,7 +459,7 @@ export default function CreateBeneficiaryPage() {
                   variant="outline"
                   onClick={() => router.push("/socialorg/accounts")}
                   disabled={submitting}
-                  className="px-6"
+                  className="w-full sm:w-auto h-12 px-8 rounded-xl border-slate-200 text-slate-700 hover:bg-slate-50 font-bold transition-all bg-white shadow-sm"
                 >
                   Hủy
                 </Button>

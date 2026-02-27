@@ -7,8 +7,11 @@ import {
   MdChevronLeft,
   MdChevronRight,
   MdAdd,
+  MdLocationOn,
 } from "react-icons/md";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil, Trash2, Check, ChevronsUpDown } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -40,6 +43,7 @@ import { toast } from "sonner";
 import {
   getCampaigns,
   deleteCampaign,
+  autoTransitionCampaigns,
   type Campaign,
   type FilterCampaignDto,
 } from "@/services/campaign.service";
@@ -106,6 +110,8 @@ export default function ManageCampaignsPage() {
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
+    // Gọi ngầm auto-transition để chuyển trạng thái campaign nếu đến ngày bắt đầu/kết thúc
+    autoTransitionCampaigns().catch(console.error);
     loadCampaigns();
   }, [page, statusFilter, selectedDistricts, searchTerm]);
 
@@ -169,10 +175,10 @@ export default function ManageCampaignsPage() {
   };
 
   return (
-    <div className="pb-10 bg-[#f8f9fa] min-h-screen">
+    <div className="min-h-screen pb-10">
       {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-6 pt-4">
-        <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center">
+      <div className="mx-auto px-6 py-4">
+        <div className="bg-white/60 backdrop-blur-md rounded-[2rem] px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center">
           <Breadcrumb
             items={[
               { label: "Quản lý chiến dịch & sự kiện" },
@@ -181,50 +187,109 @@ export default function ManageCampaignsPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 mt-6">
+      <div className="mx-auto px-6 py-8">
         {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Quản lý chiến dịch & sự kiện</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Quản lý các chiến dịch và sự kiện từ thiện
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-black text-slate-800 tracking-tight">Quản lý chiến dịch & sự kiện</h1>
+            <p className="text-slate-500 font-medium mt-2">
+              Quản lý các chiến dịch và sự kiện từ thiện
+            </p>
+          </div>
+          <Button
+            onClick={() => router.push("/socialorg/manage-events/create")}
+            className="h-12 px-6 rounded-xl font-bold bg-[#008080] hover:bg-[#00A79D] text-white shadow-sm transition-all flex items-center gap-2"
+          >
+            <MdAdd className="text-[20px]" />
+            Tạo chiến dịch mới
+          </Button>
         </div>
-        <Button
-          onClick={() => router.push("/socialorg/manage-events/create")}
-          className="gap-2 bg-teal-600 text-white hover:bg-teal-700 shadow-sm"
-        >
-          <MdAdd className="text-[20px]" />
-          Tạo chiến dịch mới
-        </Button>
-      </div>
 
-      {/* Search & Filter */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-        {/* Search & Status on same row */}
-        <div className="p-5 border-b border-gray-100">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        {/* Search & Filter */}
+        <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 p-6 mb-8 relative overflow-hidden group">
+          <div className="absolute -right-10 -top-10 w-32 h-32 rounded-full blur-3xl opacity-20 bg-[#008080] group-hover:opacity-30 transition-opacity"></div>
+          <div className="flex flex-col md:flex-row items-center gap-4 relative z-10">
             <div className="flex-1 w-full relative">
-              <MdSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 h-5 w-5" />
               <Input
                 placeholder="Tìm kiếm chiến dịch theo tên hoặc mô tả..."
                 value={searchTerm}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="pl-10 h-10 border-gray-200 focus:border-teal-500 focus:ring-teal-500/10"
+                className="pl-12 h-12 bg-white border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl w-full font-medium shadow-sm transition-all"
               />
             </div>
-            <div className="w-full sm:w-64">
+
+            <div className="w-full md:w-64">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className="h-12 bg-white border-slate-200 hover:border-[#008080] focus:ring-[#008080]/10 rounded-xl w-full font-medium shadow-sm transition-all justify-between"
+                  >
+                     <div className="flex items-center gap-2 truncate">
+                        <MdLocationOn className="text-[#008080] text-lg shrink-0" />
+                        <span className="truncate">
+                            {selectedDistricts.length === 0
+                            ? "Tất cả khu vực"
+                            : `Đã chọn ${selectedDistricts.length} khu vực`}
+                        </span>
+                     </div>
+                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[300px] p-0 rounded-2xl border-slate-100 shadow-xl overflow-hidden backdrop-blur-3xl bg-white/90">
+                  <Command>
+                     <CommandInput placeholder="Tìm kiếm quận/huyện..." className="h-11" />
+                     <CommandList className="max-h-[300px] overflow-y-auto custom-scrollbar">
+                        <CommandEmpty>Không tìm thấy quận/huyện nào.</CommandEmpty>
+                        <CommandGroup>
+                           {DISTRICTS.map((district) => {
+                              const isSelected = selectedDistricts.includes(district.value);
+                              return (
+                                 <CommandItem
+                                    key={district.value}
+                                    onSelect={() => toggleDistrict(district.value)}
+                                    className="flex items-center gap-2 px-4 py-2 hover:bg-teal-50/50 cursor-pointer"
+                                 >
+                                    <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${isSelected ? 'bg-[#008080] border-[#008080] text-white' : 'border-slate-300'}`}>
+                                       {isSelected && <Check className="h-3.5 w-3.5" />}
+                                    </div>
+                                    <span className={isSelected ? 'font-bold text-slate-900' : 'text-slate-700'}>{district.label}</span>
+                                 </CommandItem>
+                              );
+                           })}
+                        </CommandGroup>
+                     </CommandList>
+                     {selectedDistricts.length > 0 && (
+                        <div className="p-3 border-t border-slate-100 bg-slate-50">
+                           <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => { setSelectedDistricts([]); setPage(1); }}
+                              className="w-full text-xs font-bold text-red-500 hover:text-red-700 hover:bg-red-50 rounded-xl h-8"
+                           >
+                              Xóa bộ lọc khu vực
+                           </Button>
+                        </div>
+                     )}
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <div className="w-full md:w-64">
               <Select value={statusFilter} onValueChange={(value) => {
                 setStatusFilter(value);
                 setPage(1);
               }}>
-                <SelectTrigger className="h-10 bg-white border-gray-300">
+                <SelectTrigger className="h-12 bg-white border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl w-full font-medium shadow-sm transition-all">
                   <SelectValue placeholder="Tất cả trạng thái" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Tất cả trạng thái</SelectItem>
+                <SelectContent className="rounded-xl border-slate-200 shadow-xl font-medium">
+                  <SelectItem value="all" className="cursor-pointer">Tất cả trạng thái</SelectItem>
                   {STATUS_OPTIONS.map((status) => (
-                    <SelectItem key={status.value} value={status.value}>
+                    <SelectItem key={status.value} value={status.value} className="cursor-pointer">
                       {status.label}
                     </SelectItem>
                   ))}
@@ -234,273 +299,251 @@ export default function ManageCampaignsPage() {
           </div>
         </div>
 
-        {/* District Filter */}
-        <div className="p-5">
-          <div className="flex items-center justify-between mb-3">
-            <label className="text-sm font-medium text-gray-700">
-              Lọc theo khu vực
-            </label>
-            {selectedDistricts.length > 0 && (
-              <button
-                onClick={() => setSelectedDistricts([])}
-                className="text-xs text-teal-600 hover:text-teal-700 font-medium flex items-center gap-1"
-              >
-                <span>Xóa lọc ({selectedDistricts.length})</span>
-              </button>
+        {/* Table Container */}
+        <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+          <div className="overflow-x-auto">
+            {loading ? (
+              <div className="flex items-center justify-center p-16">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-10 h-10 border-4 border-[#008080]/20 border-t-[#008080] rounded-full animate-spin"></div>
+                  <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Đang tải dữ liệu...</p>
+                </div>
+              </div>
+            ) : campaigns.length === 0 ? (
+              <div className="text-center p-16 text-slate-500 font-medium">
+                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <MdSearch className="w-8 h-8 text-slate-400" />
+                </div>
+                Không tìm thấy chiến dịch nào phù hợp
+              </div>
+            ) : (
+              <Table>
+                <TableHeader className="bg-slate-50/50">
+                  <TableRow className="border-slate-100 hover:bg-transparent">
+                    <TableHead className="w-[60px] font-bold text-slate-700 uppercase tracking-wider text-xs text-center">
+                      STT
+                    </TableHead>
+                    <TableHead className="w-[280px] font-bold text-slate-700 uppercase tracking-wider text-xs">
+                      Tên chiến dịch
+                    </TableHead>
+                    <TableHead className="font-bold text-slate-700 uppercase tracking-wider text-xs">
+                      Thời gian
+                    </TableHead>
+                    <TableHead className="font-bold text-slate-700 uppercase tracking-wider text-xs">
+                      Địa điểm
+                    </TableHead>
+                    <TableHead className="w-[180px] font-bold text-slate-700 uppercase tracking-wider text-xs">
+                      Tình nguyện viên
+                    </TableHead>
+                    <TableHead className="font-bold text-slate-700 uppercase tracking-wider text-xs">
+                      Trạng thái
+                    </TableHead>
+                    <TableHead className="text-right font-bold text-slate-700 uppercase tracking-wider text-xs">
+                      Hành động
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {campaigns.map((campaign, index) => {
+                    const percentage = (campaign.currentVolunteers / campaign.maxVolunteers) * 100;
+                    const statusBadge = getStatusBadge(campaign.status);
+                    const districtLabel = DISTRICTS.find((d) => d.value === campaign.district)?.label || campaign.district;
+
+                    return (
+                      <TableRow
+                        key={campaign.id}
+                        className="hover:bg-slate-50/50 transition-colors border-slate-100 group"
+                      >
+                        <TableCell className="text-center font-bold text-slate-500">
+                          {(page - 1) * limit + index + 1}
+                        </TableCell>
+                        <TableCell
+                          className="font-bold text-slate-800 max-w-[280px] truncate group-hover:text-[#008080] transition-colors"
+                          title={campaign.title}
+                        >
+                          {campaign.title}
+                        </TableCell>
+                        <TableCell className="text-slate-600 font-medium text-sm">
+                          <div className="flex flex-col gap-1">
+                            <span>{new Date(campaign.startDate).toLocaleDateString("vi-VN")}</span>
+                            {campaign.endDate && (
+                              <span className="text-xs text-slate-400">
+                                đến {new Date(campaign.endDate).toLocaleDateString("vi-VN")}
+                              </span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-slate-600 font-medium text-sm">
+                          {districtLabel}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col gap-2">
+                            <div className="flex items-center justify-between text-xs font-bold">
+                              <span className="text-slate-600">
+                                {campaign.currentVolunteers} / {campaign.maxVolunteers}
+                              </span>
+                              <span className="text-[#008080]">{Math.round(percentage)}%</span>
+                            </div>
+                            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden shrink-0">
+                              <div
+                                className={`h-full rounded-full transition-all duration-500 ${getProgressColorClass(percentage)}`}
+                                style={{ width: `${Math.min(percentage, 100)}%` }}
+                              />
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="secondary"
+                            className={`font-bold border-none px-3 py-1 rounded-xl shadow-sm ${statusBadge.color}`}
+                          >
+                            {statusBadge.label}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex gap-2 justify-end opacity-80 group-hover:opacity-100 transition-opacity">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-9 px-3 text-xs font-bold text-slate-600 bg-white border-slate-200 hover:bg-slate-50 shadow-sm rounded-xl transition-all"
+                              onClick={() => router.push(`/socialorg/manage-events/${campaign.id}`)}
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-9 px-4 text-xs font-bold text-blue-600 bg-blue-50/50 border-blue-100 hover:bg-blue-100 hover:border-blue-200 shadow-sm rounded-xl transition-all disabled:opacity-50"
+                              onClick={() =>
+                                router.push(`/socialorg/manage-events/${campaign.id}/edit`)
+                              }
+                              disabled={campaign.status === "ONGOING" || campaign.status === "COMPLETED"}
+                            >
+                              <Pencil className="w-3.5 h-3.5 mr-1.5" />
+                              Sửa
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-9 px-4 text-xs font-bold text-rose-600 bg-rose-50/50 border-rose-100 hover:bg-rose-100 hover:border-rose-200 shadow-sm rounded-xl transition-all"
+                              onClick={() => handleDeleteClick(campaign)}
+                            >
+                              <Trash2 className="w-3.5 h-3.5 mr-1.5" />
+                              Xóa
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
             )}
           </div>
-          <div className="flex flex-wrap gap-2">
-            {DISTRICTS.map((district) => (
-              <button
-                key={district.value}
-                onClick={() => toggleDistrict(district.value)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-                  selectedDistricts.includes(district.value)
-                    ? "bg-teal-600 text-white shadow-sm ring-1 ring-teal-600"
-                    : "bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200"
-                }`}
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4 bg-white/60 backdrop-blur-md rounded-[2rem] px-6 py-4 shadow-sm border border-white/50">
+            <span className="text-sm font-bold text-slate-500">
+              Hiển thị {(page - 1) * limit + 1} - {Math.min(page * limit, total)} trên tổng số {total}
+            </span>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                disabled={page === 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                className="h-10 w-10 rounded-xl border-slate-200 bg-white hover:bg-slate-50 text-slate-600 shadow-sm"
               >
-                {district.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+                <MdChevronLeft className="text-2xl" />
+              </Button>
 
-      {/* Table Container */}
-      <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden shadow-sm">
-        <div className="overflow-x-auto">
-          {loading ? (
-            <div className="flex items-center justify-center p-12">
-              <div className="flex flex-col items-center gap-4">
-                <div className="relative">
-                  <div className="w-12 h-12 border-4 border-gray-200 rounded-full"></div>
-                  <div className="absolute inset-0 w-12 h-12 border-4 border-teal-600 border-t-transparent rounded-full animate-spin"></div>
-                </div>
-                <p className="text-sm text-gray-600 font-medium">Đang tải dữ liệu...</p>
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (page <= 3) {
+                  pageNum = i + 1;
+                } else if (page >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = page - 2 + i;
+                }
+
+                return (
+                  <Button
+                    key={pageNum}
+                    onClick={() => setPage(pageNum)}
+                    className={`h-10 w-10 p-0 text-sm font-bold rounded-xl shadow-sm transition-all ${
+                      page === pageNum
+                        ? "bg-[#008080] hover:bg-[#00A79D] text-white border-transparent"
+                        : "bg-white hover:bg-slate-50 border-slate-200 text-slate-600"
+                    }`}
+                    variant={page === pageNum ? "default" : "outline"}
+                  >
+                    {pageNum}
+                  </Button>
+                );
+              })}
+
+              <Button
+                variant="outline"
+                size="icon"
+                disabled={page === totalPages}
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                className="h-10 w-10 rounded-xl border-slate-200 bg-white hover:bg-slate-50 text-slate-600 shadow-sm"
+              >
+                <MdChevronRight className="text-2xl" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <DialogContent className="sm:max-w-[425px] rounded-[2rem] p-6 border-slate-100 shadow-xl bg-white/90 backdrop-blur-xl">
+            <DialogHeader className="mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center mb-4 mx-auto">
+                <Trash2 className="w-6 h-6 text-rose-500" />
               </div>
-            </div>
-          ) : campaigns.length === 0 ? (
-            <div className="text-center p-12 text-gray-500">
-              Không tìm thấy chiến dịch nào
-            </div>
-          ) : (
-            <Table>
-              <TableHeader className="bg-gray-50 dark:bg-gray-700">
-                <TableRow>
-                  <TableHead className="w-[50px] font-semibold text-gray-700 dark:text-gray-300 uppercase text-xs text-center">
-                    STT
-                  </TableHead>
-                  <TableHead className="w-[250px] font-semibold text-gray-700 dark:text-gray-300 uppercase text-xs">
-                    Tên chiến dịch
-                  </TableHead>
-                  <TableHead className="font-semibold text-gray-700 dark:text-gray-300 uppercase text-xs">
-                    Thời gian
-                  </TableHead>
-                  <TableHead className="font-semibold text-gray-700 dark:text-gray-300 uppercase text-xs">
-                    Địa điểm
-                  </TableHead>
-                  <TableHead className="w-[200px] font-semibold text-gray-700 dark:text-gray-300 uppercase text-xs">
-                    Tình nguyện viên
-                  </TableHead>
-                  <TableHead className="font-semibold text-gray-700 dark:text-gray-300 uppercase text-xs">
-                    Trạng thái
-                  </TableHead>
-                  <TableHead className="text-right font-semibold text-gray-700 dark:text-gray-300 uppercase text-xs">
-                    Hành động
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {campaigns.map((campaign, index) => {
-                  const percentage = (campaign.currentVolunteers / campaign.maxVolunteers) * 100;
-                  const statusBadge = getStatusBadge(campaign.status);
-                  const districtLabel = DISTRICTS.find((d) => d.value === campaign.district)?.label || campaign.district;
-
-                  return (
-                    <TableRow
-                      key={campaign.id}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-700/50"
-                    >
-                      <TableCell className="text-center font-medium text-gray-600 dark:text-gray-400">
-                        {(page - 1) * limit + index + 1}
-                      </TableCell>
-                      <TableCell
-                        className="font-medium text-gray-900 dark:text-white max-w-[250px] truncate"
-                        title={campaign.title}
-                      >
-                        {campaign.title}
-                      </TableCell>
-                      <TableCell className="text-gray-600 dark:text-gray-300 text-sm">
-                        <div>
-                          {new Date(campaign.startDate).toLocaleDateString("vi-VN")}
-                          {campaign.endDate && (
-                            <>
-                              {" - "}
-                              {new Date(campaign.endDate).toLocaleDateString("vi-VN")}
-                            </>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-gray-600 dark:text-gray-300 text-sm">
-                        {districtLabel}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-col gap-1">
-                          <div className="flex items-center justify-between text-xs mb-1">
-                            <span>
-                              {campaign.currentVolunteers}/{campaign.maxVolunteers}
-                            </span>
-                          </div>
-                          <div className="h-2 w-full bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
-                            <div
-                              className={`h-full rounded-full ${getProgressColorClass(percentage)}`}
-                              style={{ width: `${Math.min(percentage, 100)}%` }}
-                            />
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant="secondary"
-                          className={`font-medium border-none px-2.5 py-0.5 rounded-full ${statusBadge.color}`}
-                        >
-                          {statusBadge.label}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex gap-2 justify-end">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 px-3 text-xs font-medium text-teal-700 border-teal-200 hover:bg-teal-50 hover:text-teal-800 hover:border-teal-300"
-                            onClick={() => router.push(`/socialorg/manage-events/${campaign.id}`)}
-                          >
-                            <Eye className="w-3.5 h-3.5" />
-                            
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 px-3 text-xs font-medium text-blue-700 border-blue-200 hover:bg-blue-50 hover:text-blue-800 hover:border-blue-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                            onClick={() =>
-                              router.push(`/socialorg/manage-events/${campaign.id}/edit`)
-                            }
-                            disabled={campaign.status === "ONGOING" || campaign.status === "COMPLETED"}
-                          >
-                            <Pencil className="w-3.5 h-3.5 mr-1.5" />
-                            Sửa
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 px-3 text-xs font-medium text-red-700 border-red-200 hover:bg-red-50 hover:text-red-800 hover:border-red-300"
-                            onClick={() => handleDeleteClick(campaign)}
-                          >
-                            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
-                            Xóa
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          )}
-        </div>
-      </div>
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex flex-col sm:flex-row justify-between items-center mt-4 gap-4">
-          <span className="text-sm text-gray-600 dark:text-gray-400">
-            Hiển thị {(page - 1) * limit + 1}-
-            {Math.min(page * limit, total)} trên {total} chiến dịch
-          </span>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              disabled={page === 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="h-9 w-9 border-none bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              <MdChevronLeft className="text-xl" />
-            </Button>
-
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              let pageNum;
-              if (totalPages <= 5) {
-                pageNum = i + 1;
-              } else if (page <= 3) {
-                pageNum = i + 1;
-              } else if (page >= totalPages - 2) {
-                pageNum = totalPages - 4 + i;
-              } else {
-                pageNum = page - 2 + i;
-              }
-
-              return (
-                <Button
-                  key={pageNum}
-                  onClick={() => setPage(pageNum)}
-                  className={`h-8 w-8 p-0 text-sm rounded-lg ${
-                    page === pageNum
-                      ? "bg-teal-600 hover:bg-teal-700 text-white font-bold"
-                      : "bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700"
-                  }`}
-                  variant={page === pageNum ? "default" : "ghost"}
-                >
-                  {pageNum}
-                </Button>
-              );
-            })}
-
-            <Button
-              variant="outline"
-              size="icon"
-              disabled={page === totalPages}
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              className="h-9 w-9 border-none bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              <MdChevronRight className="text-xl" />
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Xác nhận xóa chiến dịch</DialogTitle>
-            <DialogDescription>
-              Bạn có chắc chắn muốn xóa chiến dịch "<strong>{campaignToDelete?.title}</strong>"?
-              <br />
-              <span className="text-red-600 font-medium mt-2 block">
-                Lưu ý: Chỉ có thể xóa chiến dịch chưa có tình nguyện viên nào đăng ký.
-              </span>
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setDeleteDialogOpen(false)}
-              disabled={deleting}
-            >
-              Hủy
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDeleteConfirm}
-              disabled={deleting}
-            >
-              {deleting ? "Đang xóa..." : "Xóa"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+              <DialogTitle className="text-xl font-bold text-center text-slate-800">Xác nhận xóa chiến dịch</DialogTitle>
+              <DialogDescription className="text-center font-medium text-slate-500 mt-2">
+                Bạn có chắc chắn muốn xóa chiến dịch <br/>
+                <strong className="text-slate-800">"{campaignToDelete?.title}"</strong>?
+                <br />
+                <span className="text-rose-500 font-bold mt-4 block p-3 bg-rose-50 rounded-xl text-xs">
+                  Lưu ý: Chỉ có thể xóa chiến dịch chưa có tình nguyện viên nào đăng ký.
+                </span>
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex-col sm:flex-row gap-3 sm:gap-2 pt-2">
+              <Button
+                variant="outline"
+                onClick={() => setDeleteDialogOpen(false)}
+                disabled={deleting}
+                className="w-full sm:w-1/2 h-11 rounded-xl font-bold border-slate-200 hover:bg-slate-50 text-slate-600 shadow-sm"
+              >
+                Hủy
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleDeleteConfirm}
+                disabled={deleting}
+                className="w-full sm:w-1/2 h-11 rounded-xl font-bold bg-rose-500 hover:bg-rose-600 text-white shadow-sm"
+              >
+                {deleting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                    Đang xóa...
+                  </>
+                ) : (
+                  "Xóa chiến dịch"
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

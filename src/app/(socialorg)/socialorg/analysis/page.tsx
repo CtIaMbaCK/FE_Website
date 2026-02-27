@@ -300,29 +300,32 @@ export default function StatisticsPage() {
   }
 
   return (
-    <div className="pb-10 bg-[#f8f9fa] min-h-screen">
+    <div className="pb-10 min-h-screen">
       {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-4">
-        <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center mb-6">
+      <div className="mx-auto px-6 py-4">
+        <div className="bg-white/60 backdrop-blur-md rounded-[2rem] px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center mb-4">
           <Breadcrumb items={[{ label: "Báo cáo thống kê" }]} />
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col px-4 sm:px-6 md:px-8 lg:px-10">
-        <div className="w-full max-w-7xl mx-auto flex flex-col gap-8">
+      <main className="flex-1 flex flex-col px-6">
+        <div className="w-full mx-auto flex flex-col gap-8">
           {/* 1. Page Header */}
           <div className="flex flex-wrap justify-between gap-4 items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Thống kê</h1>
-              <p className="text-sm text-gray-500 mt-1">
-                Xem thống kê hoạt động và xuất báo cáo
-              </p>
+            <div className="flex items-center gap-4">
+              <div className="w-2 h-10 bg-gradient-to-b from-[#008080] to-[#00A79D] rounded-full"></div>
+              <div>
+                <h1 className="text-2xl font-black text-slate-900 tracking-tight">Thống kê</h1>
+                <p className="text-sm font-medium text-slate-500 mt-1">
+                  Xem thống kê hoạt động và xuất báo cáo
+                </p>
+              </div>
             </div>
             <Button
               variant="outline"
               onClick={handleExportPDF}
-              className="gap-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-700 font-bold shadow-sm h-10 px-4 hover:bg-teal-50 hover:text-teal-700 hover:border-teal-300"
+              className="gap-2 bg-white/80 backdrop-blur-xl text-slate-700 border-slate-200 font-bold shadow-sm h-11 px-6 rounded-xl hover:bg-teal-50 hover:text-teal-700 hover:border-teal-200 transition-all"
             >
               <MdDownload className="text-lg" />
               <span className="truncate">Xuất báo cáo PDF</span>
@@ -330,14 +333,14 @@ export default function StatisticsPage() {
           </div>
 
           {/* 2. Time Range Filters */}
-          <div className="flex gap-2 py-1 overflow-x-auto no-scrollbar">
+          <div className="flex gap-2 py-1 overflow-x-auto no-scrollbar bg-white/60 backdrop-blur-md p-1.5 rounded-2xl w-fit border border-slate-100 shadow-sm">
             <Button
               variant="ghost"
               onClick={() => setSelectedDays(30)}
-              className={`h-9 font-medium rounded-lg px-4 ${
+              className={`h-10 font-bold rounded-xl px-5 transition-all ${
                 selectedDays === 30
-                  ? "bg-custom-teal/20 text-custom-teal hover:bg-custom-teal/30 hover:text-custom-teal"
-                  : "bg-white dark:bg-gray-800 text-gray-600 hover:bg-gray-100 hover:text-gray-900 border border-transparent hover:border-gray-200"
+                  ? "bg-white text-[#008080] shadow-sm"
+                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
               }`}
             >
               30 ngày qua
@@ -345,10 +348,10 @@ export default function StatisticsPage() {
             <Button
               variant="ghost"
               onClick={() => setSelectedDays(null)}
-              className={`h-9 font-medium rounded-lg px-4 ${
+              className={`h-10 font-bold rounded-xl px-5 transition-all ${
                 selectedDays === null
-                  ? "bg-custom-teal/20 text-custom-teal hover:bg-custom-teal/30 hover:text-custom-teal"
-                  : "bg-white dark:bg-gray-800 text-gray-600 hover:bg-gray-100 hover:text-gray-900 border border-transparent hover:border-gray-200"
+                  ? "bg-white text-[#008080] shadow-sm"
+                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
               }`}
             >
               Tất cả
@@ -357,80 +360,91 @@ export default function StatisticsPage() {
 
           {/* 3. Summary Stats Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="custom-card border-none bg-white dark:bg-gray-800">
-              <CardContent className="p-6 flex flex-col gap-2">
-                <p className="text-custom-text-light font-medium text-base">
-                  Tổng số Tình nguyện viên
-                </p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {overview?.totalVolunteers || 0}
-                </p>
-                {overview && overview.newVolunteersThisMonth > 0 && (
-                  <div className="text-green-600 dark:text-green-500 text-sm font-medium flex items-center">
-                    <MdArrowUpward className="text-base mr-1" /> +
-                    {overview.newVolunteersThisMonth} tháng này
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-            <Card className="custom-card border-none bg-white dark:bg-gray-800">
-              <CardContent className="p-6 flex flex-col gap-2">
-                <p className="text-custom-text-light font-medium text-base">
-                  Tổng người cần giúp đỡ
-                </p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {overview?.totalBeneficiaries || 0}
-                </p>
-                {overview && overview.newBeneficiariesThisMonth > 0 && (
-                  <div className="text-green-600 dark:text-green-500 text-sm font-medium flex items-center">
-                    <MdArrowUpward className="text-base mr-1" /> +
-                    {overview.newBeneficiariesThisMonth} tháng này
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-            <Card className="custom-card border-none bg-white dark:bg-gray-800">
-              <CardContent className="p-6 flex flex-col gap-2">
-                <p className="text-custom-text-light font-medium text-base">
-                  Tổng số chiến dịch
-                </p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {overview?.totalCampaigns || 0}
-                </p>
-                <p className="text-sm text-gray-600">
-                  {overview?.ongoingCampaigns || 0} đang diễn ra
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="custom-card border-none bg-white dark:bg-gray-800">
-              <CardContent className="p-6 flex flex-col gap-2">
-                <p className="text-custom-text-light font-medium text-base">
-                  Tổng bài viết
-                </p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {overview?.totalPosts || 0}
-                </p>
-              </CardContent>
-            </Card>
+            <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2rem] p-6 shadow-sm flex flex-col gap-2 hover:shadow-md transition-shadow relative overflow-hidden group">
+               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <div className="w-16 h-16 bg-[#008080] rounded-full blur-2xl"></div>
+               </div>
+              <p className="text-slate-500 font-bold text-sm uppercase tracking-wider">
+                Tổng TNV
+              </p>
+              <p className="text-4xl font-black text-slate-800">
+                {overview?.totalVolunteers || 0}
+              </p>
+              {overview && overview.newVolunteersThisMonth > 0 && (
+                <div className="text-teal-600 font-bold text-sm flex items-center mt-auto pt-2">
+                  <span className="flex items-center justify-center w-5 h-5 rounded-full bg-teal-100 mr-1.5">
+                     <MdArrowUpward className="text-xs" />
+                  </span>
+                  +{overview.newVolunteersThisMonth} tháng này
+                </div>
+              )}
+            </div>
+            
+            <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2rem] p-6 shadow-sm flex flex-col gap-2 hover:shadow-md transition-shadow relative overflow-hidden group">
+               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <div className="w-16 h-16 bg-orange-500 rounded-full blur-2xl"></div>
+               </div>
+              <p className="text-slate-500 font-bold text-sm uppercase tracking-wider">
+                Tổng NCGĐ
+              </p>
+              <p className="text-4xl font-black text-slate-800">
+                {overview?.totalBeneficiaries || 0}
+              </p>
+              {overview && overview.newBeneficiariesThisMonth > 0 && (
+                <div className="text-orange-500 font-bold text-sm flex items-center mt-auto pt-2">
+                  <span className="flex items-center justify-center w-5 h-5 rounded-full bg-orange-100 mr-1.5">
+                     <MdArrowUpward className="text-xs" />
+                  </span>
+                  +{overview.newBeneficiariesThisMonth} tháng này
+                </div>
+              )}
+            </div>
+
+            <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2rem] p-6 shadow-sm flex flex-col gap-2 hover:shadow-md transition-shadow relative overflow-hidden group">
+               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <div className="w-16 h-16 bg-blue-500 rounded-full blur-2xl"></div>
+               </div>
+              <p className="text-slate-500 font-bold text-sm uppercase tracking-wider">
+                Tổng chiến dịch
+              </p>
+              <p className="text-4xl font-black text-slate-800">
+                {overview?.totalCampaigns || 0}
+              </p>
+              <p className="text-sm font-bold text-blue-500 mt-auto pt-2 flex items-center">
+                 <span className="w-2 h-2 rounded-full bg-blue-500 mr-2 animate-pulse"></span>
+                {overview?.ongoingCampaigns || 0} đang diễn ra
+              </p>
+            </div>
+
+            <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2rem] p-6 shadow-sm flex flex-col gap-2 hover:shadow-md transition-shadow relative overflow-hidden group">
+               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <div className="w-16 h-16 bg-purple-500 rounded-full blur-2xl"></div>
+               </div>
+              <p className="text-slate-500 font-bold text-sm uppercase tracking-wider">
+                Tổng bài viết
+              </p>
+              <p className="text-4xl font-black text-slate-800">
+                {overview?.totalPosts || 0}
+              </p>
+            </div>
           </div>
 
           {/* 4. Charts Section (Grid 2 columns) */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Chart 1: HelpRequest Statistics */}
-            <Card className="custom-card border-none bg-white dark:bg-gray-800 flex flex-col">
-              <CardContent className="p-6 flex flex-col gap-4 h-full">
-                <div className="flex flex-col gap-1">
-                  <p className="text-gray-800 dark:text-gray-200 text-base font-medium">
+            <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2rem] shadow-sm flex flex-col p-6 h-full">
+                <div className="flex flex-col gap-1 mb-6">
+                  <p className="text-slate-500 text-sm font-bold uppercase tracking-wider">
                     Thống kê hoạt động
                   </p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-2xl font-black text-slate-800">
                     {helpRequests
                       ? helpRequests.helpRequestsByStatus.reduce(
                           (sum: number, item: any) => sum + item.count,
                           0,
                         )
                       : 0}{" "}
-                    hoạt động
+                    <span className="text-lg font-bold text-slate-500">hoạt động</span>
                   </p>
                 </div>
 
@@ -447,24 +461,24 @@ export default function StatisticsPage() {
                         REJECTED: "Từ chối",
                       };
                       const statusColors: Record<string, string> = {
-                        PENDING: "bg-yellow-100 text-yellow-800",
-                        APPROVED: "bg-blue-100 text-blue-800",
-                        ONGOING: "bg-purple-100 text-purple-800",
-                        COMPLETED: "bg-green-100 text-green-800",
-                        CANCELLED: "bg-gray-100 text-gray-800",
-                        REJECTED: "bg-red-100 text-red-800",
+                        PENDING: "bg-yellow-50 text-yellow-600 border-yellow-200",
+                        APPROVED: "bg-blue-50 text-blue-600 border-blue-200",
+                        ONGOING: "bg-purple-50 text-purple-600 border-purple-200",
+                        COMPLETED: "bg-green-50 text-green-600 border-green-200",
+                        CANCELLED: "bg-slate-50 text-slate-600 border-slate-200",
+                        REJECTED: "bg-red-50 text-red-600 border-red-200",
                       };
                       return (
                         <div
                           key={item.status}
-                          className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                          className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl hover:shadow-sm transition-shadow"
                         >
                           <Badge
-                            className={`${statusColors[item.status] || "bg-gray-100 text-gray-800"} hover:${statusColors[item.status] || "bg-gray-100"}`}
+                            className={`px-3 py-1 font-bold ${statusColors[item.status] || "bg-slate-50 text-slate-600 border-slate-200"} hover:${statusColors[item.status] || "bg-slate-50"} border shadow-none uppercase tracking-wide text-xs`}
                           >
                             {statusLabels[item.status] || item.status}
                           </Badge>
-                          <span className="text-lg font-bold text-gray-900 dark:text-white">
+                          <span className="text-xl font-black text-slate-800">
                             {item.count}
                           </span>
                         </div>
@@ -472,21 +486,21 @@ export default function StatisticsPage() {
                     })}
                   </div>
                 ) : (
-                  <p className="text-gray-500 text-sm text-center py-8">
-                    Chưa có dữ liệu hoạt động
-                  </p>
+                  <div className="flex-1 flex items-center justify-center p-8 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                     <p className="text-slate-400 font-medium text-center">
+                       Chưa có dữ liệu hoạt động
+                     </p>
+                  </div>
                 )}
-              </CardContent>
-            </Card>
+            </div>
 
             {/* Chart 2: Top Campaigns */}
-            <Card className="custom-card border-none bg-white dark:bg-gray-800">
-              <CardContent className="p-6 flex flex-col gap-6 h-full">
-                <div className="flex flex-col gap-1">
-                  <p className="text-gray-800 dark:text-gray-200 text-base font-medium">
+            <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2rem] shadow-sm flex flex-col p-6 h-full">
+                <div className="flex flex-col gap-1 mb-6">
+                  <p className="text-slate-500 text-sm font-bold uppercase tracking-wider">
                     Chiến dịch nổi bật
                   </p>
-                  <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-2xl font-black text-slate-800">
                     Top TNV đăng ký
                   </p>
                 </div>
@@ -500,28 +514,30 @@ export default function StatisticsPage() {
                         .map((campaign, index) => (
                           <div
                             key={campaign.id}
-                            className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                            className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl hover:shadow-sm transition-shadow group"
                           >
-                            <div className="flex-1">
-                              <p className="font-medium text-gray-900 dark:text-white text-sm line-clamp-1">
+                            <div className="flex-1 min-w-0 pr-4">
+                              <p className="font-bold text-slate-800 text-sm line-clamp-1 group-hover:text-teal-600 transition-colors">
                                 {campaign.title}
                               </p>
-                              <p className="text-xs text-gray-500 mt-1">
-                                {campaign.currentVolunteers} /{" "}
-                                {campaign.maxVolunteers} TNV
-                              </p>
+                              <div className="flex items-center gap-4 mt-2">
+                                <p className="text-xs font-bold text-slate-500 bg-slate-50 px-2 py-1 rounded-md">
+                                  {campaign.currentVolunteers} /{" "}
+                                  {campaign.maxVolunteers} TNV
+                                </p>
+                              </div>
                             </div>
-                            <div className="ml-3 flex items-center gap-2">
+                            <div className="flex items-center shrink-0">
                               <Badge
-                                className={`text-xs ${
+                                className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 ${
                                   campaign.status === "ONGOING"
-                                    ? "bg-blue-100 text-blue-800"
+                                    ? "bg-blue-50 text-blue-600 hover:bg-blue-50"
                                     : campaign.status === "COMPLETED"
-                                      ? "bg-green-100 text-green-800"
+                                      ? "bg-green-50 text-green-600 hover:bg-green-50"
                                       : campaign.status === "PENDING"
-                                        ? "bg-yellow-100 text-yellow-800"
-                                        : "bg-gray-100 text-gray-800"
-                                }`}
+                                        ? "bg-yellow-50 text-yellow-600 hover:bg-yellow-50"
+                                        : "bg-slate-50 text-slate-600 hover:bg-slate-50"
+                                } shadow-none`}
                               >
                                 {campaign.status === "ONGOING"
                                   ? "Đang diễn ra"
@@ -536,36 +552,37 @@ export default function StatisticsPage() {
                         ))}
                     </div>
                   ) : (
-                    <p className="text-gray-500 text-sm text-center py-8">
-                      Chưa có dữ liệu chiến dịch
-                    </p>
+                    <div className="flex-1 flex items-center justify-center p-8 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200 h-full">
+                       <p className="text-slate-400 font-medium text-center">
+                         Chưa có dữ liệu chiến dịch
+                       </p>
+                    </div>
                   )}
                 </div>
-              </CardContent>
-            </Card>
+            </div>
           </div>
 
           {/* 5. Top Volunteers Table */}
-          <Card className="custom-card border-none bg-white dark:bg-gray-800 overflow-hidden">
-            <CardHeader className="border-b border-gray-100 dark:border-gray-700 pb-4">
-              <CardTitle className="text-lg font-bold text-gray-900 dark:text-white">
+          <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2rem] overflow-hidden shadow-sm">
+            <div className="p-6 border-b border-slate-100/60 bg-slate-50/30">
+              <h2 className="text-lg font-black text-slate-800">
                 Tình nguyện viên tiêu biểu
-              </CardTitle>
-            </CardHeader>
-            <div className="overflow-x-auto ">
-              <Table >
+              </h2>
+            </div>
+            <div className="overflow-x-auto">
+              <Table>
                 <TableHeader>
-                  <TableRow className="hover:bg-transparent border-b border-gray-200 dark:border-gray-700">
-                    <TableHead className="font-semibold text-gray-500 px-6">
+                  <TableRow className="hover:bg-transparent border-b border-slate-100/60 bg-slate-50/30">
+                    <TableHead className="font-bold text-slate-500 uppercase tracking-wider text-xs px-6 py-4">
                       Họ và tên
                     </TableHead>
-                    <TableHead className="font-semibold text-gray-500 px-6">
+                    <TableHead className="font-bold text-slate-500 uppercase tracking-wider text-xs px-6 py-4">
                       Điểm tích lũy
                     </TableHead>
-                    <TableHead className="font-semibold text-gray-500 px-6">
+                    <TableHead className="font-bold text-slate-500 uppercase tracking-wider text-xs px-6 py-4">
                       Lời cảm ơn
                     </TableHead>
-                    <TableHead className="font-semibold text-gray-500 px-6">
+                    <TableHead className="font-bold text-slate-500 uppercase tracking-wider text-xs px-6 py-4">
                       Số chiến dịch
                     </TableHead>
                   </TableRow>
@@ -583,30 +600,40 @@ export default function StatisticsPage() {
                         return (
                           <TableRow
                             key={volunteer.userId}
-                            className="hover:bg-gray-50 dark:hover:bg-gray-700/30 border-b border-gray-100 dark:border-gray-700 last:border-0"
+                            className="hover:bg-slate-50/50 border-b border-slate-50 last:border-0 transition-colors"
                           >
-                            <TableCell className="font-medium text-gray-900 dark:text-gray-200 px-6">
+                            <TableCell className="font-bold text-slate-800 px-6 py-4">
                               <div className="flex items-center gap-3">
-                                {volunteer.avatarUrl && (
+                                {volunteer.avatarUrl ? (
                                   <img
                                     src={volunteer.avatarUrl}
                                     alt={volunteer.fullName}
-                                    className="w-8 h-8 rounded-full object-cover"
+                                    className="w-10 h-10 rounded-full object-cover shadow-sm border border-slate-100"
                                   />
+                                ) : (
+                                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-[#008080] text-white flex items-center justify-center font-bold shadow-sm">
+                                      {volunteer.fullName.charAt(0)}
+                                   </div>
                                 )}
                                 <span>{volunteer.fullName}</span>
                               </div>
                             </TableCell>
-                            <TableCell className="text-gray-600 dark:text-gray-400 px-6">
-                              <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">
+                            <TableCell className="px-6 py-4">
+                              <Badge className="bg-purple-50 text-purple-600 hover:bg-purple-50 font-bold px-2.5 py-1 shadow-none">
                                 {volunteer.points} điểm
                               </Badge>
                             </TableCell>
-                            <TableCell className="text-gray-600 dark:text-gray-400 px-6">
-                              {volunteer.totalThanks}
+                            <TableCell className="text-slate-600 font-medium px-6 py-4">
+                              <div className="flex items-center gap-1.5">
+                                 <span className="w-5 h-5 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center text-xs">♥</span>
+                                 {volunteer.totalThanks}
+                              </div>
                             </TableCell>
-                            <TableCell className="text-gray-600 dark:text-gray-400 px-6">
-                              {campaignInfo?.campaignCount || 0}
+                            <TableCell className="text-slate-600 font-medium px-6 py-4">
+                              <div className="flex items-center gap-1.5">
+                                 <span className="w-5 h-5 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center text-xs">★</span>
+                                 {campaignInfo?.campaignCount || 0}
+                              </div>
                             </TableCell>
                           </TableRow>
                         );
@@ -615,16 +642,21 @@ export default function StatisticsPage() {
                     <TableRow>
                       <TableCell
                         colSpan={4}
-                        className="text-center text-gray-500 py-8"
+                        className="text-center text-gray-500 py-12"
                       >
-                        Chưa có dữ liệu tình nguyện viên
+                        <div className="flex flex-col items-center justify-center gap-2">
+                           <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center">
+                              <span className="text-2xl text-slate-300">📊</span>
+                           </div>
+                           <p className="font-medium">Chưa có dữ liệu tình nguyện viên</p>
+                        </div>
                       </TableCell>
                     </TableRow>
                   )}
                 </TableBody>
               </Table>
             </div>
-          </Card>
+          </div>
         </div>
       </main>
     </div>

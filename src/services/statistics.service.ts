@@ -172,6 +172,16 @@ export const getHelpRequestStatistics = async (days?: number): Promise<HelpReque
 };
 
 /**
+ * [TCXH] Lấy nhật ký hoạt động gần đây của tổ chức
+ */
+export const getRecentActivities = async (limit?: number): Promise<any[]> => {
+  const response = await api.get("/admin-tcxh/statistics/recent-activities", {
+    params: { limit }
+  });
+  return response.data;
+};
+
+/**
  * [PUBLIC] Top tình nguyện viên toàn hệ thống
  */
 export const getTopVolunteersGlobal = async (limit?: number): Promise<TopVolunteer[]> => {

@@ -168,9 +168,9 @@ export default function HomePage() {
             <div className="relative h-full min-h-[500px] lg:min-h-[600px] flex items-center justify-center lg:justify-end">
               {/* Main abstract card */}
               <div className="relative w-full max-w-md aspect-[4/5] bg-gradient-to-br from-[#008080] to-[#00A79D] rounded-[3rem] p-1 shadow-[0_30px_60px_rgba(0,128,128,0.2)] rotate-[-2deg] hover:rotate-0 transition-transform duration-700 ease-out group">
-                <div className="absolute inset-0 bg-[url('/images/pattern.svg')] opacity-20 mix-blend-overlay rounded-[3rem]"></div>
-                
                 <div className="w-full h-full bg-white/10 backdrop-blur-3xl rounded-[2.8rem] border border-white/20 p-8 flex flex-col justify-between overflow-hidden relative">
+                   <div className="absolute inset-0 opacity-40 mix-blend-overlay rounded-[2.8rem] bg-[url('/images/pattern.jpg')] bg-cover bg-center pointer-events-none"></div>
+                   
                    <div className="flex justify-between items-start z-10">
                       <div className="bg-white/20 backdrop-blur-md p-3 rounded-2xl text-white">
                          <MdHandshake className="w-8 h-8 text-white animate-pulse" />

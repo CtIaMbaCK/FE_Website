@@ -244,174 +244,185 @@ export default function CampaignForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-8">
       {/* Thông tin cơ bản */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-teal-600" />
-            Thông tin cơ bản
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2rem] shadow-sm overflow-hidden p-8 hover:border-[#008080]/30 transition-all duration-300">
+        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+          <div className="w-12 h-12 rounded-2xl bg-teal-50 flex items-center justify-center flex-shrink-0 shadow-sm border border-teal-100">
+            <MapPin className="w-6 h-6 text-teal-600" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-800">Thông tin cơ bản</h2>
+        </div>
+        
+        <div className="space-y-6">
           {/* Tên chiến dịch */}
           <div className="space-y-2">
-            <Label htmlFor="title">
-              Tên chiến dịch <span className="text-red-600">*</span>
+            <Label htmlFor="title" className="text-sm font-bold text-slate-700">
+              Tên chiến dịch <span className="text-red-500">*</span>
             </Label>
             <Input
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="VD: Chung tay dọn dẹp bãi biển"
+              className="h-12 bg-gray-50/50 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl"
               required
             />
           </div>
 
           {/* Mô tả */}
           <div className="space-y-2">
-            <Label htmlFor="description">Mô tả</Label>
+            <Label htmlFor="description" className="text-sm font-bold text-slate-700">Mô tả</Label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Mô tả chi tiết về chiến dịch..."
               rows={4}
+              className="bg-gray-50/50 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl"
             />
           </div>
 
           {/* Mục tiêu */}
           <div className="space-y-2">
-            <Label htmlFor="goal">Mục tiêu</Label>
+            <Label htmlFor="goal" className="text-sm font-bold text-slate-700">Mục tiêu</Label>
             <Input
               id="goal"
               value={goal}
               onChange={(e) => setGoal(e.target.value)}
               placeholder="VD: Trao 500 phần quà cho người nghèo"
+              className="h-12 bg-gray-50/50 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl"
             />
           </div>
 
-          {/* Quận/Huyện */}
-          <div className="space-y-2">
-            <Label htmlFor="district">
-              Quận/Huyện <span className="text-red-600">*</span>
-            </Label>
-            <Select value={district} onValueChange={setDistrict} required>
-              <SelectTrigger>
-                <SelectValue placeholder="Chọn quận/huyện" />
-              </SelectTrigger>
-              <SelectContent>
-                {DISTRICTS.map((d) => (
-                  <SelectItem key={d.value} value={d.value}>
-                    {d.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Quận/Huyện */}
+            <div className="space-y-2">
+              <Label htmlFor="district" className="text-sm font-bold text-slate-700">
+                Quận/Huyện <span className="text-red-500">*</span>
+              </Label>
+              <Select value={district} onValueChange={setDistrict} required>
+                <SelectTrigger className="h-12 bg-gray-50/50 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl">
+                  <SelectValue placeholder="Chọn quận/huyện" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl border-slate-200 shadow-xl font-medium">
+                  {DISTRICTS.map((d) => (
+                    <SelectItem key={d.value} value={d.value} className="cursor-pointer">
+                      {d.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          {/* Địa chỉ chi tiết */}
+            {/* Địa chỉ chi tiết */}
+            <div className="space-y-2">
+              <Label htmlFor="addressDetail" className="text-sm font-bold text-slate-700">
+                Địa chỉ chi tiết <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="addressDetail"
+                value={addressDetail}
+                onChange={(e) => setAddressDetail(e.target.value)}
+                placeholder="VD: 123 Đường ABC, Phường XYZ"
+                className="h-12 bg-gray-50/50 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl"
+                required
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Thời gian và số lượng */}
+      <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2rem] shadow-sm overflow-hidden p-8 hover:border-[#008080]/30 transition-all duration-300">
+        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+          <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center flex-shrink-0 shadow-sm border border-blue-100">
+            <Calendar className="w-6 h-6 text-blue-600" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-800">Thời gian và số lượng</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Ngày bắt đầu */}
           <div className="space-y-2">
-            <Label htmlFor="addressDetail">
-              Địa chỉ chi tiết <span className="text-red-600">*</span>
+            <Label htmlFor="startDate" className="text-sm font-bold text-slate-700">
+              Ngày bắt đầu <span className="text-red-500">*</span>
             </Label>
             <Input
-              id="addressDetail"
-              value={addressDetail}
-              onChange={(e) => setAddressDetail(e.target.value)}
-              placeholder="VD: 123 Đường ABC, Phường XYZ"
+              id="startDate"
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="h-12 bg-gray-50/50 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl"
               required
             />
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Thời gian và số lượng */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-blue-600" />
-            Thời gian và số lượng
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Ngày bắt đầu */}
-            <div className="space-y-2">
-              <Label htmlFor="startDate">
-                Ngày bắt đầu <span className="text-red-600">*</span>
-              </Label>
-              <Input
-                id="startDate"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                required
-              />
-            </div>
-
-            {/* Ngày kết thúc */}
-            <div className="space-y-2">
-              <Label htmlFor="endDate">Ngày kết thúc</Label>
-              <Input
-                id="endDate"
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-            </div>
-
-            {/* Số lượng mục tiêu */}
-            <div className="space-y-2">
-              <Label htmlFor="targetVolunteers">
-                Số lượng tình nguyện viên mục tiêu <span className="text-red-600">*</span>
-              </Label>
-              <Input
-                id="targetVolunteers"
-                type="number"
-                min="1"
-                value={targetVolunteers}
-                onChange={(e) => setTargetVolunteers(parseInt(e.target.value) || 0)}
-                placeholder="50"
-                required
-              />
-            </div>
-
-            {/* Số lượng tối đa */}
-            <div className="space-y-2">
-              <Label htmlFor="maxVolunteers">
-                Số lượng tối đa <span className="text-red-600">*</span>
-              </Label>
-              <Input
-                id="maxVolunteers"
-                type="number"
-                min="1"
-                value={maxVolunteers}
-                onChange={(e) => setMaxVolunteers(parseInt(e.target.value) || 0)}
-                placeholder="100"
-                required
-              />
-            </div>
+          {/* Ngày kết thúc */}
+          <div className="space-y-2">
+            <Label htmlFor="endDate" className="text-sm font-bold text-slate-700">Ngày kết thúc</Label>
+            <Input
+              id="endDate"
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="h-12 bg-gray-50/50 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl"
+            />
           </div>
-        </CardContent>
-      </Card>
+
+          {/* Số lượng mục tiêu */}
+          <div className="space-y-2">
+            <Label htmlFor="targetVolunteers" className="text-sm font-bold text-slate-700">
+              Số lượng TNV mục tiêu <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="targetVolunteers"
+              type="number"
+              min="1"
+              value={targetVolunteers}
+              onChange={(e) => setTargetVolunteers(parseInt(e.target.value) || 0)}
+              placeholder="50"
+              className="h-12 bg-gray-50/50 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl"
+              required
+            />
+          </div>
+
+          {/* Số lượng tối đa */}
+          <div className="space-y-2">
+            <Label htmlFor="maxVolunteers" className="text-sm font-bold text-slate-700">
+              Số lượng tối đa <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="maxVolunteers"
+              type="number"
+              min="1"
+              value={maxVolunteers}
+              onChange={(e) => setMaxVolunteers(parseInt(e.target.value) || 0)}
+              placeholder="100"
+              className="h-12 bg-gray-50/50 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl"
+              required
+            />
+          </div>
+        </div>
+      </div>
 
       {/* Hình ảnh */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <ImageIcon className="w-5 h-5 text-purple-600" />
-            Hình ảnh
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2rem] shadow-sm overflow-hidden p-8 hover:border-[#008080]/30 transition-all duration-300">
+        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+          <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center flex-shrink-0 shadow-sm border border-purple-100">
+            <ImageIcon className="w-6 h-6 text-purple-600" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-800">Hình ảnh</h2>
+        </div>
+        
+        <div className="space-y-6">
           {/* Cover Image */}
           <div className="space-y-2">
-            <Label>Ảnh bìa</Label>
+            <Label className="text-sm font-bold text-slate-700">Ảnh bìa</Label>
             {!coverImagePreview ? (
               <div
                 onClick={() => document.getElementById("coverImage")?.click()}
-                className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-teal-500 transition-colors"
+                className="border-2 border-dashed border-slate-300 bg-slate-50/50 rounded-2xl p-10 text-center cursor-pointer hover:border-[#008080] hover:bg-[#008080]/5 transition-all duration-300 group"
               >
                 <input
                   id="coverImage"
@@ -420,34 +431,39 @@ export default function CampaignForm({
                   onChange={handleCoverImageChange}
                   className="hidden"
                 />
-                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-600">Click để tải ảnh bìa lên</p>
-                <p className="text-xs text-gray-400 mt-1">PNG, JPG (max. 5MB)</p>
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                  <Upload className="w-8 h-8 text-slate-400 group-hover:text-[#008080]" />
+                </div>
+                <p className="text-sm font-bold text-slate-600">Click để tải ảnh bìa lên</p>
+                <p className="text-xs font-medium text-slate-400 mt-2">PNG, JPG (max. 5MB)</p>
               </div>
             ) : (
-              <div className="relative">
+              <div className="relative group">
                 <img
                   src={coverImagePreview}
                   alt="Cover preview"
-                  className="w-full h-64 object-cover rounded-lg"
+                  className="w-full h-80 object-cover rounded-2xl shadow-sm border border-slate-100"
                 />
-                <button
-                  type="button"
-                  onClick={removeCoverImage}
-                  className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+                <div className="absolute inset-0 bg-black/40 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <button
+                    type="button"
+                    onClick={removeCoverImage}
+                    className="bg-white text-red-600 p-3 rounded-xl hover:bg-red-50 font-bold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all"
+                  >
+                    <X className="w-5 h-5" />
+                    Bỏ chọn ảnh
+                  </button>
+                </div>
               </div>
             )}
           </div>
 
           {/* Additional Images */}
           <div className="space-y-2">
-            <Label>Ảnh bổ sung (Tối đa 10 ảnh)</Label>
+            <Label className="text-sm font-bold text-slate-700">Ảnh bổ sung (Tối đa 10 ảnh)</Label>
             <div
               onClick={() => document.getElementById("images")?.click()}
-              className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-teal-500 transition-colors"
+              className="border-2 border-dashed border-slate-300 bg-slate-50/50 rounded-2xl p-8 text-center cursor-pointer hover:border-[#008080] hover:bg-[#008080]/5 transition-all duration-300 group"
             >
               <input
                 id="images"
@@ -457,53 +473,56 @@ export default function CampaignForm({
                 onChange={handleImagesChange}
                 className="hidden"
               />
-              <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              <p className="text-sm text-gray-600">Click để tải nhiều ảnh lên</p>
-              <p className="text-xs text-gray-400 mt-1">PNG, JPG (max. 5MB mỗi ảnh)</p>
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm group-hover:scale-110 transition-transform">
+                <Upload className="w-6 h-6 text-slate-400 group-hover:text-[#008080]" />
+              </div>
+              <p className="text-sm font-bold text-slate-600">Click để thêm nhiều ảnh</p>
+              <p className="text-xs font-medium text-slate-400 mt-1">PNG, JPG (max. 5MB mỗi ảnh)</p>
             </div>
 
             {imagePreviews.length > 0 && (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                 {imagePreviews.map((preview, index) => (
-                  <div key={index} className="relative">
+                  <div key={index} className="relative group">
                     <img
                       src={preview}
                       alt={`Preview ${index + 1}`}
-                      className="w-full h-32 object-cover rounded-lg"
+                      className="w-full h-36 object-cover rounded-xl shadow-sm border border-slate-100"
                     />
                     <button
                       type="button"
                       onClick={() => removeImage(index)}
-                      className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
+                      className="absolute top-2 right-2 bg-white border border-slate-200 text-red-500 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-red-50 transition-all shadow-sm"
                     >
-                      <X className="w-3 h-3" />
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
                 ))}
               </div>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Actions */}
-      <div className="flex items-center justify-end gap-3">
+      <div className="flex items-center justify-end gap-4 mt-8">
         <Button
           type="button"
           variant="outline"
           onClick={() => router.push("/socialorg/manage-events")}
           disabled={submitting}
+          className="h-12 px-6 rounded-xl font-bold bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all shadow-sm"
         >
-          Hủy
+          Hủy bỏ
         </Button>
         <Button
           type="submit"
-          className="bg-teal-600 hover:bg-teal-700"
           disabled={submitting}
+          className="h-12 px-8 rounded-xl font-bold bg-[#008080] hover:bg-[#00A79D] text-white shadow-sm transition-all"
         >
           {submitting ? (
             <>
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+              <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2"></div>
               Đang xử lý...
             </>
           ) : (

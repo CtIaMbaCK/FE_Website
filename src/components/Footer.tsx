@@ -65,11 +65,11 @@ export default function Footer() {
              <ul className="flex flex-col gap-4 text-slate-500 font-medium text-sm">
                <li className="flex items-start gap-3">
                  <MdLocationOn className="w-5 h-5 text-[#008080] shrink-0 mt-0.5" />
-                 <span className="leading-relaxed">Khu Công nghệ cao, Thành phố Thủ Đức, Thành phố Hồ Chí Minh</span>
+                 <span className="leading-relaxed">Thành Phố Hồ Chí Minh</span>
                </li>
                <li className="flex items-center gap-3">
                  <MdPhone className="w-5 h-5 text-[#008080] shrink-0" />
-                 <a href="tel:0123456789" className="hover:text-[#008080] transition-colors">0123 456 789</a>
+                 <a href="tel:0123456789" className="hover:text-[#008080] transition-colors">038 5279 610</a>
                </li>
                <li className="flex items-center gap-3">
                  <MdEmail className="w-5 h-5 text-[#008080] shrink-0" />

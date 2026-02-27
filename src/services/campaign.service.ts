@@ -220,3 +220,30 @@ export const updateRegistrationStatus = async (
   );
   return response.data;
 };
+
+/**
+ * Tự động chuyển trạng thái campaign (gọi định kỳ hoặc khi mở trang)
+ */
+export const autoTransitionCampaigns = async () => {
+  const response = await api.post("/admin-tcxh/campaigns/auto-transition");
+  return response.data;
+};
+
+/**
+ * Upload hình ảnh minh chứng để hoàn thành campaign
+ */
+export const completeCampaign = async (id: string, proofImages: File[]) => {
+  const formData = new FormData();
+  if (proofImages && proofImages.length > 0) {
+    proofImages.forEach((image) => {
+      formData.append("proofImages", image);
+    });
+  }
+
+  const response = await api.patch(`/admin-tcxh/campaigns/${id}/complete`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};

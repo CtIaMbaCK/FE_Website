@@ -5,8 +5,19 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { getMe, logout } from "@/services/auth.service";
 import Image from "next/image";
-import { MdLogout } from "react-icons/md";
-import { User } from "lucide-react";
+import { 
+  MdDashboard, 
+  MdPeopleOutline, 
+  MdVolunteerActivism, 
+  MdPersonAddAlt, 
+  MdCampaign, 
+  MdPermMedia, 
+  MdWorkspacePremium, 
+  MdChat, 
+  MdBarChart,
+  MdLogout 
+} from "react-icons/md";
+import { User, Building2 } from "lucide-react";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -57,94 +68,76 @@ export default function Sidebar() {
   // 4. Định nghĩa danh sách menu tại đây cho gọn
   const menuItems = [
     {
-      name: "Dashboard",
+      name: "Tổng quan",
       href: "/socialorg/dashboard",
-      icon: "dashboard",
+      icon: MdDashboard,
     },
     {
       name: "Quản lý Người cần giúp đỡ",
       href: "/socialorg/bficiary",
-      icon: "account_child_invert",
+      icon: MdPeopleOutline,
     },
     {
       name: "Quản lý Tình nguyện viên",
       href: "/socialorg/volunteers",
-      icon: "group",
+      icon: MdVolunteerActivism,
     },
     {
       name: "Quản lý tài khoản",
       href: "/socialorg/accounts",
-      icon: "person_add",
+      icon: MdPersonAddAlt,
     },
-    
-    // {
-    //   name: 'Quản lý hoạt động',
-    //   href: '/socialorg/requests',
-    //   icon: 'volunteer_activism'
-    // },
-    // {
-    //   name: "Khen thưởng Tình nguyện viên",
-    //   href: "/socialorg/appreciation",
-    //   icon: "military_tech",
-    // },
-    // {
-    //   name: "Nhận xét TNV",
-    //   href: "/socialorg/rewards/comments",
-    //   icon: "comment",
-    // },
-    
-    // {
-    //   name: "Cấp Chứng nhận",
-    //   href: "/socialorg/rewards/certificates",
-    //   icon: "award_star",
-    // },
     {
       name: "Quản lý Chiến dịch - sự kiện",
       href: "/socialorg/manage-events",
-      icon: "campaign",
+      icon: MdCampaign,
     },
     {
       name: "Quản lý Truyền thông",
       href: "/socialorg/blogs",
-      icon: "perm_media",
+      icon: MdPermMedia,
     },
     {
       name: "Mẫu Chứng nhận",
       href: "/socialorg/rewards/templates",
-      icon: "workspace_premium",
+      icon: MdWorkspacePremium,
     },
     {
       name: "Tin nhắn",
       href: "/socialorg/chat",
-      icon: "chat",
+      icon: MdChat,
     },
     {
       name: "Thống kê",
       href: "/socialorg/analysis",
-      icon: "bar_chart",
+      icon: MdBarChart,
     },
   ];
 
   return (
-    <aside className="flex w-64 flex-col bg-white text-gray-800 border-r border-gray-200 h-screen sticky top-0">
-      <div className="flex h-16 shrink-0 items-center gap-3 px-6 border-b border-gray-200">
-        <div className="text-primary size-7">
+    <aside className="flex w-72 flex-col bg-white/80 backdrop-blur-2xl border-r border-slate-100 shadow-[4px_0_24px_rgba(0,0,0,0.02)] h-screen sticky top-0 z-40 relative">
+      <div className="flex h-[88px] shrink-0 items-center gap-3 px-6 border-b border-slate-100/60 pb-2">
+        <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-100 p-2 flex items-center justify-center">
           <Image
             src="/images/Logo.png"
-            width={64}
-            height={64}
+            width={40}
+            height={40}
             alt="BetterUS Logo"
+            className="w-full h-full object-contain"
           />
         </div>
-        <Link href={"/socialorg/dashboard"}>
-          <h2 className="text-gray-900 text-lg font-bold leading-tight tracking-[-0.015em]">
+        <Link href={"/socialorg/dashboard"} className="flex flex-col">
+          <span className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#008080] to-teal-600 tracking-tight">
             BetterUS
-          </h2>
+          </span>
+          <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+            Tổ chức xã hội
+          </span>
         </Link>
       </div>
 
-      <nav className="flex flex-col flex-1 p-4 overflow-y-auto">
-        <div className="flex flex-col gap-1">
+      <nav className="flex flex-col flex-1 px-4 py-6 overflow-y-auto scrollbar-hide">
+        <ul className="space-y-2 flex-col flex">
           {/* 5. Dùng vòng lặp map để render menu */}
           {menuItems.map((item) => {
             // Cải tiến: Active khi pathname bắt đầu bằng href của menu
@@ -152,90 +145,100 @@ export default function Sidebar() {
               pathname === item.href ||
               (pathname.startsWith(item.href + "/") && item.href !== "/socialorg");
 
+            const Icon = item.icon;
+
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-200 ${
-                  isActive
-                    ? "bg-primary text-white" // Style khi đang Active
-                    : "text-gray-500 hover:bg-primary/10 hover:text-primary" // Style khi bình thường
-                }`}
-              >
-                <span className="material-symbols-outlined">{item.icon}</span>
-                <p className="text-sm font-medium leading-normal">
-                  {item.name}
-                </p>
-              </Link>
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={`flex items-center px-4 py-3.5 rounded-2xl transition-all duration-300 group relative overflow-hidden ${
+                    isActive
+                      ? "bg-gradient-to-r from-[#008080] to-teal-500 text-white shadow-md shadow-teal-500/20 font-bold"
+                      : "text-slate-500 hover:bg-teal-50/50 hover:text-teal-700 font-medium"
+                  }`}
+                >
+                  {isActive && (
+                     <div className="absolute top-0 right-0 w-16 h-16 bg-white/20 rounded-bl-full -z-10"></div>
+                  )}
+                  <Icon className={`text-[22px] transition-transform duration-300 ${isActive ? "scale-110" : "group-hover:scale-110"}`} />
+                  <span className="ml-3.5 text-sm">
+                    {item.name}
+                  </span>
+                </Link>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </nav>
 
       {/* Organization Info at Bottom */}
-      <div className="border-t border-gray-200 p-4">
-        <div className="flex items-center gap-3 mb-3">
+      <div className="border-t border-slate-100/60 pt-6 mt-2 pb-6 px-4 shrink-0">
+        <div className="flex items-center gap-3 px-3 mb-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-100/50">
           {/* Avatar/Logo */}
           {loading ? (
-            <div className="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full">
-              <span className="text-xs text-gray-500">...</span>
+            <div className="flex items-center justify-center w-10 h-10 bg-slate-200 rounded-xl animate-pulse">
             </div>
           ) : orgAvatar ? (
             <img
               src={orgAvatar}
               alt={orgName}
-              className="w-10 h-10 rounded-full object-cover"
+              className="w-10 h-10 rounded-xl object-cover shadow-sm bg-white"
             />
           ) : (
-            <div className="flex items-center justify-center w-10 h-10 bg-gray-800 text-white rounded-full font-semibold">
-              {orgName ? orgName.charAt(0).toUpperCase() : "O"}
-            </div>
+             <div className="w-10 h-10 bg-gradient-to-br from-[#008080] to-teal-500 rounded-xl flex items-center justify-center shadow-sm text-white">
+               <Building2 className="w-5 h-5" />
+             </div>
           )}
 
           {/* Org Info */}
           <div className="flex-1 min-w-0">
             {loading ? (
-              <p className="text-sm text-gray-400">Đang tải...</p>
+              <div className="h-4 bg-slate-200 rounded w-20 mb-1 animate-pulse"></div>
             ) : orgName ? (
               <>
-                <p className="text-sm font-semibold text-gray-900 truncate">
+                <p className="text-sm font-bold text-slate-800 truncate" title={orgName}>
                   {orgName}
                 </p>
-                <p className="text-xs text-gray-500">Tổ chức xã hội</p>
+                <p className="text-[10px] uppercase font-bold text-slate-400">Tổ chức xã hội</p>
               </>
             ) : (
               <>
-                <p className="text-sm font-semibold text-gray-900 truncate">
-                  Tổ chức chưa hoàn thiện hồ sơ
+                <p className="text-[11px] font-bold text-slate-600 truncate mb-0.5">
+                  Chưa hoàn thiện hồ sơ
                 </p>
                 <Link
                   href="/socialorg/profile"
-                  className="text-xs text-blue-500 hover:text-blue-600 hover:underline"
+                  className="text-[10px] uppercase font-bold text-teal-600 hover:text-teal-700"
                 >
-                  Hoàn thiện hồ sơ →
+                  Hoàn thiện →
                 </Link>
               </>
             )}
           </div>
         </div>
 
-        {/* Nut Thong tin ca nhan */}
-        <button
-          onClick={() => router.push("/socialorg/profile")}
-          className="flex w-full justify-center items-center gap-10 p-2 mb-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-600 hover:text-white transition-colors"
-        >
-          <User className="w-5 h-5" />
-          <span className="text-sm font-medium">Thông tin cá nhân</span>
-        </button>
-
-        {/* Nut Logout */}
-        <button
-          onClick={handleLogout}
-          className="flex w-full justify-center items-center gap-10 p-2 bg-[#FFE4E6] text-[#CC4362] rounded-xl hover:bg-[#FFE4E6] hover:text-white transition-colors"
-        >
-          <MdLogout className="text-xl" />  
-          <span className="text-sm font-medium">Đăng xuất</span>
-        </button>
+        {/* Action Buttons Container */}
+        <div className="flex items-center gap-2">
+           {/* Nut Thong tin ca nhan */}
+           <button
+             onClick={() => router.push("/socialorg/profile")}
+             className="flex-1 flex justify-center items-center gap-2 p-3 bg-blue-50/50 text-blue-600 rounded-2xl hover:bg-blue-500 hover:text-white hover:shadow-md hover:shadow-blue-500/20 transition-all font-bold text-sm group"
+             title="Thông tin tổ chức"
+           >
+             <User className="w-4 h-4 group-hover:scale-110 transition-transform" />
+             <span>Hồ sơ</span>
+           </button>
+   
+           {/* Nut Logout */}
+           <button
+             onClick={handleLogout}
+             className="flex-1 flex justify-center items-center gap-2 px-3 py-3 bg-red-50/50 text-red-600 rounded-2xl hover:bg-red-500 hover:text-white hover:shadow-md hover:shadow-red-500/20 transition-all font-bold text-sm shrink-0 group"
+             title="Đăng xuất"
+           >
+             <MdLogout className="text-[18px] group-hover:scale-110 transition-transform" />
+             <span>Đăng xuất</span>
+           </button>
+        </div>
       </div>
     </aside>
   );

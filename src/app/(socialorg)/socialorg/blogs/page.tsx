@@ -96,24 +96,29 @@ export default function BlogsPage() {
 
   return (
     <div className="min-h-screen pb-10">
-      <div className="bg-white/60 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center ml-6 mt-4">
-        <Breadcrumb items={[{ label: "Quản lý Truyền thông" }]} />
+      <div className="mx-auto px-6 py-4">
+        <div className="bg-white/60 backdrop-blur-md rounded-[2rem] px-6 py-4 shadow-sm border border-white/50 inline-flex items-center justify-center mb-4">
+          <Breadcrumb items={[{ label: "Quản lý Truyền thông" }]} />
+        </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="mx-auto px-6 py-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Quản lý Truyền thông
-            </h1>
-            <p className="text-sm text-gray-600 mt-1">
-              Quản lý các bài viết truyền thông của tổ chức
-            </p>
+          <div className="flex items-center gap-4">
+            <div className="w-2 h-10 bg-gradient-to-b from-[#008080] to-[#00A79D] rounded-full"></div>
+            <div>
+              <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+                Quản lý Truyền thông
+              </h1>
+              <p className="text-sm font-medium text-slate-500 mt-1">
+                Quản lý các bài viết truyền thông của tổ chức
+              </p>
+            </div>
           </div>
           <Button
             onClick={() => router.push("/socialorg/blogs/create")}
-            className="gap-2 bg-[#008080] shadow-sm"
+            className="gap-2 bg-[#008080] hover:bg-[#00A79D] text-white shadow-sm h-11 px-6 rounded-xl font-medium transition-all"
           >
             <Plus className="w-4 h-4" />
             Tạo bài viết mới
@@ -121,48 +126,44 @@ export default function BlogsPage() {
         </div>
 
         {/* Search */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-          <div className="p-5">
-            <div className="relative">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Tìm kiếm bài viết theo tiêu đề..."
-                value={searchTerm}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                className="pl-10 h-10 border-gray-200 focus:border-purple-500 focus:ring-purple-500/10"
-              />
-            </div>
+        <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 mb-6 p-6">
+          <div className="relative max-w-md w-full">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 h-5 w-5" />
+            <Input
+              placeholder="Tìm kiếm bài viết theo tiêu đề..."
+              value={searchTerm}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className="pl-12 h-12 bg-gray-50/50 border-slate-200 focus:border-[#008080] focus:ring-[#008080]/10 rounded-xl w-full font-medium"
+            />
           </div>
         </div>
 
         {/* Table */}
-        <div className="rounded-lg border border-gray-200 bg-white overflow-hidden shadow-sm">
+        <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
           <div className="overflow-x-auto">
             {loading ? (
-              <div className="flex items-center justify-center p-12">
+              <div className="flex items-center justify-center min-h-[400px]">
                 <div className="flex flex-col items-center gap-4">
-                  <div className="relative">
-                    <div className="w-12 h-12 border-4 border-gray-200 rounded-full"></div>
-                    <div className="absolute inset-0 w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
-                  </div>
-                  <p className="text-sm text-gray-600 font-medium">
+                  <div className="w-10 h-10 border-4 border-[#008080]/20 border-t-[#008080] rounded-full animate-spin"></div>
+                  <p className="text-sm font-bold uppercase tracking-wider text-slate-500">
                     Đang tải dữ liệu...
                   </p>
                 </div>
               </div>
             ) : posts.length === 0 ? (
-              <div className="flex flex-col items-center justify-center p-12 text-center">
-                <FileText className="w-12 h-12 text-gray-400 mb-3" />
-                <p className="text-sm font-medium text-gray-900 mb-1">
+              <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-8">
+                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                  <FileText className="w-10 h-10 text-slate-300" />
+                </div>
+                <p className="text-lg font-bold text-slate-700 mb-2">
                   Chưa có bài viết nào
                 </p>
-                <p className="text-xs text-gray-500 mb-4">
+                <p className="text-sm text-slate-500 mb-6">
                   Bắt đầu bằng cách tạo bài viết truyền thông đầu tiên
                 </p>
                 <Button
                   onClick={() => router.push("/socialorg/blogs/create")}
-                  size="sm"
-                  className="bg-purple-600 hover:bg-purple-700"
+                  className="bg-[#008080] hover:bg-[#00A79D] text-white rounded-xl h-11 px-6 font-medium shadow-sm transition-all"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Tạo bài viết mới
@@ -171,78 +172,84 @@ export default function BlogsPage() {
             ) : (
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-gray-50/50">
-                    <TableHead className="w-[50px]">STT</TableHead>
-                    <TableHead>Tiêu đề</TableHead>
-                    <TableHead className="w-[150px]">Ngày tạo</TableHead>
-                    <TableHead className="w-[150px]">Cập nhật</TableHead>
-                    <TableHead className="text-right w-[280px]">
+                  <TableRow className="border-b border-slate-100 hover:bg-transparent">
+                    <TableHead className="w-[80px] text-xs font-bold uppercase tracking-wider text-slate-500 bg-slate-50/50 py-4">STT</TableHead>
+                    <TableHead className="text-xs font-bold uppercase tracking-wider text-slate-500 bg-slate-50/50 py-4">Tiêu đề</TableHead>
+                    <TableHead className="w-[150px] text-xs font-bold uppercase tracking-wider text-slate-500 bg-slate-50/50 py-4">Ngày tạo</TableHead>
+                    <TableHead className="w-[150px] text-xs font-bold uppercase tracking-wider text-slate-500 bg-slate-50/50 py-4">Cập nhật</TableHead>
+                    <TableHead className="text-right w-[280px] text-xs font-bold uppercase tracking-wider text-slate-500 bg-slate-50/50 py-4">
                       Thao tác
                     </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {posts.map((post, index) => (
-                    <TableRow key={post.id} className="hover:bg-gray-50/50">
-                      <TableCell className="font-medium text-gray-500">
-                        {(page - 1) * limit + index + 1}
+                    <TableRow key={post.id} className="border-b border-slate-50 hover:bg-slate-50/80 transition-colors">
+                      <TableCell className="font-bold text-slate-500 py-4">
+                        <span className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-xs">
+                           {(page - 1) * limit + index + 1}
+                        </span>
                       </TableCell>
-                      <TableCell>
-                        <div className="flex items-start gap-3">
-                          {post.coverImage && (
+                      <TableCell className="py-4">
+                        <div className="flex items-start gap-4">
+                          {post.coverImage ? (
                             <img
                               src={post.coverImage}
                               alt={post.title}
-                              className="w-16 h-12 object-cover rounded-md border border-gray-200"
+                              className="w-16 h-16 object-cover rounded-xl border border-slate-100 shadow-sm"
                             />
+                          ) : (
+                            <div className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center flex-shrink-0">
+                              <FileText className="w-6 h-6 text-slate-300" />
+                            </div>
                           )}
-                          <div>
-                            <p className="font-medium text-gray-900 line-clamp-1">
+                          <div className="flex flex-col justify-center min-h-[4rem]">
+                            <p className="font-bold text-slate-800 line-clamp-1">
                               {post.title}
                             </p>
-                            <p className="text-xs text-gray-500 line-clamp-2 mt-1">
+                            <p className="text-xs font-medium text-slate-500 line-clamp-2 mt-1">
                               {post.content.substring(0, 100)}...
                             </p>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="text-sm text-gray-600">
+                      <TableCell className="text-sm font-medium text-slate-600 py-4">
                         {new Date(post.createdAt).toLocaleDateString("vi-VN")}
                       </TableCell>
-                      <TableCell className="text-sm text-gray-600">
+                      <TableCell className="text-sm font-medium text-slate-600 py-4">
                         {new Date(post.updatedAt).toLocaleDateString("vi-VN")}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="py-4">
                         <div className="flex gap-2 justify-end">
                           <Button
                             variant="outline"
                             size="sm"
-                            className="h-8 px-3 text-xs font-medium text-purple-700 border-purple-200 hover:bg-purple-50 hover:text-purple-800 hover:border-purple-300"
+                            className="h-9 px-3 rounded-lg font-bold text-[#008080] border-[#008080]/20 bg-[#008080]/5 hover:bg-[#008080]/10 hover:border-[#008080]/30 transition-all"
                             onClick={() =>
                               window.open(`/posts/${post.id}`, "_blank")
                             }
                           >
-                            <Eye className="w-3.5 h-3.5 mr-1.5" />
+                            <Eye className="w-4 h-4 mr-1.5" />
                             Xem
                           </Button>
                           <Button
                             variant="outline"
                             size="sm"
-                            className="h-8 px-3 text-xs font-medium text-blue-700 border-blue-200 hover:bg-blue-50 hover:text-blue-800 hover:border-blue-300"
+                            className="h-9 px-3 rounded-lg font-bold text-indigo-600 border-indigo-200 bg-indigo-50 hover:bg-indigo-100 hover:border-indigo-300 transition-all"
                             onClick={() =>
                               router.push(`/socialorg/blogs/${post.id}/edit`)
                             }
                           >
-                            <Pencil className="w-3.5 h-3.5 mr-1.5" />
+                            <Pencil className="w-4 h-4 mr-1.5" />
                             Sửa
                           </Button>
                           <Button
                             variant="outline"
                             size="sm"
-                            className="h-8 px-3 text-xs font-medium text-red-700 border-red-200 hover:bg-red-50 hover:text-red-800 hover:border-red-300"
+                            className="h-9 px-3 rounded-lg font-bold text-red-600 border-red-200 bg-red-50 hover:bg-red-100 hover:border-red-300 transition-all"
                             onClick={() => handleDeleteClick(post)}
                           >
-                            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
+                            <Trash2 className="w-4 h-4 mr-1.5" />
                             Xóa
                           </Button>
                         </div>
@@ -256,26 +263,28 @@ export default function BlogsPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
-              <div className="text-sm text-gray-600">
-                Hiển thị {(page - 1) * limit + 1} đến{" "}
-                {Math.min(page * limit, total)} trong tổng {total} bài viết
+            <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50/50">
+              <div className="text-sm font-medium text-slate-500">
+                Hiển thị <span className="text-slate-700 font-bold">{(page - 1) * limit + 1}</span> đến{" "}
+                <span className="text-slate-700 font-bold">{Math.min(page * limit, total)}</span> trong tổng <span className="text-slate-700 font-bold">{total}</span> bài viết
               </div>
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
                   size="sm"
+                  className="h-9 rounded-lg font-medium border-slate-200 hover:bg-slate-100 text-slate-600"
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
                 >
                   Trước
                 </Button>
-                <span className="text-sm text-gray-600">
-                  Trang {page} / {totalPages}
-                </span>
+                <div className="h-9 px-4 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-sm font-bold text-slate-700">
+                  {page} / {totalPages}
+                </div>
                 <Button
                   variant="outline"
                   size="sm"
+                  className="h-9 rounded-lg font-medium border-slate-200 hover:bg-slate-100 text-slate-600"
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
                 >
