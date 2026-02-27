@@ -18,6 +18,7 @@ import {
   MdChat,
 } from "react-icons/md";
 import { logout, getMe } from "@/services/auth.service";
+import NotificationBell from "@/components/NotificationBell";
 
 export default function AdminLayout({
   children,
@@ -177,6 +178,9 @@ export default function AdminLayout({
 
       {/* Main content */}
       <div className="lg:ml-72 transition-all duration-300">
+        <header className="flex justify-end items-center h-16 px-6 bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-slate-100">
+          <NotificationBell />
+        </header>
         <main className="p-4 sm:p-6 md:p-8">{children}</main>
       </div>
 
