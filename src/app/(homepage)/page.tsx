@@ -295,14 +295,14 @@ export default function HomePage() {
 
         {/* --- Top Volunteers --- */}
         <section className="mb-32">
-          <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-4">
-            <div>
+          <div className="flex flex-col md:flex-row items-center justify-center mb-12 gap-4">
+            <div className="flex items-center flex-col justify-center">
               <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">Ngôi Sao Sáng</h2>
               <p className="text-slate-500">Những cá nhân xuất sắc có đóng góp lớn nhất trong cộng đồng.</p>
             </div>
-            <button className="text-[#008080] font-semibold text-sm flex items-center gap-1 hover:text-[#006666] transition-colors bg-[#008080]/10 px-4 py-2 rounded-full">
+            {/* <button className="text-[#008080] font-semibold text-sm flex items-center gap-1 hover:text-[#006666] transition-colors bg-[#008080]/10 px-4 py-2 rounded-full">
               Xem tất cả <MdArrowForward />
-            </button>
+            </button> */}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -362,14 +362,14 @@ export default function HomePage() {
 
         {/* --- News / Posts Section --- */}
         <section className="mb-32">
-          <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-4">
-            <div>
+          <div className="flex flex-col md:flex-row items-center justify-center mb-12 gap-4">
+            <div className="flex flex-col items-center justify-center">
               <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">Tin tức & Sự kiện</h2>
               <p className="text-slate-500">Cập nhật nhanh những thông tin mới nhất từ các Tổ chức Xã hội.</p>
             </div>
-            <Link href="/posts" className="text-[#008080] font-semibold text-sm flex items-center gap-1 hover:text-[#006666] transition-colors bg-[#008080]/10 px-4 py-2 rounded-full">
+            {/* <Link href="/posts" className="text-[#008080] font-semibold text-sm flex items-center gap-1 hover:text-[#006666] transition-colors bg-[#008080]/10 px-4 py-2 rounded-full">
               Xem tất cả <MdArrowForward />
-            </Link>
+            </Link> */}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

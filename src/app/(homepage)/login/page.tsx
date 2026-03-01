@@ -50,9 +50,9 @@ export default function LoginPage() {
         router.push("/socialorg/dashboard");
       } else if (userRole === 'VOLUNTEER' || userRole === 'BENEFICIARY') {
         // VOLUNTEER và BENEFICIARY chỉ dùng mobile, redirect về HomePage
-        router.push("/");
+        window.location.href = "/";
       } else {
-        router.push("/");
+        window.location.href = "/";
       }
     } catch (error: any) {
       // Hiển thị lỗi

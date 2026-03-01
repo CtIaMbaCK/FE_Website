@@ -537,15 +537,22 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      <main className="flex-grow flex items-center justify-center p-4 py-8">
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 w-full max-w-4xl overflow-hidden">
+    <div className="relative min-h-screen bg-[#F8FAFC] overflow-hidden flex flex-col font-sans">
+      {/* Background Orbs */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#008080]/10 blur-[120px]" />
+        <div className="absolute top-[20%] -right-[15%] w-[45%] h-[55%] rounded-full bg-blue-300/10 blur-[120px]" />
+        <div className="absolute -bottom-[10%] left-[20%] w-[60%] h-[60%] rounded-full bg-[#008080]/15 blur-[150px]" />
+      </div>
+
+      <main className="relative z-10 flex-grow flex items-center justify-center p-4 py-8 lg:py-16">
+        <div className="bg-white/70 backdrop-blur-xl border border-white/80 rounded-[2.5rem] shadow-[0_30px_60px_rgba(0,128,128,0.12)] w-full max-w-4xl overflow-hidden">
           {/* Header minimalist */}
-          <div className="px-6 py-6 border-b border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-900">
+          <div className="px-8 py-8 border-b border-white/40 bg-white/40 backdrop-blur-md">
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
               Đăng ký tài khoản
             </h1>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-slate-500 mt-2 font-medium">
               {step === 1
                 ? "Bước 1: Thông tin cơ bản"
                 : "Bước 2: Hoàn thiện hồ sơ"}
@@ -553,30 +560,30 @@ export default function RegisterPage() {
           </div>
 
           {/* Progress bar minimalist */}
-          <div className="px-6 py-3 bg-gray-50">
+          <div className="px-8 py-4 bg-white/20 backdrop-blur-sm">
             <div className="flex items-center gap-2">
               <div
-                className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
-                  step >= 1 ? "bg-teal-600" : "bg-gray-200"
+                className={`h-2 flex-1 rounded-full transition-all duration-500 shadow-inner ${
+                  step >= 1 ? "bg-gradient-to-r from-[#008080] to-[#00A79D]" : "bg-slate-200/50"
                 }`}
               />
               <div
-                className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
-                  step >= 2 ? "bg-teal-600" : "bg-gray-200"
+                className={`h-2 flex-1 rounded-full transition-all duration-500 shadow-inner ${
+                  step >= 2 ? "bg-gradient-to-r from-[#008080] to-[#00A79D]" : "bg-slate-200/50"
                 }`}
               />
             </div>
           </div>
 
           {/* Animated Form Container */}
-          <div className="px-6 py-6">
+          <div className="px-6 py-8 sm:px-10">
             <div className="relative overflow-hidden">
               <div
-                className="flex transition-transform duration-500 ease-in-out"
+                className="flex transition-transform duration-500 ease-out items-start"
                 style={{ transform: `translateX(-${(step - 1) * 100}%)` }}
               >
                 {/* STEP 1: Basic Info */}
-                <div className="w-full shrink-0 px-1">
+                <div className={`w-full shrink-0 px-1 transition-all duration-500 ${step === 1 ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
@@ -586,38 +593,38 @@ export default function RegisterPage() {
                   >
                     {/* Role Selection */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-900 mb-3">
+                      <label className="block text-sm font-semibold text-slate-800 mb-4">
                         Chọn loại tài khoản *
                       </label>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <button
                           type="button"
                           onClick={() => setSelectedRole("VOLUNTEER")}
-                          className={`relative p-4 border-2 rounded-lg transition-all ${
+                          className={`relative p-5 border-2 rounded-2xl transition-all duration-300 ${
                             selectedRole === "VOLUNTEER"
-                              ? "border-teal-600 bg-teal-50 shadow-sm"
-                              : "border-gray-200 hover:border-teal-400 hover:bg-gray-50"
+                              ? "border-[#008080] bg-gradient-to-br from-[#008080]/10 to-[#00A79D]/5 shadow-[0_10px_20px_rgba(0,128,128,0.1)] scale-[1.02]"
+                              : "border-slate-200 bg-white/50 hover:border-[#008080]/50 hover:bg-white hover:shadow-md"
                           }`}
                         >
-                          <div className="text-center">
-                            <div className="text-3xl mb-2">🙋‍♂️</div>
+                          <div className="text-center group">
+                            <div className="text-4xl mb-3 transform transition-transform group-hover:scale-110">🙋‍♂️</div>
                             <div
-                              className={`font-semibold text-sm ${
+                              className={`font-bold text-base mb-1 ${
                                 selectedRole === "VOLUNTEER"
-                                  ? "text-teal-700"
-                                  : "text-gray-900"
+                                  ? "text-[#008080]"
+                                  : "text-slate-700"
                               }`}
                             >
                               Tình nguyện viên
                             </div>
-                            <div className="text-xs text-gray-600 mt-1">
+                            <div className="text-xs text-slate-500 font-medium">
                               Tham gia hoạt động
                             </div>
                           </div>
                           {selectedRole === "VOLUNTEER" && (
-                            <div className="absolute top-2 right-2 bg-teal-600 text-white rounded-full p-0.5">
+                            <div className="absolute top-3 right-3 bg-gradient-to-tr from-[#008080] to-[#00A79D] text-white rounded-full p-1 shadow-sm animate-fade-in">
                               <svg
-                                className="w-3.5 h-3.5"
+                                className="w-4 h-4"
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
                               >
@@ -634,31 +641,31 @@ export default function RegisterPage() {
                         <button
                           type="button"
                           onClick={() => setSelectedRole("BENEFICIARY")}
-                          className={`relative p-4 border-2 rounded-lg transition-all ${
+                          className={`relative p-5 border-2 rounded-2xl transition-all duration-300 ${
                             selectedRole === "BENEFICIARY"
-                              ? "border-teal-600 bg-teal-50 shadow-sm"
-                              : "border-gray-200 hover:border-teal-400 hover:bg-gray-50"
+                              ? "border-[#008080] bg-gradient-to-br from-[#008080]/10 to-[#00A79D]/5 shadow-[0_10px_20px_rgba(0,128,128,0.1)] scale-[1.02]"
+                              : "border-slate-200 bg-white/50 hover:border-[#008080]/50 hover:bg-white hover:shadow-md"
                           }`}
                         >
-                          <div className="text-center">
-                            <div className="text-3xl mb-2">🤝</div>
+                          <div className="text-center group">
+                            <div className="text-4xl mb-3 transform transition-transform group-hover:scale-110">🤝</div>
                             <div
-                              className={`font-semibold text-sm ${
+                              className={`font-bold text-base mb-1 ${
                                 selectedRole === "BENEFICIARY"
-                                  ? "text-teal-700"
-                                  : "text-gray-900"
+                                  ? "text-[#008080]"
+                                  : "text-slate-700"
                               }`}
                             >
                               Người cần hỗ trợ
                             </div>
-                            <div className="text-xs text-gray-600 mt-1">
+                            <div className="text-xs text-slate-500 font-medium">
                               Nhận sự giúp đỡ
                             </div>
                           </div>
                           {selectedRole === "BENEFICIARY" && (
-                            <div className="absolute top-2 right-2 bg-teal-600 text-white rounded-full p-0.5">
+                            <div className="absolute top-3 right-3 bg-gradient-to-tr from-[#008080] to-[#00A79D] text-white rounded-full p-1 shadow-sm animate-fade-in">
                               <svg
-                                className="w-3.5 h-3.5"
+                                className="w-4 h-4"
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
                               >
@@ -675,31 +682,31 @@ export default function RegisterPage() {
                         <button
                           type="button"
                           onClick={() => setSelectedRole("ORGANIZATION")}
-                          className={`relative p-4 border-2 rounded-lg transition-all ${
+                          className={`relative p-5 border-2 rounded-2xl transition-all duration-300 ${
                             selectedRole === "ORGANIZATION"
-                              ? "border-teal-600 bg-teal-50 shadow-sm"
-                              : "border-gray-200 hover:border-teal-400 hover:bg-gray-50"
+                              ? "border-[#008080] bg-gradient-to-br from-[#008080]/10 to-[#00A79D]/5 shadow-[0_10px_20px_rgba(0,128,128,0.1)] scale-[1.02]"
+                              : "border-slate-200 bg-white/50 hover:border-[#008080]/50 hover:bg-white hover:shadow-md"
                           }`}
                         >
-                          <div className="text-center">
-                            <div className="text-3xl mb-2">🏢</div>
+                          <div className="text-center group">
+                            <div className="text-4xl mb-3 transform transition-transform group-hover:scale-110">🏢</div>
                             <div
-                              className={`font-semibold text-sm ${
+                              className={`font-bold text-base mb-1 ${
                                 selectedRole === "ORGANIZATION"
-                                  ? "text-teal-700"
-                                  : "text-gray-900"
+                                  ? "text-[#008080]"
+                                  : "text-slate-700"
                               }`}
                             >
                               Tổ chức xã hội
                             </div>
-                            <div className="text-xs text-gray-600 mt-1">
+                            <div className="text-xs text-slate-500 font-medium">
                               Quản lý hoạt động
                             </div>
                           </div>
                           {selectedRole === "ORGANIZATION" && (
-                            <div className="absolute top-2 right-2 bg-teal-600 text-white rounded-full p-0.5">
+                            <div className="absolute top-3 right-3 bg-gradient-to-tr from-[#008080] to-[#00A79D] text-white rounded-full p-1 shadow-sm animate-fade-in">
                               <svg
-                                className="w-3.5 h-3.5"
+                                className="w-4 h-4"
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
                               >
@@ -715,12 +722,12 @@ export default function RegisterPage() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-6">
                       {/* Phone */}
                       <div>
                         <Label
                           htmlFor="phoneNumber"
-                          className="text-gray-900 text-sm"
+                          className="text-slate-800 font-semibold text-sm"
                         >
                           Số điện thoại *
                         </Label>
@@ -737,7 +744,7 @@ export default function RegisterPage() {
                             })
                           }
                           disabled={isLoading}
-                          className="mt-1.5 h-10"
+                          className="mt-2 h-12 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all"
                         />
                       </div>
 
@@ -745,7 +752,7 @@ export default function RegisterPage() {
                       <div>
                         <Label
                           htmlFor="email"
-                          className="text-gray-900 text-sm"
+                          className="text-slate-800 font-semibold text-sm"
                         >
                           Email *
                         </Label>
@@ -762,22 +769,22 @@ export default function RegisterPage() {
                             })
                           }
                           disabled={isLoading}
-                          className="mt-1.5 h-10"
+                          className="mt-2 h-12 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all"
                         />
                       </div>
                     </div>
 
                     {/* Password */}
-                    <div>
+                    <div className="mt-5">
                       <Label
                         htmlFor="password"
-                        className="text-gray-900 text-sm"
+                        className="text-slate-800 font-semibold text-sm"
                       >
                         Mật khẩu *
                       </Label>
-                      <div className="mt-1.5 flex items-center gap-2 w-full px-3 h-10 border border-gray-300 rounded-lg focus-within:border-teal-500 focus-within:ring-1 focus-within:ring-teal-500">
+                      <div className="mt-2 flex items-center gap-2 w-full px-4 h-12 bg-white/60 border border-slate-200 rounded-xl focus-within:bg-white focus-within:border-[#008080]/50 focus-within:ring-4 focus-within:ring-[#008080]/10 transition-all">
                         <input
-                          className="flex-1 outline-none bg-transparent text-sm"
+                          className="flex-1 outline-none bg-transparent text-sm placeholder:text-slate-400"
                           id="password"
                           required
                           type={isSeePassword ? "text" : "password"}
@@ -796,23 +803,23 @@ export default function RegisterPage() {
                             isSeePassword ? "seePassword" : "notSeePassword"
                           }
                           onClick={() => setSeePassword(!isSeePassword)}
-                          className="cursor-pointer"
+                          className="cursor-pointer text-slate-400 hover:text-[#008080] transition-colors"
                         />
                       </div>
                     </div>
 
                     {/* Confirm Password */}
-                    <div>
+                    <div className="mt-5">
                       <Label
                         htmlFor="confirmPassword"
-                        className="text-gray-900 text-sm"
+                        className="text-slate-800 font-semibold text-sm"
                       >
                         Xác nhận mật khẩu *
                       </Label>
 
-                      <div className="mt-1.5 flex items-center gap-2 w-full px-3 h-10 border border-gray-300 rounded-lg focus-within:border-teal-500 focus-within:ring-1 focus-within:ring-teal-500">
+                      <div className="mt-2 flex items-center gap-2 w-full px-4 h-12 bg-white/60 border border-slate-200 rounded-xl focus-within:bg-white focus-within:border-[#008080]/50 focus-within:ring-4 focus-within:ring-[#008080]/10 transition-all">
                         <input
-                          className="flex-1 outline-none bg-transparent text-sm"
+                          className="flex-1 outline-none bg-transparent text-sm placeholder:text-slate-400"
                           type={isSeeConfirmPassword ? "text" : "password"}
                           placeholder="Nhập lại mật khẩu"
                           value={basicData.confirmPassword}
@@ -833,23 +840,23 @@ export default function RegisterPage() {
                           onClick={() =>
                             setIsSeeConfirmPassword(!isSeeConfirmPassword)
                           }
-                          className="cursor-pointer"
+                          className="cursor-pointer text-slate-400 hover:text-[#008080] transition-colors"
                         />
                       </div>
                     </div>
 
                     <Button
                       type="submit"
-                      className="w-full h-10 bg-teal-600 hover:bg-teal-700 text-white font-medium text-sm"
+                      className="w-full h-12 mt-8 bg-gradient-to-r from-[#008080] to-[#00A79D] hover:shadow-[0_15px_30px_rgba(0,128,128,0.2)] hover:-translate-y-0.5 transition-all duration-300 text-white font-bold text-base rounded-full"
                       disabled={!selectedRole}
                     >
-                      Tiếp theo <ChevronRight className="ml-1.5 w-4 h-4" />
+                      Tiếp theo <ChevronRight className="ml-1.5 w-5 h-5" />
                     </Button>
                   </form>
                 </div>
 
                 {/* STEP 2: Profile Info */}
-                <div className="w-full shrink-0 px-1">
+                <div className={`w-full shrink-0 px-1 transition-all duration-500 ${step === 2 ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
                   <form onSubmit={handleSubmit} className="space-y-5">
                     {/* TNV Profile */}
                     {selectedRole === "VOLUNTEER" && (
@@ -857,7 +864,7 @@ export default function RegisterPage() {
                         <div>
                           <Label
                             htmlFor="fullName"
-                            className="text-gray-900 text-sm"
+                            className="text-slate-800 font-semibold text-sm"
                           >
                             Họ và tên *
                           </Label>
@@ -872,14 +879,14 @@ export default function RegisterPage() {
                                 fullName: e.target.value,
                               })
                             }
-                            className="mt-1.5 h-10"
+                            className="mt-2 h-12 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all"
                           />
                         </div>
 
                         <div>
                           <Label
                             htmlFor="bio"
-                            className="text-gray-900 text-sm"
+                            className="text-slate-800 font-semibold text-sm"
                           >
                             Giới thiệu bản thân
                           </Label>
@@ -894,14 +901,14 @@ export default function RegisterPage() {
                               })
                             }
                             rows={3}
-                            className="mt-1.5 text-sm resize-none"
+                            className="mt-2 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all text-sm resize-none"
                           />
                         </div>
 
                         <div>
                           <Label
                             htmlFor="experienceYears"
-                            className="text-gray-900 text-sm"
+                            className="text-slate-800 font-semibold text-sm"
                           >
                             Số năm kinh nghiệm
                           </Label>
@@ -917,12 +924,12 @@ export default function RegisterPage() {
                                 experienceYears: parseInt(e.target.value) || 0,
                               })
                             }
-                            className="mt-1.5 h-10"
+                            className="mt-2 h-12 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all"
                           />
                         </div>
 
                         <div>
-                          <Label className="text-gray-900 text-sm">
+                          <Label className="text-slate-800 font-semibold text-sm">
                             Kỹ năng
                           </Label>
                           <div className="flex flex-wrap gap-2 mt-2">
@@ -952,8 +959,8 @@ export default function RegisterPage() {
                                 }}
                                 className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-all ${
                                   volunteerData.skills.includes(skill.value)
-                                    ? "bg-teal-600 text-white border-teal-600"
-                                    : "bg-white text-gray-700 border-gray-300 hover:border-teal-500"
+                                    ? "bg-gradient-to-r from-[#008080] to-[#00A79D] text-white border-transparent shadow-md transform scale-105"
+                                    : "bg-white/60 text-slate-600 border-slate-200 hover:border-[#008080]/50 hover:bg-white hover:text-[#008080] hover:shadow-sm"
                                 }`}
                               >
                                 {skill.label}
@@ -963,10 +970,10 @@ export default function RegisterPage() {
                         </div>
 
                         <div>
-                          <Label className="text-gray-900 text-sm">
+                          <Label className="text-slate-800 font-semibold text-sm">
                             Khu vực hoạt động
                           </Label>
-                          <div className="flex flex-wrap gap-2 mt-2 max-h-40 overflow-y-auto p-3 border border-gray-200 rounded-lg bg-gray-50">
+                          <div className="flex flex-wrap gap-2 mt-2 max-h-40 overflow-y-auto p-3 border border-slate-200/60 rounded-2xl bg-white/40 shadow-inner">
                             {DISTRICTS.map((district) => (
                               <button
                                 key={district.value}
@@ -998,8 +1005,8 @@ export default function RegisterPage() {
                                   volunteerData.preferredDistricts.includes(
                                     district.value,
                                   )
-                                    ? "bg-teal-600 text-white border-teal-600"
-                                    : "bg-white text-gray-700 border-gray-300 hover:border-teal-500"
+                                    ? "bg-gradient-to-r from-[#008080] to-[#00A79D] text-white border-transparent shadow-md transform scale-105"
+                                    : "bg-white/60 text-slate-600 border-slate-200 hover:border-[#008080]/50 hover:bg-white hover:text-[#008080] hover:shadow-sm"
                                 }`}
                               >
                                 {district.label}
@@ -1009,14 +1016,14 @@ export default function RegisterPage() {
                         </div>
 
                         {/* Upload ảnh cho Volunteer */}
-                        <div className="border-t border-gray-200 pt-4 space-y-4">
-                          <h3 className="text-sm font-medium text-gray-900">
+                        <div className="border-t border-slate-200/60 pt-6 mt-6 space-y-4">
+                          <h3 className="text-base font-bold text-slate-800">
                             Hình ảnh (không bắt buộc)
                           </h3>
 
                           {/* Avatar */}
                           <div>
-                            <Label className="text-gray-900 text-sm">
+                            <Label className="text-slate-800 font-semibold text-sm">
                               Ảnh đại diện
                             </Label>
                             <div className="mt-2">
@@ -1025,7 +1032,7 @@ export default function RegisterPage() {
                                   <img
                                     src={volunteerPreviews.avatar}
                                     alt="Avatar preview"
-                                    className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+                                    className="w-full h-full object-cover rounded-2xl border-2 border-white/60 shadow-md"
                                   />
                                   <button
                                     type="button"
@@ -1041,13 +1048,13 @@ export default function RegisterPage() {
                                   </button>
                                 </div>
                               ) : (
-                                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-teal-500 transition-colors">
+                                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 bg-white/50 rounded-2xl cursor-pointer hover:border-[#008080]/50 hover:bg-white/80 transition-all group">
                                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                    <p className="text-xs text-gray-500">
+                                    <Upload className="w-10 h-10 text-slate-400 mb-3 group-hover:text-[#008080] group-hover:scale-110 transition-all duration-300" />
+                                    <p className="text-white bg-slate-400 font-semibold rounded px-2 py-0.5 mt-1">
                                       Nhấn để chọn ảnh
                                     </p>
-                                    <p className="text-xs text-gray-400">
+                                    <p className="text-xs text-slate-500 mt-2 font-medium">
                                       PNG, JPG (max 5MB)
                                     </p>
                                   </div>
@@ -1070,7 +1077,7 @@ export default function RegisterPage() {
 
                           {/* CCCD Front */}
                           <div>
-                            <Label className="text-gray-900 text-sm">
+                            <Label className="text-slate-800 font-semibold text-sm">
                               CCCD mặt trước
                             </Label>
                             <div className="mt-2">
@@ -1079,7 +1086,7 @@ export default function RegisterPage() {
                                   <img
                                     src={volunteerPreviews.cccdFront}
                                     alt="CCCD front"
-                                    className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+                                    className="w-full h-full object-cover rounded-2xl border-2 border-white/60 shadow-md"
                                   />
                                   <button
                                     type="button"
@@ -1095,13 +1102,13 @@ export default function RegisterPage() {
                                   </button>
                                 </div>
                               ) : (
-                                <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-teal-500 transition-colors">
+                                <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-slate-300 bg-white/50 rounded-2xl cursor-pointer hover:border-[#008080]/50 hover:bg-white/80 transition-all group">
                                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                    <p className="text-xs text-gray-500">
+                                    <Upload className="w-10 h-10 text-slate-400 mb-3 group-hover:text-[#008080] group-hover:scale-110 transition-all duration-300" />
+                                    <p className="text-white bg-slate-400 font-semibold rounded px-2 py-0.5 mt-1">
                                       Nhấn để chọn ảnh
                                     </p>
-                                    <p className="text-xs text-gray-400">
+                                    <p className="text-xs text-slate-500 mt-2 font-medium">
                                       PNG, JPG (max 5MB)
                                     </p>
                                   </div>
@@ -1124,7 +1131,7 @@ export default function RegisterPage() {
 
                           {/* CCCD Back */}
                           <div>
-                            <Label className="text-gray-900 text-sm">
+                            <Label className="text-slate-800 font-semibold text-sm">
                               CCCD mặt sau
                             </Label>
                             <div className="mt-2">
@@ -1133,7 +1140,7 @@ export default function RegisterPage() {
                                   <img
                                     src={volunteerPreviews.cccdBack}
                                     alt="CCCD back"
-                                    className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+                                    className="w-full h-full object-cover rounded-2xl border-2 border-white/60 shadow-md"
                                   />
                                   <button
                                     type="button"
@@ -1149,13 +1156,13 @@ export default function RegisterPage() {
                                   </button>
                                 </div>
                               ) : (
-                                <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-teal-500 transition-colors">
+                                <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-slate-300 bg-white/50 rounded-2xl cursor-pointer hover:border-[#008080]/50 hover:bg-white/80 transition-all group">
                                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                    <p className="text-xs text-gray-500">
+                                    <Upload className="w-10 h-10 text-slate-400 mb-3 group-hover:text-[#008080] group-hover:scale-110 transition-all duration-300" />
+                                    <p className="text-white bg-slate-400 font-semibold rounded px-2 py-0.5 mt-1">
                                       Nhấn để chọn ảnh
                                     </p>
-                                    <p className="text-xs text-gray-400">
+                                    <p className="text-xs text-slate-500 mt-2 font-medium">
                                       PNG, JPG (max 5MB)
                                     </p>
                                   </div>
@@ -1185,7 +1192,7 @@ export default function RegisterPage() {
                         <div>
                           <Label
                             htmlFor="fullName"
-                            className="text-gray-900 text-sm"
+                            className="text-slate-800 font-semibold text-sm"
                           >
                             Họ và tên *
                           </Label>
@@ -1200,21 +1207,21 @@ export default function RegisterPage() {
                                 fullName: e.target.value,
                               })
                             }
-                            className="mt-1.5 h-10"
+                            className="mt-2 h-12 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all"
                           />
                         </div>
 
                         <div>
                           <Label
                             htmlFor="vulnerabilityType"
-                            className="text-gray-900 text-sm"
+                            className="text-slate-800 font-semibold text-sm"
                           >
                             Loại hoàn cảnh *
                           </Label>
                           <select
                             id="vulnerabilityType"
                             required
-                            className="mt-1.5 w-full h-10 px-3 border border-gray-300 rounded-lg text-sm"
+                            className="mt-2 w-full h-12 px-4 bg-white/60 border border-slate-200 focus:bg-white focus:border-[#008080]/50 focus:ring-4 focus:ring-[#008080]/10 rounded-xl transition-all text-sm outline-none"
                             value={beneficiaryData.vulnerabilityType}
                             onChange={(e) =>
                               setBeneficiaryData({
@@ -1235,7 +1242,7 @@ export default function RegisterPage() {
                         <div>
                           <Label
                             htmlFor="situationDescription"
-                            className="text-gray-900 text-sm"
+                            className="text-slate-800 font-semibold text-sm"
                           >
                             Mô tả hoàn cảnh
                           </Label>
@@ -1250,14 +1257,14 @@ export default function RegisterPage() {
                               })
                             }
                             rows={3}
-                            className="mt-1.5 text-sm resize-none"
+                            className="mt-2 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all text-sm resize-none"
                           />
                         </div>
 
                         <div>
                           <Label
                             htmlFor="healthCondition"
-                            className="text-gray-900 text-sm"
+                            className="text-slate-800 font-semibold text-sm"
                           >
                             Tình trạng sức khỏe
                           </Label>
@@ -1272,19 +1279,19 @@ export default function RegisterPage() {
                               })
                             }
                             rows={2}
-                            className="mt-1.5 text-sm resize-none"
+                            className="mt-2 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all text-sm resize-none"
                           />
                         </div>
 
-                        <div className="border-t border-gray-200 pt-4">
-                          <h3 className="text-sm font-medium text-gray-900 mb-3">
+                        <div className="border-t border-slate-200/60 pt-6 mt-6">
+                          <h3 className="text-base font-bold text-slate-800 mb-3">
                             Thông tin người giám hộ (nếu có)
                           </h3>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                               <Label
                                 htmlFor="guardianName"
-                                className="text-gray-900 text-sm"
+                                className="text-slate-800 font-semibold text-sm"
                               >
                                 Tên người giám hộ
                               </Label>
@@ -1298,14 +1305,14 @@ export default function RegisterPage() {
                                     guardianName: e.target.value,
                                   })
                                 }
-                                className="mt-1.5 h-10"
+                                className="mt-2 h-12 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all"
                               />
                             </div>
 
                             <div>
                               <Label
                                 htmlFor="guardianPhone"
-                                className="text-gray-900 text-sm"
+                                className="text-slate-800 font-semibold text-sm"
                               >
                                 Số điện thoại
                               </Label>
@@ -1319,20 +1326,20 @@ export default function RegisterPage() {
                                     guardianPhone: e.target.value,
                                   })
                                 }
-                                className="mt-1.5 h-10"
+                                className="mt-2 h-12 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all"
                               />
                             </div>
 
                             <div className="sm:col-span-2">
                               <Label
                                 htmlFor="guardianRelation"
-                                className="text-gray-900 text-sm"
+                                className="text-slate-800 font-semibold text-sm"
                               >
                                 Mối quan hệ
                               </Label>
                               <select
                                 id="guardianRelation"
-                                className="mt-1.5 w-full h-10 px-3 border border-gray-300 rounded-lg text-sm"
+                                className="mt-2 w-full h-12 px-4 bg-white/60 border border-slate-200 focus:bg-white focus:border-[#008080]/50 focus:ring-4 focus:ring-[#008080]/10 rounded-xl transition-all text-sm outline-none"
                                 value={beneficiaryData.guardianRelation}
                                 onChange={(e) =>
                                   setBeneficiaryData({
@@ -1357,14 +1364,14 @@ export default function RegisterPage() {
                         </div>
 
                         {/* Upload ảnh cho Beneficiary */}
-                        <div className="border-t border-gray-200 pt-4 space-y-4">
-                          <h3 className="text-sm font-medium text-gray-900">
+                        <div className="border-t border-slate-200/60 pt-6 mt-6 space-y-4">
+                          <h3 className="text-base font-bold text-slate-800">
                             Hình ảnh (không bắt buộc)
                           </h3>
 
                           {/* Avatar */}
                           <div>
-                            <Label className="text-gray-900 text-sm">
+                            <Label className="text-slate-800 font-semibold text-sm">
                               Ảnh đại diện
                             </Label>
                             <div className="mt-2">
@@ -1373,7 +1380,7 @@ export default function RegisterPage() {
                                   <img
                                     src={beneficiaryPreviews.avatar}
                                     alt="Avatar preview"
-                                    className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+                                    className="w-full h-full object-cover rounded-2xl border-2 border-white/60 shadow-md"
                                   />
                                   <button
                                     type="button"
@@ -1389,13 +1396,13 @@ export default function RegisterPage() {
                                   </button>
                                 </div>
                               ) : (
-                                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-teal-500 transition-colors">
+                                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 bg-white/50 rounded-2xl cursor-pointer hover:border-[#008080]/50 hover:bg-white/80 transition-all group">
                                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                    <p className="text-xs text-gray-500">
+                                    <Upload className="w-10 h-10 text-slate-400 mb-3 group-hover:text-[#008080] group-hover:scale-110 transition-all duration-300" />
+                                    <p className="text-white bg-slate-400 font-semibold rounded px-2 py-0.5 mt-1">
                                       Nhấn để chọn ảnh
                                     </p>
-                                    <p className="text-xs text-gray-400">
+                                    <p className="text-xs text-slate-500 mt-2 font-medium">
                                       PNG, JPG (max 5MB)
                                     </p>
                                   </div>
@@ -1418,7 +1425,7 @@ export default function RegisterPage() {
 
                           {/* CCCD Front */}
                           <div>
-                            <Label className="text-gray-900 text-sm">
+                            <Label className="text-slate-800 font-semibold text-sm">
                               CCCD mặt trước
                             </Label>
                             <div className="mt-2">
@@ -1427,7 +1434,7 @@ export default function RegisterPage() {
                                   <img
                                     src={beneficiaryPreviews.cccdFront}
                                     alt="CCCD front"
-                                    className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+                                    className="w-full h-full object-cover rounded-2xl border-2 border-white/60 shadow-md"
                                   />
                                   <button
                                     type="button"
@@ -1443,13 +1450,13 @@ export default function RegisterPage() {
                                   </button>
                                 </div>
                               ) : (
-                                <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-teal-500 transition-colors">
+                                <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-slate-300 bg-white/50 rounded-2xl cursor-pointer hover:border-[#008080]/50 hover:bg-white/80 transition-all group">
                                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                    <p className="text-xs text-gray-500">
+                                    <Upload className="w-10 h-10 text-slate-400 mb-3 group-hover:text-[#008080] group-hover:scale-110 transition-all duration-300" />
+                                    <p className="text-white bg-slate-400 font-semibold rounded px-2 py-0.5 mt-1">
                                       Nhấn để chọn ảnh
                                     </p>
-                                    <p className="text-xs text-gray-400">
+                                    <p className="text-xs text-slate-500 mt-2 font-medium">
                                       PNG, JPG (max 5MB)
                                     </p>
                                   </div>
@@ -1472,7 +1479,7 @@ export default function RegisterPage() {
 
                           {/* CCCD Back */}
                           <div>
-                            <Label className="text-gray-900 text-sm">
+                            <Label className="text-slate-800 font-semibold text-sm">
                               CCCD mặt sau
                             </Label>
                             <div className="mt-2">
@@ -1481,7 +1488,7 @@ export default function RegisterPage() {
                                   <img
                                     src={beneficiaryPreviews.cccdBack}
                                     alt="CCCD back"
-                                    className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+                                    className="w-full h-full object-cover rounded-2xl border-2 border-white/60 shadow-md"
                                   />
                                   <button
                                     type="button"
@@ -1497,13 +1504,13 @@ export default function RegisterPage() {
                                   </button>
                                 </div>
                               ) : (
-                                <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-teal-500 transition-colors">
+                                <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-slate-300 bg-white/50 rounded-2xl cursor-pointer hover:border-[#008080]/50 hover:bg-white/80 transition-all group">
                                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                    <p className="text-xs text-gray-500">
+                                    <Upload className="w-10 h-10 text-slate-400 mb-3 group-hover:text-[#008080] group-hover:scale-110 transition-all duration-300" />
+                                    <p className="text-white bg-slate-400 font-semibold rounded px-2 py-0.5 mt-1">
                                       Nhấn để chọn ảnh
                                     </p>
-                                    <p className="text-xs text-gray-400">
+                                    <p className="text-xs text-slate-500 mt-2 font-medium">
                                       PNG, JPG (max 5MB)
                                     </p>
                                   </div>
@@ -1526,17 +1533,17 @@ export default function RegisterPage() {
 
                           {/* Proof Files (Multiple) */}
                           <div>
-                            <Label className="text-gray-900 text-sm">
+                            <Label className="text-slate-800 font-semibold text-sm">
                               Ảnh minh chứng hoàn cảnh (có thể chọn nhiều ảnh)
                             </Label>
                             <div className="mt-2">
-                              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-teal-500 transition-colors">
+                              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 bg-white/50 rounded-2xl cursor-pointer hover:border-[#008080]/50 hover:bg-white/80 transition-all group">
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                  <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                  <p className="text-xs text-gray-500">
+                                  <Upload className="w-10 h-10 text-slate-400 mb-3 group-hover:text-[#008080] group-hover:scale-110 transition-all duration-300" />
+                                  <p className="text-white bg-slate-400 font-semibold rounded px-2 py-0.5 mt-1">
                                     Nhấn để chọn ảnh
                                   </p>
-                                  <p className="text-xs text-gray-400">
+                                  <p className="text-xs text-slate-500 mt-2 font-medium">
                                     PNG, JPG (max 5MB mỗi ảnh)
                                   </p>
                                 </div>
@@ -1566,7 +1573,7 @@ export default function RegisterPage() {
                                         <img
                                           src={preview}
                                           alt={`Proof ${index + 1}`}
-                                          className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+                                          className="w-full h-full object-cover rounded-2xl border-2 border-white/60 shadow-md"
                                         />
                                         <button
                                           type="button"
@@ -1599,7 +1606,7 @@ export default function RegisterPage() {
                           <div>
                             <Label
                               htmlFor="organizationName"
-                              className="text-gray-900 text-sm"
+                              className="text-slate-800 font-semibold text-sm"
                             >
                               Tên tổ chức *
                             </Label>
@@ -1614,14 +1621,14 @@ export default function RegisterPage() {
                                   organizationName: e.target.value,
                                 })
                               }
-                              className="mt-1.5 h-10"
+                              className="mt-2 h-12 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all"
                             />
                           </div>
 
                           <div>
                             <Label
                               htmlFor="representativeName"
-                              className="text-gray-900 text-sm"
+                              className="text-slate-800 font-semibold text-sm"
                             >
                               Người đại diện *
                             </Label>
@@ -1636,7 +1643,7 @@ export default function RegisterPage() {
                                   representativeName: e.target.value,
                                 })
                               }
-                              className="mt-1.5 h-10"
+                              className="mt-2 h-12 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all"
                             />
                           </div>
                         </div>
@@ -1644,7 +1651,7 @@ export default function RegisterPage() {
                         <div>
                           <Label
                             htmlFor="description"
-                            className="text-gray-900 text-sm"
+                            className="text-slate-800 font-semibold text-sm"
                           >
                             Mô tả tổ chức
                           </Label>
@@ -1659,14 +1666,14 @@ export default function RegisterPage() {
                               })
                             }
                             rows={3}
-                            className="mt-1.5 text-sm resize-none"
+                            className="mt-2 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all text-sm resize-none"
                           />
                         </div>
 
                         <div>
                           <Label
                             htmlFor="website"
-                            className="text-gray-900 text-sm"
+                            className="text-slate-800 font-semibold text-sm"
                           >
                             Website
                           </Label>
@@ -1681,7 +1688,7 @@ export default function RegisterPage() {
                                 website: e.target.value,
                               })
                             }
-                            className="mt-1.5 h-10"
+                            className="mt-2 h-12 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all"
                           />
                         </div>
 
@@ -1689,14 +1696,14 @@ export default function RegisterPage() {
                           <div>
                             <Label
                               htmlFor="district"
-                              className="text-gray-900 text-sm"
+                              className="text-slate-800 font-semibold text-sm"
                             >
                               Quận/Huyện *
                             </Label>
                             <select
                               id="district"
                               required
-                              className="mt-1.5 w-full h-10 px-3 border border-gray-300 rounded-lg text-sm"
+                              className="mt-2 w-full h-12 px-4 bg-white/60 border border-slate-200 focus:bg-white focus:border-[#008080]/50 focus:ring-4 focus:ring-[#008080]/10 rounded-xl transition-all text-sm outline-none"
                               value={organizationData.district}
                               onChange={(e) =>
                                 setOrganizationData({
@@ -1720,7 +1727,7 @@ export default function RegisterPage() {
                           <div>
                             <Label
                               htmlFor="addressDetail"
-                              className="text-gray-900 text-sm"
+                              className="text-slate-800 font-semibold text-sm"
                             >
                               Địa chỉ chi tiết *
                             </Label>
@@ -1735,20 +1742,20 @@ export default function RegisterPage() {
                                   addressDetail: e.target.value,
                                 })
                               }
-                              className="mt-1.5 h-10"
+                              className="mt-2 h-12 bg-white/60 border-slate-200 focus-visible:bg-white focus-visible:border-[#008080]/50 focus-visible:ring-[#008080]/20 rounded-xl transition-all"
                             />
                           </div>
                         </div>
 
                         {/* Upload ảnh cho Organization */}
-                        <div className="border-t border-gray-200 pt-4 space-y-4">
-                          <h3 className="text-sm font-medium text-gray-900">
+                        <div className="border-t border-slate-200/60 pt-6 mt-6 space-y-4">
+                          <h3 className="text-base font-bold text-slate-800">
                             Hình ảnh (không bắt buộc)
                           </h3>
 
                           {/* Avatar */}
                           <div>
-                            <Label className="text-gray-900 text-sm">
+                            <Label className="text-slate-800 font-semibold text-sm">
                               Logo tổ chức
                             </Label>
                             <div className="mt-2">
@@ -1757,7 +1764,7 @@ export default function RegisterPage() {
                                   <img
                                     src={organizationPreviews.avatar}
                                     alt="Logo preview"
-                                    className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+                                    className="w-full h-full object-cover rounded-2xl border-2 border-white/60 shadow-md"
                                   />
                                   <button
                                     type="button"
@@ -1773,13 +1780,13 @@ export default function RegisterPage() {
                                   </button>
                                 </div>
                               ) : (
-                                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-teal-500 transition-colors">
+                                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 bg-white/50 rounded-2xl cursor-pointer hover:border-[#008080]/50 hover:bg-white/80 transition-all group">
                                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                    <p className="text-xs text-gray-500">
+                                    <Upload className="w-10 h-10 text-slate-400 mb-3 group-hover:text-[#008080] group-hover:scale-110 transition-all duration-300" />
+                                    <p className="text-white bg-slate-400 font-semibold rounded px-2 py-0.5 mt-1">
                                       Nhấn để chọn ảnh
                                     </p>
-                                    <p className="text-xs text-gray-400">
+                                    <p className="text-xs text-slate-500 mt-2 font-medium">
                                       PNG, JPG (max 5MB)
                                     </p>
                                   </div>
@@ -1802,7 +1809,7 @@ export default function RegisterPage() {
 
                           {/* Business License */}
                           <div>
-                            <Label className="text-gray-900 text-sm">
+                            <Label className="text-slate-800 font-semibold text-sm">
                               Giấy phép hoạt động
                             </Label>
                             <div className="mt-2">
@@ -1811,7 +1818,7 @@ export default function RegisterPage() {
                                   <img
                                     src={organizationPreviews.businessLicense}
                                     alt="Business license"
-                                    className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+                                    className="w-full h-full object-cover rounded-2xl border-2 border-white/60 shadow-md"
                                   />
                                   <button
                                     type="button"
@@ -1827,13 +1834,13 @@ export default function RegisterPage() {
                                   </button>
                                 </div>
                               ) : (
-                                <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-teal-500 transition-colors">
+                                <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-slate-300 bg-white/50 rounded-2xl cursor-pointer hover:border-[#008080]/50 hover:bg-white/80 transition-all group">
                                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                    <p className="text-xs text-gray-500">
+                                    <Upload className="w-10 h-10 text-slate-400 mb-3 group-hover:text-[#008080] group-hover:scale-110 transition-all duration-300" />
+                                    <p className="text-white bg-slate-400 font-semibold rounded px-2 py-0.5 mt-1">
                                       Nhấn để chọn ảnh
                                     </p>
-                                    <p className="text-xs text-gray-400">
+                                    <p className="text-xs text-slate-500 mt-2 font-medium">
                                       PNG, JPG (max 5MB)
                                     </p>
                                   </div>
@@ -1856,17 +1863,17 @@ export default function RegisterPage() {
 
                           {/* Verification Docs (Multiple) */}
                           <div>
-                            <Label className="text-gray-900 text-sm">
+                            <Label className="text-slate-800 font-semibold text-sm">
                               Tài liệu xác minh (có thể chọn nhiều ảnh)
                             </Label>
                             <div className="mt-2">
-                              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-teal-500 transition-colors">
+                              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 bg-white/50 rounded-2xl cursor-pointer hover:border-[#008080]/50 hover:bg-white/80 transition-all group">
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                  <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                  <p className="text-xs text-gray-500">
+                                  <Upload className="w-10 h-10 text-slate-400 mb-3 group-hover:text-[#008080] group-hover:scale-110 transition-all duration-300" />
+                                  <p className="text-white bg-slate-400 font-semibold rounded px-2 py-0.5 mt-1">
                                     Nhấn để chọn ảnh
                                   </p>
-                                  <p className="text-xs text-gray-400">
+                                  <p className="text-xs text-slate-500 mt-2 font-medium">
                                     PNG, JPG (max 5MB mỗi ảnh)
                                   </p>
                                 </div>
@@ -1897,7 +1904,7 @@ export default function RegisterPage() {
                                         <img
                                           src={preview}
                                           alt={`Document ${index + 1}`}
-                                          className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+                                          className="w-full h-full object-cover rounded-2xl border-2 border-white/60 shadow-md"
                                         />
                                         <button
                                           type="button"
@@ -1923,24 +1930,23 @@ export default function RegisterPage() {
                       </>
                     )}
 
-                    <div className="flex gap-3 pt-4">
+                    <div className="flex gap-4 pt-6 mt-8 border-t border-slate-200/60">
                       <Button
                         type="button"
-                        variant="outline"
                         onClick={handleBackStep}
-                        className="flex-1 h-10 text-sm"
+                        className="flex-1 h-12 bg-white/80 border border-slate-200 hover:bg-white hover:text-[#008080] hover:shadow-md text-slate-600 font-semibold rounded-full transition-all"
                       >
-                        <ChevronLeft className="mr-1.5 w-4 h-4" /> Quay lại
+                        <ChevronLeft className="mr-1.5 w-5 h-5" /> Quay lại
                       </Button>
                       <Button
                         type="submit"
-                        className="flex-1 h-10 bg-teal-600 hover:bg-teal-700 text-white font-medium text-sm"
+                        className="flex-1 h-12 bg-gradient-to-r from-[#008080] to-[#00A79D] hover:shadow-[0_15px_30px_rgba(0,128,128,0.2)] hover:-translate-y-0.5 transition-all duration-300 text-white font-bold text-base rounded-full"
                         disabled={isLoading}
                       >
                         {isLoading ? (
                           <>
                             <svg
-                              className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
                               viewBox="0 0 24 24"
@@ -1973,11 +1979,11 @@ export default function RegisterPage() {
           </div>
 
           {/* Login Link */}
-          <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 text-center">
-            <p className="text-sm text-gray-600">
+          <div className="px-8 py-6 bg-white/30 backdrop-blur-md border-t border-white/40 text-center">
+            <p className="text-sm text-slate-600 font-medium">
               Đã có tài khoản?{" "}
               <Link
-                className="text-teal-600 font-medium hover:underline"
+                className="text-[#008080] font-bold hover:text-[#00A79D] transition-colors"
                 href="/login"
               >
                 Đăng nhập
@@ -1988,12 +1994,12 @@ export default function RegisterPage() {
       </main>
 
       {/* Footer minimalist */}
-      <footer className="bg-white border-t border-gray-200 py-6 mt-auto">
+      <footer className="relative z-10 w-full py-8 mt-auto">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-6 text-sm">
-            <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 text-sm">
+            <div className="flex items-center gap-2 text-slate-500 font-medium bg-white/50 backdrop-blur-sm px-5 py-2.5 rounded-full border border-white/60 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
               <svg
-                className="h-4 w-4 text-teal-600"
+                className="h-5 w-5 text-[#008080]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -2006,16 +2012,16 @@ export default function RegisterPage() {
                 />
               </svg>
               <a
-                className="hover:text-teal-600 transition-colors"
+                className="hover:text-[#008080] transition-colors"
                 href="tel:0123458789"
               >
                 0123 458 789
               </a>
             </div>
-            <div className="hidden sm:block text-gray-300">•</div>
-            <div className="flex items-center gap-2 text-gray-600">
+            
+            <div className="flex items-center gap-2 text-slate-500 font-medium bg-white/50 backdrop-blur-sm px-5 py-2.5 rounded-full border border-white/60 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
               <svg
-                className="h-4 w-4 text-teal-600"
+                className="h-5 w-5 text-[#008080]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -2028,15 +2034,15 @@ export default function RegisterPage() {
                 />
               </svg>
               <a
-                className="hover:text-teal-600 transition-colors"
+                className="hover:text-[#008080] transition-colors"
                 href="mailto:support@betterus.com"
               >
                 support@betterus.com
               </a>
             </div>
           </div>
-          <div className="text-center mt-4">
-            <p className="text-xs text-gray-500">© 2025 BetterUS</p>
+          <div className="text-center mt-6">
+            <p className="text-sm font-medium text-slate-400">© 2025 BetterUS. Kiến tạo giá trị vì cộng đồng.</p>
           </div>
         </div>
       </footer>
