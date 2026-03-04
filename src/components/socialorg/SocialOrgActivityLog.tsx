@@ -99,7 +99,7 @@ export default function SocialOrgActivityLog() {
           </div>
           <div>
             <h2 className="text-2xl font-black text-slate-800 tracking-tight">
-              Nhật Ký Tương Tác
+              Nhật ký hoạt động
             </h2>
             <p className="text-slate-500 font-medium text-sm mt-0.5">
                {activities.length} hoạt động gần đây liên quan đến Tổ chức

@@ -6,7 +6,7 @@ import api from "@/services/api";
 import { getMe } from "@/services/auth.service";
 
 // Cập nhật URL đúng của backend NestJS
-const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") || "http://localhost:3000";
+const SOCKET_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.replace("/api/v1", "") || "http://localhost:8080";
 
 interface Notification {
   id: string;
@@ -22,6 +22,9 @@ export default function NotificationBell() {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+    let socketInstanceRef: Socket | null = null;
+
     // 1. Fetch unread count & recent notifications list
     const fetchNotifications = async () => {
       try {
@@ -29,8 +32,10 @@ export default function NotificationBell() {
           api.get("/notifications/unread-count"),
           api.get("/notifications?limit=10"),
         ]);
-        setUnreadCount(unreadRes.data.count || 0);
-        setNotifications(listRes.data || []);
+        if (isMounted) {
+          setUnreadCount(unreadRes.data.count || 0);
+          setNotifications(listRes.data || []);
+        }
       } catch (error) {
         console.error("Lỗi khi tải thông báo:", error);
       }
@@ -45,38 +50,36 @@ export default function NotificationBell() {
 
       try {
         const user = await getMe();
-        if (!user || !user.id) return;
+        if (!user || !user.id || !isMounted) return;
 
-        const socketInstance = io(`${SOCKET_URL}/notifications`, {
+        socketInstanceRef = io(`${SOCKET_URL}/notifications`, {
           auth: { token },
           query: { userId: user.id },
           transports: ["websocket"],
         });
 
-        setSocket(socketInstance);
+        if (isMounted) {
+          setSocket(socketInstanceRef);
+        }
 
-        socketInstance.on("connect", () => {
+        socketInstanceRef.on("connect", () => {
           console.log("Đã kết nối Socket.IO tới Backend Notifications");
         });
 
-        socketInstance.on("new_notification", (newNotif: Notification) => {
+        socketInstanceRef.on("new_notification", (newNotif: Notification) => {
           console.log("Có thông báo mới:", newNotif);
           setNotifications((prev) => [newNotif, ...prev]);
           setUnreadCount((prev) => prev + 1);
         });
-
-        return socketInstance;
       } catch (error) {
         console.error("Lỗi khi kết nối socket:", error);
       }
     };
 
-    let socketInstanceRef: Socket | undefined;
-    connectSocket().then((instance) => {
-      if (instance) socketInstanceRef = instance;
-    });
+    connectSocket();
 
     return () => {
+      isMounted = false;
       if (socketInstanceRef) {
         socketInstanceRef.disconnect();
       }

@@ -102,7 +102,7 @@ export default function ActivityLog() {
         <div className="flex items-center gap-3">
           <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
             <MdHistory size={26} className="text-[#008080]" />
-            Nhật Ký Hoạt Động
+            Nhật ký hoạt động
           </h2>
           <span className="px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded-full text-xs font-semibold shadow-sm">
             {activities.length} hoạt động

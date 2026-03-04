@@ -102,7 +102,7 @@ export default function EmergencyDashboard() {
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
             </span>
           </div>
-          SOS Khẩn Cấp
+          SOS khẩn cấp
           {emergencies.length > 0 && (
             <span className="ml-2 px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold inline-block border border-red-200 shadow-sm">
               {emergencies.length}
@@ -127,10 +127,11 @@ export default function EmergencyDashboard() {
           </p>
         </div>
       ) : (
-        <div className="space-y-4">
-          {emergencies.map((emergency) => (
-            <div
-              key={emergency.id}
+        <div className="h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+          <div className="space-y-4">
+            {emergencies.map((emergency) => (
+              <div
+                key={emergency.id}
               className="border border-red-200 rounded-2xl p-5 bg-gradient-to-br from-white to-red-50/50 hover:shadow-md hover:border-red-300 transition-all duration-300 relative overflow-hidden"
             >
               {/* Vạch báo đỏ mỏng bên mép trái */}
@@ -240,6 +241,7 @@ export default function EmergencyDashboard() {
             </div>
           ))}
         </div>
+      </div>
       )}
     </Card>
   );

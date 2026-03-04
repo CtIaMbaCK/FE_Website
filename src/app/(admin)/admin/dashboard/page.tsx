@@ -163,7 +163,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
          <div className="space-y-8">
             <div className="bg-white/80 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-               <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">SOS Mới nhất</h2>
+               <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">Khẩn cấp</h2>
                <div className="bg-rose-50/50 rounded-2xl p-1 overflow-hidden border border-rose-100/50">
                  <EmergencyDashboard />
                </div>
