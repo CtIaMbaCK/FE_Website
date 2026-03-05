@@ -171,7 +171,7 @@ export default function CampaignsPage() {
             </SelectTrigger>
             <SelectContent className="rounded-xl border-slate-100 shadow-xl">
               <SelectItem value="all" className="rounded-lg">Tất cả trạng thái</SelectItem>
-              <SelectItem value="ACTIVE" className="rounded-lg">Đang hoạt động</SelectItem>
+              <SelectItem value="ONGOING" className="rounded-lg">Đang thực hiện</SelectItem>
               <SelectItem value="PENDING" className="rounded-lg">Chờ duyệt</SelectItem>
               <SelectItem value="COMPLETED" className="rounded-lg">Đã hoàn thành</SelectItem>
               <SelectItem value="CANCELLED" className="rounded-lg">Đã hủy</SelectItem>
