@@ -156,18 +156,3 @@ Frontend kết nối với **Nest_Backend** qua:
 Đảm bảo backend đang chạy trước khi khởi động frontend.
 
 ---
-
-## UI Component Library
-
-Dự án sử dụng **shadcn/ui** (dựa trên Radix UI) cho các component:
-- `Dialog`, `Dropdown Menu`, `Select`, `Tabs`, `Popover`
-- `Avatar`, `Progress`, `Tooltip`, `Collapsible`
-- `Label`, `Separator`, `Slot`
-
-Thêm component mới từ shadcn:
-
-```bash
-npx shadcn@latest add <component-name>
-```
-
----
