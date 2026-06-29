@@ -1,4 +1,4 @@
-# 🌐 BetterUS — Next.js Frontend
+# BetterUS — Next.js Frontend
 
 Giao diện web quản trị của hệ thống **BetterUS** — nền tảng kết nối tình nguyện viên với người có hoàn cảnh khó khăn tại TP. Hồ Chí Minh.
 
@@ -43,7 +43,7 @@ Dành cho các tổ chức đã được duyệt:
 
 ---
 
-## 🚀 Hướng dẫn cài đặt & chạy
+## Hướng dẫn cài đặt & chạy
 
 ### 1. Clone repository và vào thư mục
 
@@ -74,8 +74,6 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8080/api/v1 (sử dụng ngrok để p
 # Tên ứng dụng
 NEXT_PUBLIC_APP_NAME=BetterUS
 ```
-
-> ⚠️ **Lưu ý**: Biến có tiền tố `NEXT_PUBLIC_` sẽ được expose ra client-side (browser). Không đặt thông tin nhạy cảm vào các biến này.
 
 ### 4. Khởi động server development
 
