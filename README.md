@@ -144,15 +144,3 @@ Next_Frontend/
 ├── components.json                 # Cấu hình shadcn/ui
 └── package.json
 ```
-
----
-
-## Kết nối với Backend
-
-Frontend kết nối với **Nest_Backend** qua:
-- **REST API**: `NEXT_PUBLIC_API_BASE_URL` (mặc định `http://localhost:8080/api/v1`)
-- **WebSocket**: Socket.IO cho tính năng chat real-time
-
-Đảm bảo backend đang chạy trước khi khởi động frontend.
-
----
